@@ -1,0 +1,538 @@
+body {
+  font-family: 'Raleway', sans-serif;
+  /* background-image: url('../img/bg.png'); */
+  margin: 0;
+}
+
+header, footer {
+  display: block;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Roboto', sans-serif;
+  font-weight: 300;
+}
+
+h1 {
+  font-size: 1.5em;
+  text-transform: uppercase;
+}
+
+h2 {
+  font-size: 1em;
+  color: #888;
+  padding-left: 0.2em;
+  padding-bottom: 0.3em;
+  border-bottom: 0.1em solid #ddd;
+}
+
+h3 {
+  font-size: 0.9em;
+  color: #888;
+}
+
+.text-left {
+  text-align: left;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.row {
+  overflow: auto;
+}
+
+.c25 {
+  width: 25%;
+  float: left;
+}
+
+.c10 {
+  width: 10%;
+  float: left;
+}
+
+.c16 {
+  width: 16.66%;
+  float: left;
+}
+
+.c20 {
+  width: 20%;
+  float: left;
+}
+
+.c30 {
+  width: 30%;
+  float: left;
+}
+
+.c33 {
+  width: 33.33%;
+  float: left;
+}
+
+.c40 {
+  width: 40%;
+  float: left;
+}
+
+.c50 {
+  width: 50%;
+  float: left;
+}
+
+.c60 {
+  width: 60%;
+  float: left;
+}
+
+.c70 {
+  width: 70%;
+  float: left;
+}
+
+
+/* CONTENT */
+
+div.content {
+  background-color: #fff;
+  padding: 0;
+}
+
+div.wrapper {
+  padding: 0em 0.8em 0 0.8em;
+}
+
+@media (min-width: 70em) {
+	div.content {
+		width: 70em;
+    margin: 0 auto;
+    /* box-shadow: 0 0.1em 0.2em #333; */
+	}
+
+  div.wrapper {
+    padding: 0em 1.5em 0 1.5em;
+  }
+}
+
+/* HEADER */
+
+header.main-header {
+  margin-bottom: 1em;
+  padding-bottom: 0;
+  overflow: auto;
+  border-bottom: 0.1em solid #eee;
+}
+
+header.main-header img.webindex {
+  width: 50%;
+  max-width: 12em;
+  float: left;
+}
+
+/* NAVIGATION */
+
+nav.navigation {
+  clear: both;
+  overflow: auto;
+  margin-top: 2em;
+}
+
+nav.navigation ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+nav.navigation li {
+  float: left;
+  style: block;
+  width: 50%;
+  text-align: center;
+  padding: 0.4em 0;
+}
+
+@media (min-width: 25em) {
+  nav.navigation li {
+    width: 25%;
+    margin-bottom: 0.4em;
+  }
+}
+
+header.site-header nav.navigation li.active {
+  border-bottom: 0.6em solid #fff;
+}
+
+/* INDEX TABS */
+
+nav.index-tabs {
+  margin-top: 1.5em;
+}
+
+nav.index-tabs ul {
+  list-style: none;
+  padding: 0;
+  overflow: auto;
+}
+
+nav.index-tabs li {
+  display: block;
+  width: 20%;
+  float: left;
+}
+
+nav.index-tabs li a {
+  display: block;
+  margin: 0 0.5em;
+  padding-top: 1em;
+  min-height: 2.2em;
+  text-align: center;
+  text-decoration: none;
+  font-weight: 700;
+  color: #fff;
+  font-family: 'Roboto', sans-serif;
+}
+
+nav.index-tabs li:first-child a {
+  margin-left: 0;
+}
+
+nav.index-tabs li:last-child a {
+  margin-right: 0;
+}
+
+nav.index-tabs li.active {
+  background-color: #fff;
+  color: #444;
+}
+
+nav.index-tabs li.active a {
+  color: #444;
+  font-weight: 400;
+}
+
+/* RANKING */
+
+div.bar-ranking {
+  width: 100%;
+  height: 6em;
+}
+
+div.ranking {
+  width: 100%;
+  height: 25em;
+}
+
+div.world-map {
+  height: 20em;
+}
+
+/* DESCRIPTION */
+
+p.description {
+  color: #555;
+  margin-bottom: 0.5em;
+}
+
+/* TIMELINE */
+
+div.timeline {
+  z-index:0;
+  position: relative;
+  margin-top: 2em;
+  margin-bottom: 1em;
+}
+
+div.timeline div.line .selected a.circle, div.timeline div.line .selected a.circle:hover {
+  background-color: #CC2222 !important;
+}
+
+div.timeline div.line a.circle:hover {
+  background-color: #666;
+}
+
+div.timeline a.circle {
+  width: 2.5em !important;
+  height: 2.5em !important;
+  background-color: #fff !important;
+  border: 0.3em solid #93cb4b !important;
+}
+
+div.timeline div.element {
+  width: 20% !important;
+}
+
+div.timeline div.element:first-child {
+  width: 10% !important;
+  text-align: left !important;
+}
+
+div.timeline div.element:last-child {
+  width: 10% !important;
+  text-align: right !important;
+  float: right !important;
+}
+
+div.timeline div.elements div.element a {
+  color: #fff !important;
+  font-family: 'Roboto', sans-serif !important;
+  padding: 0 0.35em;
+}
+
+div.timeline div.line::before {
+  border-top: .2rem solid #fff !important;
+}
+
+/* NUMBERS */
+
+div.numbers {
+  overflow: hidden;
+  font-family: 'Roboto', sans-serif;
+  margin-bottom: 1em;
+  margin-top: 3em;
+}
+
+div.numbers div.circle {
+  width: 2.2em;
+  height: 2.2em;
+  border: 0.05em solid #aaa;
+  border-radius: 50%;
+  font-size: 3.2em;
+  text-align: center;
+  color: #222;
+  background-size: cover;
+  margin: 0 auto;
+  overflow: hidden;
+  position: relative;
+}
+
+div.numbers div.circle.left {
+  margin: auto;
+  float: left;
+}
+
+div.numbers div.circle.right {
+  margin: auto;
+  float: right;
+}
+
+div.numbers div.circle p.value {
+  margin: 0;
+  margin-top: 0.2em;
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
+
+div.numbers p.left {
+  width: 6em;
+  clear: both;
+  float: left;
+}
+
+div.numbers p.right {
+  width: 6em;
+  clear: both;
+  float: right;
+}
+
+
+div.numbers div.mean {
+  background-color: rgba(27, 111, 98, 0.5);
+}
+
+div.numbers div.median {
+  background-color: rgba(27, 109, 99, 0.5);
+}
+
+div.numbers div.mean p.value, div.numbers div.median p.value {
+  font-size: 0.7em;
+  padding-top: 0.66em;
+}
+
+div.numbers p {
+  margin-top: 0.5em;
+  margin-bottom: 0.1em;
+  color: #444;
+  text-align: center;
+  font-size: 1.2em;
+}
+
+div.numbers-wrapper {
+  padding-left: 3em;
+}
+
+/* WORLD BARS */
+
+div.world-bars {
+  font-size: 0.6em;
+}
+
+div.world-bars p.continent {
+  font-size: 1.2em;
+}
+
+div.world-bar {
+  height: 1.2em;
+  background-color: #eee;
+  border-bottom: 0.1em solid #ccc;
+  margin-top: 0.3em;
+  margin-bottom: 0.7em;
+}
+
+div.world-bar div.bar {
+  height: 1.2em;
+}
+
+
+/* WORLD MAP */
+
+div#country-visor.visor {
+  background-color: transparent !important;
+  color: #333;
+}
+
+div.direction-buttons {
+  width: 4.3em;
+  height: 4.3em;
+  padding-top: 0;
+}
+
+div.map {
+  height: 28em;
+}
+
+/* POLAR CHARTS */
+
+.polar-charts {
+  overflow: hidden;
+}
+
+.polar-charts h3 {
+  text-align: center;
+  margin-bottom: 0.2em;
+  color: #555;
+}
+
+.polar {
+  height: 10em;
+}
+
+.no-signature .wesCountry .signature {
+	display: none;
+}
+
+/* FOOTER */
+
+footer {
+  margin-top: 6em;
+
+  background-color: #93cb4b;
+  background-image: url(../img/world.png);
+  background-size: cover;
+  background-position: bottom;
+  color: #fff;
+  overflow: auto;
+}
+
+footer div.content {
+  background-color: transparent;
+}
+
+footer nav.navigation li {
+  text-align: left;
+}
+
+@media (min-width: 25em) {
+  footer nav.navigation li {
+    width: 16.66%;
+    margin-bottom: 0.4em;
+  }
+}
+
+footer .signature {
+  font-size: 0.8em;
+  margin-top: 1.5em;
+}
+
+/* MAIN HEADER */
+
+header.site-header {
+  background-color: #8BCE33;
+  background-image: url(../img/world.png);
+  background-size: cover;
+  padding-top: 0;
+  padding-bottom: 0em;
+  margin-bottom: 1em;
+  color: #fff;
+}
+
+header.site-header div.content {
+  background-color: transparent;
+}
+
+header.site-header p {
+  font-size: 1.1em;
+  line-height: 1.2em;
+  letter-spacing: 0.1em;
+}
+
+header.site-header p.motto {
+  font-size: 3.5em;
+  line-height: 0.5em;
+  text-transform: uppercase;
+  font-family: 'Allerta Stencil', sans-serif;
+  font-weight: bolder;
+}
+
+header.site-header p.introduction {
+  margin-bottom: 2em;
+  line-height: 1.6em;
+}
+
+header.site-header p.introduction span.highlight {
+  background-color: #fff;
+  color: #8BCE33;
+  padding: 0 0.2em;
+}
+
+header.site-header img.webindex {
+  width: 70%;
+  margin-top: 1em;
+}
+
+div.header-bars {
+  height: 8em;
+  clear: both;
+}
+
+div.header-bars text.wesCountry {
+  text-transform: capitalize;
+}
+
+div.header-bars g > text {
+  writing-mode: tb;
+  glyph-orientation-vertical: 0;
+  text-anchor: start !important;
+  dominant-baseline: auto !important;
+}
+
+div.header-bars g > text:nth-of-type(odd) {
+  fill: #888 !important;
+}
+
+/* WWWF */
+/*
+img.wwwf {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 0.3em 0.5em;
+}
+*/

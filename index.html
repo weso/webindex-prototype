@@ -1,0 +1,168 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <title>The Web Index</title>
+		<link rel="stylesheet" type="text/css" href="css/wesCountry.min.css">
+		<link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+		<link rel="stylesheet" type="text/css" href="css/style.css">
+		<link href='http://fonts.googleapis.com/css?family=Raleway:300|Roboto:300|Allerta+Stencil' rel='stylesheet' type='text/css'>
+
+		<script src="js/libraries/wesCountry.min.js"></script>
+  </head>
+  <body>
+		<!--<img class="wwwf" src="img/wwwf.png" />-->
+		<header class="site-header">
+			<div class="content">
+				<div class="wrapper">
+					<div class="row">
+						<div class="c40">
+							<img class="webindex" src="img/webindex.png" alt="Web Index" />
+						</div>
+						<div class="c60">
+							<nav class="navigation">
+								<ul>
+									<li class="active">home</li>
+									<li>about</li>
+									<li>news & media</li>
+									<li>contact</li>
+								</ul>
+							</nav>
+						</div>
+					</div>
+
+					<p class="motto">
+						Measuring
+					</p>
+					<p class="motto">
+						the Web
+					</p>
+					<p class="motto">
+						Global Impact
+					</p>
+					<p class="introduction">
+						Designed and produced by the <span class="highlight">World Wide Web Foundation</span>, the <span class="highlight">Web Index</span> is the world's first multi-dimensional measure of the <span class="highlight">Web's growth</span>, utility and impact on <span class="highlight">people</span> and <span class="highlight">nations</span>. The Web Index launched in 2012, and the 2013 index has been enlarged to include 20 new countries. It features an expanded and enhanced <span class="highlight">data set</span>, particularly in the areas of <span class="highlight">gender</span>, <span class="highlight">Open Data</span>, <span class="highlight">surveillance</span> and <span class="highlight">security</span>.
+					</p>
+					<div id="header-bars" class="header-bars no-signature"></div>
+					<div id="timeline" class="timeline"></div>
+					<nav class="index-tabs">
+						<ul>
+							<li class="active"><a href="">Web Index</a></li>
+							<li><a href="">Empowerment</a></li>
+							<li><a href="">Freedom and Openness</a></li>
+							<li><a href="">Relevant Content</a></li>
+							<li><a href="">Universal Access</a></li>
+						</ul>
+					</nav>
+				</div>
+			</div>
+		</header>
+		<div class="content">
+			<div class="wrapper">
+				<div class="main">
+					<h2>World Ranking</h2>
+					<div class="numbers">
+						<div class="c70">
+							<div id="map" class="map"></div>
+						</div>
+						<div class="c30 world-bars">
+							<div class="numbers-wrapper">
+								<p class="continent">Africa</p>
+								<div class="world-bar">
+									<div class="bar" style="width: 30%;background-color:#88c24d"></div>
+								</div>
+								<p class="continent">America</p>
+								<div class="world-bar">
+									<div class="bar" style="width: 50%;background-color:#1b7564"></div>
+								</div>
+								<p class="continent">Asia</p>
+								<div class="world-bar">
+									<div class="bar" style="width: 40%;background-color:#44965b"></div>
+								</div>
+								<p class="continent">Europe</p>
+								<div class="world-bar">
+									<div class="bar" style="width: 70%;background-color:#145061"></div>
+								</div>
+								<p class="continent">Oceania</p>
+								<div class="world-bar">
+									<div class="bar" style="width: 80%;background-color:#07536e"></div>
+								</div>
+
+								<div class="numbers">
+									<div class="c33 text-left">
+										<p>&nbsp;</p>
+										<div class="circle left">
+											<p class="value">84</p>
+										</div>
+										<p class="left">countries</p>
+									</div>
+									<div class="c33">
+										<p>&nbsp;</p>
+										<div class="circle mean">
+											<div style="background-color: #fff; height: 49.69%;"></div>
+											<p class="value">50.31</p>
+										</div>
+										<p>mean</p>
+									</div>
+									<div class="c33">
+										<p>&nbsp;</p>
+										<div class="circle median right">
+											<div style="background-color: #fff; height: 52.9%;"></div>
+											<p class="value">47.10</p>
+										</div>
+										<p class="right">median</p>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div id="bar-ranking" class="bar-ranking"></div>
+					<h2>By component</h2>
+					<div class="polar-charts row no-signature">
+						<div class="c20">
+							<h3>Africa</h3>
+							<div id="polar-africa" class="polar"></div>
+						</div>
+						<div class="c20">
+							<h3>America</h3>
+							<div id="polar-america" class="polar"></div>
+						</div>
+						<div class="c20">
+							<h3>Asia</h3>
+							<div id="polar-asia" class="polar"></div>
+						</div>
+						<div class="c20">
+							<h3>Europe</h3>
+							<div id="polar-europe" class="polar"></div>
+						</div>
+						<div class="c20">
+							<h3>Oceania</h3>
+							<div id="polar-oceania" class="polar"></div>
+						</div>
+					</div>
+					<h2>Ranking by continent</h2>
+					<div id="ranking" class="ranking"></div>
+				</div>
+			</div>
+		</div>
+		<footer>
+			<div class="content">
+				<div class="wrapper">
+					<nav class="navigation">
+						<ul>
+							<li class="active">home</li>
+							<li>about</li>
+							<li>news & media</li>
+							<li>contact</li>
+							<li>terms of use</li>
+							<li>privacy policy</li>
+						</ul>
+					</nav>
+					<p class="signature">
+						Copyright &copy; 2014 World Wide Web Foundation. This work is licensed under CC by 3.0.
+					</p>
+				</div>
+			</div>
+		</footer>
+		<script src="js/controller/index.js"></script>
+  </body>
+</html>
