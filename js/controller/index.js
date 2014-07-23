@@ -415,3 +415,230 @@ options.series = [
     ];
 
 wesCountry.charts.chart(options);
+
+/* Animation */
+
+var WRITE_SPEED = 100;
+var SHUFFLE_SPEED = 150;
+var SHUFFLE_TIMEOUT = 4000;
+var BAR_SPEED = 50;
+var BAR_PARTS = 10.0;
+var HIGHLIGHT_SPEED = 200;
+
+animate();
+
+function animate() {
+  // Write motto
+  setTimeout(write, WRITE_SPEED);
+
+  // Shuffle text
+  textShuffle();
+
+  // Show bars
+  showBars();
+
+  // Highlight
+  highlight();
+}
+
+/* Motto writting */
+
+var cursorInterval = null;
+
+function animateCursor(cursor) {
+  var cursor = document.getElementById(cursor);
+
+  // Show cursor
+  cursor.style.visibility = 'visible';
+
+  cursorInterval = setInterval(function() {
+    cursor.style.visibility = cursor.style.visibility == 'hidden' ? 'visible' : 'hidden';
+  }, 500);
+}
+
+var texts = [document.getElementById('first-text'),
+            document.getElementById('second-text'),
+            document.getElementById('third-text')];
+
+var finalTexts = [document.getElementById('first-text-initial'),
+            document.getElementById('second-text-initial'),
+            document.getElementById('third-text-initial')];
+
+var textIndex = 0;
+
+function write() {
+  if (textIndex >= texts.length)
+    return;
+
+  var text = texts[textIndex];
+  var textFinal = finalTexts[textIndex];
+
+  // Animate cursor
+  if (text.innerHTML.length == 0) {
+    // Stop previous cursor
+    if (cursorInterval) {
+        clearInterval(cursorInterval);
+
+        // Hide previous cursor
+        document.getElementById("cursor" + textIndex).style.display = 'none';
+    }
+
+    animateCursor("cursor" + (textIndex + 1));
+  }
+
+  // Write text
+  if (textFinal.innerHTML.length > 0) {
+    var character = textFinal.innerHTML[0];
+    textFinal.innerHTML = textFinal.innerHTML.substring(1);
+
+    text.innerHTML = text.innerHTML + character;
+  }
+  else
+    textIndex++;
+
+  setTimeout(write, WRITE_SPEED);
+}
+
+/* Bar text shuffling */
+function shuffleString(str) {
+    var a = str.split(""),
+        n = a.length;
+
+    for(var i = n - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var tmp = a[i];
+        a[i] = a[j];
+        a[j] = tmp;
+    }
+    return a.join("");
+}
+
+function textShuffle() {
+  var texts = document.querySelectorAll('div.header-bars g > text');
+
+  var length = texts.length;
+
+  // Store original value
+  for (var i = 0; i < length; i++) {
+    var text = texts[i];
+
+    text.setAttribute('data-initial', text.textContent);
+  }
+
+  // Shuffle
+  var interval = setInterval(function() {
+    for (var i = 0; i < length; i++) {
+      var text = texts[i];
+
+      text.textContent = shuffleString(text.textContent);
+    }
+  }, SHUFFLE_SPEED);
+
+  // Restore text
+  setTimeout(function() {
+    clearInterval(interval);
+
+    for (var i = 0; i < length; i++) {
+      var text = texts[i];
+
+      text.textContent = text.getAttribute('data-initial');
+    }
+  }, SHUFFLE_TIMEOUT)
+}
+
+function showBars() {
+  var bars = document.querySelectorAll('div.header-bars g > rect');
+
+  var length = bars.length;
+
+  // Initial values
+  for (var i = 0; i < length; i++) {
+    var bar = bars[i];
+
+    if (!bar.hasAttribute('data-code'))
+      continue;
+
+    // Store original values
+    bar.setAttribute('final-pos', bar.getAttribute('y'));
+    bar.setAttribute('final-height', bar.getAttribute('height'));
+
+    // Set height to 0
+    var height = bar.getAttribute('final-height') * 1;
+
+    bar.setAttribute('y', bar.getAttribute('final-pos') * 1 + height - 0);
+    bar.setAttribute('height', 0);
+    bar.setAttribute('increment', height / BAR_PARTS);
+
+    // Show bar
+    bar.style.visibility = 'visible';
+  }
+
+  // Grow
+  setTimeout(barGrowth, BAR_SPEED);
+}
+
+function barGrowth() {
+  var bars = document.querySelectorAll('div.header-bars g > rect');
+
+  var length = bars.length;
+
+  var changes = false;
+
+  for (var i = 0; i < length; i++) {
+    var bar = bars[i];
+
+    var finalPos = bar.getAttribute('final-pos') * 1;
+    var finalHeight = bar.getAttribute('final-height') * 1;
+
+    var pos = bar.getAttribute('y') * 1;
+    var height = bar.getAttribute('height') * 1;
+
+    var increment = bar.getAttribute('increment') * 1;
+
+    if (height < finalHeight) {
+      changes = true;
+
+      height += increment;
+      pos -= increment;
+
+      if (height > finalHeight) {
+        height = finalHeight;
+        pos = finalPos;
+      }
+
+      bar.setAttribute('y', pos);
+      bar.setAttribute('height', height);
+    }
+  }
+
+  if (changes)
+    setTimeout(barGrowth, BAR_SPEED);
+}
+
+/* Highlight */
+
+function shuffleArray (o) {
+  for (var j, x, i = o.length; i; j = Math.floor(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
+  return o;
+};
+
+function highlight() {
+  var texts = document.querySelectorAll('.highlight-initial');
+
+  texts = shuffleArray(texts);
+
+  var length = texts.length;
+
+  var index = 0;
+
+  var interval = setInterval(function() {
+      if (index >= length)
+        clearInterval(interval);
+      else {
+        var text = texts[index];
+        text.className = 'highlight';
+      }
+
+      index++;
+  }, HIGHLIGHT_SPEED);
+}

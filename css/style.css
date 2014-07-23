@@ -491,9 +491,21 @@ header.site-header p.motto {
   font-weight: bolder;
 }
 
+p.motto span.initial {
+  display: none;
+}
+
+p.motto span.cursor {
+  visibility: hidden;
+}
+
 header.site-header p.introduction {
   margin-bottom: 2em;
   line-height: 1.6em;
+}
+
+header.site-header p.introduction span.highlight-initial {
+  padding: 0 0.2em;
 }
 
 header.site-header p.introduction span.highlight {
@@ -523,8 +535,16 @@ div.header-bars g > text {
   dominant-baseline: auto !important;
 }
 
+div.header-bars g > text:first-of-type {
+  display: none;
+}
+
 div.header-bars g > text:nth-of-type(odd) {
   fill: #888 !important;
+}
+
+div.header-bars rect {
+  visibility: hidden;
 }
 
 /* WWWF */
