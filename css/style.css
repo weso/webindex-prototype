@@ -461,6 +461,15 @@ footer .signature {
   margin-top: 1.5em;
 }
 
+footer .signature div {
+  overflow: auto;
+}
+
+footer .signature i {
+  float: right;
+  margin-left: 0.5em;
+}
+
 /* MAIN HEADER */
 
 header.site-header {
