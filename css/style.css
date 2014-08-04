@@ -174,6 +174,15 @@ nav.navigation li {
   }
 }
 
+nav.navigation li a {
+  text-decoration: none;
+  color: #fff;
+}
+
+nav.navigation li a:hover {
+  text-decoration: underline;
+}
+
 header.site-header nav.navigation li.active {
   border-bottom: 0.6em solid #fff;
 }
@@ -691,6 +700,10 @@ header.site-header p.introduction span.highlight {
   padding: 0 0.2em;
 }
 
+header.site-header p.introduction.short {
+  padding-bottom: 1em;
+}
+
 header.site-header img.webindex {
   width: 100%;
   margin-top: 1em;
@@ -758,3 +771,76 @@ img.wwwf {
   padding: 0.3em 0.5em;
 }
 */
+
+/* table */
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th {
+  font-size: 0.1em;
+  min-width: 4em;
+  border-bottom: 0.15em solid #111 !important;
+}
+
+@media (min-width: 48em) {
+  th {
+    font-size: 0.6em;
+  }
+}
+
+@media (min-width: 70em) {
+  th {
+    font-size: 0.8em;
+  }
+}
+
+td {
+  text-align: right;
+}
+
+td:first-child {
+  text-align: left;
+}
+
+@media (max-width: 39em) {
+    tr {
+      padding-bottom: 0.7em;
+      border-bottom: 0.1em solid #888 !important;
+    }
+
+    tr.data {
+      border-bottom: 0.1em solid transparent !important;
+    }
+}
+
+@media (min-width: 40em) {
+    td {
+      padding: 0.5em 0;
+      border-bottom: 0.1em solid #888 !important;
+    }
+}
+
+tr.data td {
+  border-bottom: 0.1em solid transparent !important;
+}
+
+table img.flag {
+  vertical-align: middle;
+  margin-right: 0.5em;
+}
+
+table .country-chart {
+  height: 12em;
+}
+
+table .country-chart-bars {
+  height: 8em;
+  padding-top: 2em;
+}
+
+table div.row {
+  overflow: hidden;
+}

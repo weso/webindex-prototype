@@ -171,7 +171,7 @@ var countries = [
 		return elements;
 	};
 
-	options.maxRankingRows = 11;
+	options.maxRankingRows = 6;
 	options.margins = [4, 12, 1, 0];
   options.yAxis.margin = 1;
 	options.xAxis.title = options.yAxis.title = "";
