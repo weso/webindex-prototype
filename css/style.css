@@ -63,13 +63,22 @@ h3 {
 }
 
 .c20 {
-  width: 20%;
+  width: 50%;
   float: left;
 }
 
-.c30 {
-  width: 30%;
-  float: left;
+@media (min-width: 48em) {
+  .c20 {
+    width: 20%;
+    float: left;
+  }
+}
+
+@media (min-width: 48em) {
+  .c30 {
+    width: 30%;
+    float: left;
+  }
 }
 
 .c33 {
@@ -77,9 +86,11 @@ h3 {
   float: left;
 }
 
-.c40 {
-  width: 40%;
-  float: left;
+@media (min-width: 25em) {
+  .c40 {
+    width: 40%;
+    float: left;
+  }
 }
 
 .c50 {
@@ -87,16 +98,19 @@ h3 {
   float: left;
 }
 
-.c60 {
-  width: 60%;
-  float: left;
+@media (min-width: 25em) {
+  .c60 {
+    width: 60%;
+    float: left;
+  }
 }
 
-.c70 {
-  width: 70%;
-  float: left;
+@media (min-width: 48em) {
+  .c70 {
+    width: 70%;
+    float: left;
+  }
 }
-
 
 /* CONTENT */
 
@@ -130,12 +144,6 @@ header.main-header {
   border-bottom: 0.1em solid #eee;
 }
 
-header.main-header img.webindex {
-  width: 50%;
-  max-width: 12em;
-  float: left;
-}
-
 /* NAVIGATION */
 
 nav.navigation {
@@ -156,6 +164,7 @@ nav.navigation li {
   width: 50%;
   text-align: center;
   padding: 0.4em 0;
+  border-bottom: 0.6em solid transparent;
 }
 
 @media (min-width: 25em) {
@@ -183,8 +192,27 @@ nav.index-tabs ul {
 
 nav.index-tabs li {
   display: block;
-  width: 20%;
+  width: 100%;
   float: left;
+}
+
+@media (min-width: 48em) {
+  nav.index-tabs li {
+    width: 20%;
+    font-size: 0.7em;
+  }
+}
+
+@media (min-width: 64em) {
+  nav.index-tabs li {
+    font-size: 0.9em;
+  }
+}
+
+@media (min-width: 70em) {
+  nav.index-tabs li {
+    font-size: 1em;
+  }
 }
 
 nav.index-tabs li a {
@@ -233,6 +261,49 @@ div.world-map {
   height: 20em;
 }
 
+div.ranking-legend ul {
+  padding: 0;
+  list-style: none;
+}
+
+div.ranking-legend ul li {
+  display: block;
+  width: 50%;
+  float: left;
+  font-size: 0.9em;
+  padding-bottom: 0.3em;
+}
+
+@media (min-width: 30em) {
+  div.ranking-legend ul li {
+    width: 33.33%;
+  }
+}
+
+div.ranking-legend .circle {
+  width: 1em;
+  height: 1em;
+  border-radius: 50%;
+  background-color: #ccc;
+  float: left;
+  margin-right: 1em;
+}
+
+@media (min-width: 40em) {
+  div.ranking-legend {
+    display: none;
+  }
+}
+
+div.ranking .wesCountry-legend {
+  display: none;
+}
+
+@media (min-width: 40em) {
+  div.ranking .wesCountry-legend {
+    display: block;
+  }
+}
 /* DESCRIPTION */
 
 p.description {
@@ -258,10 +329,31 @@ div.timeline div.line a.circle:hover {
 }
 
 div.timeline a.circle {
-  width: 2.5em !important;
-  height: 2.5em !important;
+  width: 1.1em !important;
+  height: 1.1em !important;
   background-color: #fff !important;
   border: 0.3em solid #93cb4b !important;
+}
+
+@media (min-width: 30em) {
+  div.timeline a.circle {
+    width: 1.5em !important;
+    height: 1.5em !important;
+  }
+}
+
+@media (min-width: 40em) {
+  div.timeline a.circle {
+    width: 2em !important;
+    height: 2em !important;
+  }
+}
+
+@media (min-width: 48em) {
+  div.timeline a.circle {
+    width: 2.5em !important;
+    height: 2.5em !important;
+  }
 }
 
 div.timeline div.element {
@@ -282,7 +374,14 @@ div.timeline div.element:last-child {
 div.timeline div.elements div.element a {
   color: #fff !important;
   font-family: 'Roboto', sans-serif !important;
+  font-size: 0.7em !important;
   padding: 0 0.35em;
+}
+
+@media (min-width: 30em) {
+  div.timeline div.elements div.element a {
+    font-size: 1em !important;
+  }
 }
 
 div.timeline div.line::before {
@@ -299,17 +398,25 @@ div.numbers {
 }
 
 div.numbers div.circle {
-  width: 2.2em;
-  height: 2.2em;
+  width: 2em;
+  height: 2em;
   border: 0.05em solid #aaa;
   border-radius: 50%;
-  font-size: 3.2em;
+  font-size: 2.2em;
   text-align: center;
   color: #222;
   background-size: cover;
   margin: 0 auto;
   overflow: hidden;
   position: relative;
+}
+
+@media (min-width: 64em) {
+  div.numbers div.circle {
+    width: 2.2em;
+    height: 2.2em;
+    font-size: 3.2em;
+  }
 }
 
 div.numbers div.circle.left {
@@ -334,14 +441,21 @@ div.numbers p.left {
   width: 6em;
   clear: both;
   float: left;
+  text-align: left;
 }
 
 div.numbers p.right {
   width: 6em;
   clear: both;
   float: right;
+  text-align: right;
 }
 
+@media (min-width: 64em) {
+    div.numbers p.left, div.numbers p.right {
+      text-align: center;
+    }
+}
 
 div.numbers div.mean {
   background-color: rgba(27, 111, 98, 0.5);
@@ -364,8 +478,10 @@ div.numbers p {
   font-size: 1.2em;
 }
 
-div.numbers-wrapper {
-  padding-left: 3em;
+@media (min-width: 48em) {
+  div.numbers-wrapper {
+    padding-left: 3em;
+  }
 }
 
 /* WORLD BARS */
@@ -404,8 +520,42 @@ div.direction-buttons {
   padding-top: 0;
 }
 
+.wesCountry-map .buttons {
+  display: none;
+}
+
+@media (min-width: 30em) {
+  .wesCountry-map .buttons {
+    display: block;
+  }
+}
+
 div.map {
-  height: 28em;
+  height: 15em;
+}
+
+@media (min-width: 30em) {
+  div.map {
+    height: 20em;
+  }
+}
+
+@media (min-width: 40em) {
+  div.map {
+    height: 25em;
+  }
+}
+
+@media (min-width: 48em) {
+  div.map {
+    height: 26em;
+  }
+}
+
+@media (min-width: 64em) {
+  div.map {
+    height: 28em;
+  }
 }
 
 /* POLAR CHARTS */
@@ -487,17 +637,35 @@ header.site-header div.content {
 }
 
 header.site-header p {
-  font-size: 1.1em;
+  font-size: 1em;
   line-height: 1.2em;
   letter-spacing: 0.1em;
 }
 
+@media (min-width: 40em) {
+  header.site-header p {
+    font-size: 1.1em;
+  }
+}
+
 header.site-header p.motto {
-  font-size: 3.5em;
+  font-size: 1.5em;
   line-height: 0.5em;
   text-transform: uppercase;
   font-family: 'Allerta Stencil', sans-serif;
   font-weight: bolder;
+}
+
+@media (min-width: 30em) {
+  header.site-header p.motto {
+    font-size: 2.5em;
+  }
+}
+
+@media (min-width: 48em) {
+	header.site-header p.motto {
+		font-size: 3.5em;
+	}
 }
 
 p.motto span.initial {
@@ -524,8 +692,20 @@ header.site-header p.introduction span.highlight {
 }
 
 header.site-header img.webindex {
-  width: 70%;
+  width: 100%;
   margin-top: 1em;
+}
+
+@media (min-width: 20em) {
+  header.site-header img.webindex {
+    width: 90%;
+  }
+}
+
+@media (min-width: 48em) {
+  header.site-header img.webindex {
+    width: 70%;
+  }
 }
 
 div.header-bars {
@@ -542,6 +722,19 @@ div.header-bars g > text {
   glyph-orientation-vertical: 0;
   text-anchor: start !important;
   dominant-baseline: auto !important;
+  font-size: 4px !important;
+}
+
+@media (min-width: 30em) {
+  div.header-bars g > text {
+    font-size: 0.1em !important;
+  }
+}
+
+@media (min-width: 40em) {
+  div.header-bars g > text {
+    font-size: 0.2em !important;
+  }
 }
 
 div.header-bars g > text:first-of-type {
