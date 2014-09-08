@@ -1,0 +1,209 @@
+header, footer, aside, nav, article, main {
+  display: block;
+}
+
+/* FLOAT */
+
+.float-left: {
+  float: left;
+}
+
+.float-right {
+  float: right;
+}
+
+.overflow-auto {
+  overflow: auto
+}
+
+/* BODY */
+
+body {
+  font-family: 'Raleway', sans-serif;
+}
+
+/* ANCHORS */
+
+a, a:link {
+  text-decoration: none;
+  color: #C92127;
+}
+
+a:visited {
+  color: #4B088A;
+}
+
+a:hover, a:active {
+  color: #000;
+  text-decoration: underline;
+}
+
+/* BUTTON */
+
+button, input[type=button], input[type=submit] {
+  background-color: #C92127;
+  border: none;
+  padding: 0.3em 0;
+  color: #fff;
+  font-weight: 400;
+}
+
+/* HEADER */
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Roboto', sans-serif;
+}
+
+h2 {
+  border-bottom: 0.1em solid #C92127;
+}
+
+header.site-header {
+
+}
+
+header.site-header nav {
+  overflow: auto;
+}
+
+header.site-header nav ul {
+  float: right;
+}
+
+header.site-header nav li {
+  float: left;
+  list-style: none;
+  padding: 0.5em 0 0.5em 1em;
+}
+
+/* MAIN */
+
+main {
+  padding: 0.5em;
+}
+
+/* ************************************************************************** */
+/*                                    HOME                                    */
+/* ************************************************************************** */
+
+h2 i {
+  color: #888;
+}
+
+/* VIDEO */
+
+.video img {
+  width: 100%;
+}
+
+/* NEWS BAR */
+
+.news-bar article {
+  border-bottom: 0.1em solid #ccc;
+}
+
+.news-bar article:last-of-type {
+  border-bottom: none;
+}
+
+.news-bar h3 {
+  font-size: 1em;
+}
+
+/* TWITTER BAR */
+
+.twitter-bar article {
+  border-bottom: 0.1em solid #ccc;
+  padding-top: 0.4em;
+}
+
+.twitter-bar article:last-of-type {
+  border-bottom: none;
+}
+
+.twitter-bar article header {
+  font-size: 0.9em;
+}
+
+.twitter-bar article header a {
+  color: #000;
+  font-weight: bold;
+}
+
+.twitter-bar img {
+  float: left;
+  width: 2em;
+  border: none;
+  margin-right: 0.5em;
+}
+
+.twitter-bar time {
+  color: #444;
+  display: block;
+  text-align: right;
+}
+
+/* FOLLOW */
+
+.sign-up input {
+  width: 100%;
+  margin: 0.2em 0;
+  font-size: 1.2em;
+}
+
+/* LINKS */
+
+div.links ul {
+  list-style: none;
+  padding: 0;
+  overflow: hidden;
+}
+
+div.links li {
+  float: left;
+  width: 33.33%;
+  text-align: center;
+}
+
+/* RANKING TABLE */
+
+table.ranking td {
+  text-align: right;
+}
+
+table.ranking td:first-child {
+  text-align: left;
+}
+
+table.ranking img {
+  margin-right: 0.5em;
+  margin-top: 0.2em;
+  vertical-align: middle;
+  float: left;
+}
+
+table.ranking p.country-name {
+  padding-left: 1em;
+  padding-top: 0;
+}
+
+/* QUICK LINKS */
+
+.quick-links time {
+  color: #666;
+  display: block;
+  text-align: right;
+}
+
+.quick-links ul {
+  list-style: none;
+  padding: 0;
+}
+
+.quick-links li {
+  margin-bottom: 1em;
+}
+
+.quick-links li i {
+  color: #C92127;
+}
