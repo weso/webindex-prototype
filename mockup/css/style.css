@@ -1,4 +1,4 @@
-header, footer, aside, nav, article, main {
+﻿header, footer, aside, nav, article, main {
   display: block;
 }
 
@@ -79,6 +79,10 @@ h2 {
   border-bottom: 0.05em solid #888;
 }
 
+h3:before {
+  content: "● "
+}
+
 h2 img.border {
   display: block;
   background-color: #555;
@@ -104,9 +108,9 @@ header.site-header a.logo img {
 
 @media (min-width: 64em) {
   header.site-header a.logo {
-    max-width: 17em;
+    max-width: 14em;
     float: left;
-    margin-top: 1em;
+    margin-top: 1.5em;
   }
 }
 
@@ -975,26 +979,9 @@ td:first-child {
   text-align: left;
 }
 
-@media (max-width: 39em) {
-    tr {
-      padding-bottom: 0.7em;
-      border-bottom: 0.1em solid #888 !important;
-    }
-
-    tr.data {
-      border-bottom: 0.1em solid transparent !important;
-    }
-}
-
-@media (min-width: 40em) {
-    td {
-      padding: 0.5em 0;
-      border-bottom: 0.1em solid #888 !important;
-    }
-}
-
-tr.data td {
-  border-bottom: 0.1em solid transparent !important;
+tr {
+  padding-bottom: 0.7em;
+  border-bottom: 0.1em solid #888 !important;
 }
 
 table img.flag {
@@ -1013,77 +1000,6 @@ table .country-chart-bars {
 
 table div.row {
   overflow: hidden;
-}
-
-/* COLUMNS */
-
-.row {
-  overflow: auto;
-}
-
-.c25 {
-  width: 25%;
-  float: left;
-}
-
-.c10 {
-  width: 10%;
-  float: left;
-}
-
-.c16 {
-  width: 16.66%;
-  float: left;
-}
-
-.c20 {
-  width: 50%;
-  float: left;
-}
-
-@media (min-width: 48em) {
-  .c20 {
-    width: 20%;
-    float: left;
-  }
-}
-
-@media (min-width: 48em) {
-  .c30 {
-    width: 30%;
-    float: left;
-  }
-}
-
-.c33 {
-  width: 33.33%;
-  float: left;
-}
-
-@media (min-width: 25em) {
-  .c40 {
-    width: 40%;
-    float: left;
-  }
-}
-
-.c50 {
-  width: 50%;
-  float: left;
-}
-
-@media (min-width: 25em) {
-  .c60 {
-    width: 60%;
-    float: left;
-  }
-}
-
-@media (min-width: 48em) {
-  .c70 {
-    width: 70%;
-    float: left;
-  }
 }
 
 /* WORLD MAP */
@@ -1145,6 +1061,10 @@ div.map {
 
 .polar-charts {
   overflow: hidden;
+}
+
+.polar-charts h3:before {
+  content: "";
 }
 
 .polar-charts h3 {
@@ -1227,4 +1147,32 @@ div.ranking .wesCountry-legend {
 select.selector {
   width: 100%;
   margin-bottom: 1.5em;
+}
+
+/* COLUMNS */
+
+.row {
+  overflow: auto;
+}
+
+.c20 {
+  width: 50%;
+  float: left;
+}
+
+@media (min-width: 48em) {
+  .c20 {
+    width: 20%;
+    float: left;
+  }
+}
+
+/* FULL RANKING */
+
+table.full-ranking td {
+  padding: 0.5em 0;
+}
+
+table.full-ranking th {
+  font-size: 0.6em;
 }
