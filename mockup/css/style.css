@@ -76,7 +76,7 @@ h1 {
 
 h2 {
   color: #444;
-  border-image: url('../img/border.png') 0 0 27 0 round round;
+  border-bottom: 0.05em solid #888;
 }
 
 h2 img.border {
@@ -527,10 +527,6 @@ ul.secondary {
   font-size: 0.9em;
 }
 
-article:nth-of-type(1) h2 {
-  border-image: url('../img/border_red.png') 0 0 27 0 round round !important;
-}
-
 article:nth-of-type(1) ul.secondary li:nth-child(even) a {
   background-color: #E64447 !important;
 }
@@ -539,20 +535,12 @@ article:nth-of-type(1) ul.secondary li:nth-child(odd) a {
   background-color: #C46869 !important;
 }
 
-article:nth-of-type(2) h2 {
-  border-image: url('../img/border_gray.png') 0 0 27 0 round round !important;
-}
-
 article:nth-of-type(2) ul.secondary li:nth-child(even) a {
   background-color: #444 !important;
 }
 
 article:nth-of-type(2) ul.secondary li:nth-child(odd) a {
   background-color: #777 !important;
-}
-
-article:nth-of-type(3) h2 {
-  border-image: url('../img/border_green.png') 0 0 27 0 round round !important;
 }
 
 article:nth-of-type(3) ul.secondary li:nth-child(even) a {
@@ -571,20 +559,12 @@ article:nth-of-type(4) ul.secondary li:nth-child(odd) a {
   background-color: #C46869 !important;
 }
 
-article:nth-of-type(5) h2 {
-  border-image: url('../img/border_gray.png') 0 0 27 0 round round !important;
-}
-
 article:nth-of-type(5) ul.secondary li:nth-child(even) a {
   background-color: #444 !important;
 }
 
 article:nth-of-type(5) ul.secondary li:nth-child(odd) a {
   background-color: #777 !important;
-}
-
-article:nth-of-type(6) h2 {
-  border-image: url('../img/border_green.png') 0 0 27 0 round round !important;
 }
 
 /* ABOUT */
@@ -1157,30 +1137,8 @@ div.map {
   }
 }
 
-/* WORLD BARS */
-
-div.world-bars {
-  font-size: 0.6em;
-}
-
-div.world-bars p.continent {
-  font-size: 1.2em;
-}
-
-div.world-bar {
-  height: 1.2em;
-  background-color: #eee;
-  border-bottom: 0.1em solid #ccc;
-  margin-top: 0.3em;
-  margin-bottom: 0.7em;
-}
-
-div.world-bar div.bar {
-  height: 1.2em;
-}
-
-.numbers-wrapper {
-  padding-left: 2.5em;
+.wesCountry-map .buttons {
+  display: none;
 }
 
 /* POLAR CHARTS */
@@ -1268,5 +1226,5 @@ div.ranking .wesCountry-legend {
 
 select.selector {
   width: 100%;
-  margin-bottom: 1em;
+  margin-bottom: 1.5em;
 }

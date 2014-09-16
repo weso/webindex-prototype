@@ -49,10 +49,12 @@
           </ul>
         </nav>
         <div>
+          <h2>Data components</h2>
           Select a year
           <div id="timeline" class="timeline"></div>
           Select a country
           <select class="country-selector selector">
+            <option>Whole World</option>
             <option>Benin</option>
           </select>
           Select an indicator
@@ -64,33 +66,7 @@
       <section class="right-content">
       		<h2 id="world_ranking">World Ranking</h2>
 					<div class="numbers">
-						<div class="c70">
-							<div id="map" class="map"></div>
-						</div>
-						<div class="c30 world-bars">
-							<div class="numbers-wrapper">
-								<p class="continent">Africa</p>
-								<div class="world-bar">
-									<div class="bar" style="width: 30%;background-color:#88c24d"></div>
-								</div>
-								<p class="continent">America</p>
-								<div class="world-bar">
-									<div class="bar" style="width: 50%;background-color:#1b7564"></div>
-								</div>
-								<p class="continent">Asia</p>
-								<div class="world-bar">
-									<div class="bar" style="width: 40%;background-color:#44965b"></div>
-								</div>
-								<p class="continent">Europe</p>
-								<div class="world-bar">
-									<div class="bar" style="width: 70%;background-color:#145061"></div>
-								</div>
-								<p class="continent">Oceania</p>
-								<div class="world-bar">
-									<div class="bar" style="width: 80%;background-color:#07536e"></div>
-								</div>
-							</div>
-						</div>
+						<div id="map" class="map"></div>
 					</div>
 					<div id="bar-ranking" class="bar-ranking"></div>
 
@@ -144,21 +120,9 @@
 </thead>
 
 <tbody class="row-hover" role="alert" aria-live="polite" aria-relevant="all">
-  <tr class="row-2 even data">
+  <tr class="row-2 even">
 	   <td class="column-1 "><img class="flag" src="img/flags/SWE.png" />Sweden</td><td data-title="Rank">1</td><td data-title="Web Index Score">100.0</td><td data-title="Universal Access">94.4</td><td data-title="Relevant Content">90.1</td><td data-title="Freedom And Openness">86.1</td><td data-title="Impact And Empowerment">92.2</td>
   </tr>
-<tr>
-  <td class="extra" colspan="7">
-    <div class="row">
-      <div class="c30">
-        <div id="country-chart" class="country-chart"></div>
-      </div>
-      <div class="c70">
-        <div id="country-chart-bars" class="country-chart-bars"></div>
-      </div>
-    </div>
-  </td>
-</tr>
 <tr class="row-3 odd">
 	<td class="column-1 "><img class="flag" src="img/flags/NOR.png" />Norway</td><td data-title="Rank">2</td><td data-title="Web Index Score">97.5</td><td data-title="Universal Access">87.6</td><td data-title="Relevant Content">90.2</td><td data-title="Freedom And Openness">100.0</td><td data-title="Impact And Empowerment">77.8</td>
 </tr><tr class="row-4 even">
