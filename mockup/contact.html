@@ -9,84 +9,96 @@
   </head>
   <body>
     <header class="site-header">
-      <p class="donate">
-        <a href="http://www.webfoundation.org/" target="_blank" title="link opens in new window">
-          Donate now
-        </a>
-      </p>
-      <div class="main">
-        <img src="img/webindex.png" alt="Web Index" />
+      <section class="navigation">
+        <a href="/" class="logo"><img src="img/webindex.png" alt="Web Index" /></a>
+        <p class="donate">
+          <a href="http://www.webfoundation.org/" target="_blank" title="link opens in new window">
+            Donate now
+          </a>
+        </p>
         <nav>
           <ul>
-            <li><a href="index.html">Home</a></li>
-            <li><a href="report.html">Report</a></li>
-            <li><a href="data.html">Data</a></li>
-            <li><a href="about.html">About</a></li>
-            <li><a href="news.html">News & Media</a></li>
+            <li><a href="index.html">Home</a> <span class="separator">|</span></li>
+            <li><a href="report.html">The Report</a> <span class="separator">|</span></li>
+            <li><a href="data.html">The Data</a> <span class="separator">|</span></li>
+            <li><a href="about.html">About</a> <span class="separator">|</span></li>
+            <li><a href="news.html">News & Media</a> <span class="separator">|</span></li>
             <li class="active"><a href="contact.html">Contact Us</a></li>
           </ul>
         </nav>
+      </section>
+      <div class="by">
+        <p>
+          by
+          <a href="http://www.webfoundation.org/" target="_blank" title="link opens in new window">
+            <img src="img/wwwf.png" alt="World Wide Web Foundation" />
+          </a>
+        </p>
       </div>
-      <p class="by">
-        by
-        <a href="http://www.webfoundation.org/" target="_blank" title="link opens in new window">
-          <img src="img/wwwf.png" alt="World Wide Web Foundation" />
-        </a>
-      </p>
     </header>
     <main>
       <h1>Contact</h1>
-      <nav>
-        <ul>
-          <li>For general information, email us at: <a href="mailto:team-webindex@webfoundation.org">team-webindex@webfoundation.org</a></li>
-          <li>For media requests, email us at: <a href="mailto:press@webfoundation.org">press@webfoundation.org</a> or call <a href="tel:+442071938042">+44 207 193 8042</a></li>
-          <li>Follow us <a href=""><i class="fa fa-rss"></i></a> <a href=""><i class="fa fa-twitter"></i></a> <a href=""><i class="fa fa-facebook"></i></a></li>
-          <li>
-            <div class="vcard">
-               <h3 class="country-name">Switzerland</h3>
-               <h4 class="fn">World Wide Web Foundation</h4>
-               <div class="adr">
-                  <div class="street-address">c/o Lenz & Staehelin</div>
-                  <div class="street-address">Route de Chêne 30</div>
-                  <div class="locality">Geneva 17</div>
-                  <div class="postal-code">1211</div>
-                  <div class="country-name">Switzerland</div>
-               </div>
-            </div>
-          <li>
-          <li>
-            <div class="vcard">
-               <h3 class="country-name">United States</h3>
-               <h4 class="fn">World Wide Web Foundation - US</h4>
-               <div class="adr">
-                  <div class="street-address">1889 F Street NW, 2nd Floor</div>
-                  <div class="locality">Washington, DC</div>
-                  <div class="postal-code">20006</div>
-                  <div class="country-name">United States</div>
-               </div>
-            </div>
-          <li>
-        </ul>
-      </nav>
-      <h2>Feedback</h2>
-      <form action="" autocomplete="on">
-        <label for="name">Name (required)</label>
-        <input type="text" name="name" required />
-        <label for="email">Email address (required)</label>
-        <input type="email" name="email" required />
-        <label for="type">Comment type (required)</label>
-        <select name="type" required>
-          <option value="Indicators and Data">Indicators and Data</option>
-          <option value="Methodology">Methodology</option>
-          <option value="Countries covered">Countries covered</option>
-          <option value="Visualisation and Presentation of the Index">Visualisation and Presentation of the Index</option>
-          <option value="Other/General comment">Other/General comment</option>
-          <option value="New">New</option>
-        </select>
-        <label for="comment">Comment (required)</label>
-        <textarea name="comment" cols="40" rows="10" required></textarea>
-        <input type="submit" value="Send" />
-      </form>
+      <section class="left-column">
+        <nav class="contact content">
+          <ul>
+            <li>For general information, email us at: <a href="mailto:team-webindex@webfoundation.org">team-webindex@webfoundation.org</a></li>
+            <li>For media requests, email us at: <a href="mailto:press@webfoundation.org">press@webfoundation.org</a> or call <a href="tel:+442071938042">+44 207 193 8042</a></li>
+            <li>Follow us
+              <p class="follow">
+                <a href="#rss"><i class="fa fa-rss fa-3x"></i></a> <a href="https://twitter.com/webfoundation"><i class="fa fa-twitter fa-3x"></i></a> <a href="https://www.facebook.com/webfoundation"><i class="fa fa-facebook fa-3x"></i></a>
+              </p>
+            </li>
+            <li>
+              <div class="vcard">
+                 <h2 class="country-name">Switzerland</h2>
+                 <h3 class="fn">World Wide Web Foundation</h3>
+                 <div class="adr">
+                    <div class="street-address">c/o Lenz & Staehelin</div>
+                    <div class="street-address">Route de Chêne 30</div>
+                    <div class="locality">Geneva 17</div>
+                    <div class="postal-code">1211</div>
+                    <div class="country-name">Switzerland</div>
+                 </div>
+              </div>
+            <li>
+            <li>
+              <div class="vcard">
+                 <h2 class="country-name">United States</h2>
+                 <h3 class="fn">World Wide Web Foundation - US</h3>
+                 <div class="adr">
+                    <div class="street-address">1889 F Street NW, 2nd Floor</div>
+                    <div class="locality">Washington, DC</div>
+                    <div class="postal-code">20006</div>
+                    <div class="country-name">United States</div>
+                 </div>
+              </div>
+            <li>
+          </ul>
+        </nav>
+      </section>
+      <section class="right-column">
+        <div class="content">
+          <h2>Feedback</h2>
+          <form action="" autocomplete="on" class="feedback">
+            <label for="name">Name (required)</label>
+            <input type="text" name="name" required />
+            <label for="email">Email address (required)</label>
+            <input type="email" name="email" required />
+            <label for="type">Comment type (required)</label>
+            <select name="type" required>
+              <option value="Indicators and Data">Indicators and Data</option>
+              <option value="Methodology">Methodology</option>
+              <option value="Countries covered">Countries covered</option>
+              <option value="Visualisation and Presentation of the Index">Visualisation and Presentation of the Index</option>
+              <option value="Other/General comment">Other/General comment</option>
+              <option value="New">New</option>
+            </select>
+            <label for="comment">Comment (required)</label>
+            <textarea name="comment" cols="40" rows="10" required></textarea>
+            <input type="submit" value="Send" />
+          </form>
+        </div>
+      </section>
     </main>
     <footer class="the-footer">
       <nav>
