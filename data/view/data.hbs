@@ -1,0 +1,20 @@
+<select>
+  {{#indicators}}
+   <option value="{{indicator}}">{{name}}</option>
+   <optgroup label="&nbsp;---------------">
+     {{#children}}
+        <option value="{{indicator}}">{{name}}</option>
+        <optgroup label="&nbsp;&nbsp;&nbsp;&nbsp;---------------">
+        {{#children}}
+           <option value="{{indicator}}">&nbsp;&nbsp;&nbsp;&nbsp;{{name}}</option>
+           <optgroup label="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;---------------------------------------------">
+             {{#children}}
+                <option value="{{indicator}}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{name}}</option>
+             {{/children}}
+           </optgroup>
+        {{/children}}
+      </optgroup>
+     {{/children}}
+   </optgroup>
+  {{/indicators}}
+</select>
