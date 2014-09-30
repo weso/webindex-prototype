@@ -1,0 +1,39 @@
+// bower:scss
+// endbower
+
+@import "bourbon/bourbon";
+@import "base/grid-settings";
+@import "neat/neat";
+@import "base/base";
+
+@import "partials/colours";
+@import "partials/header";
+@import "partials/footer";
+@import "partials/index";
+@import "partials/report";
+
+body {
+  font-family: Raleway, sans-serif;
+  color: #333;
+  margin: 0;
+}
+
+.content {
+
+}
+
+.container {
+  @include outer-container;
+}
+
+.text-left {
+  text-align: left;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.text-center {
+  text-align: center;
+}

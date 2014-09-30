@@ -1,0 +1,158 @@
+header.site-header .logo {
+  margin: 0.5em 0 0 0.5em;
+  display: inline-block;
+  float: left;
+}
+
+header.site-header .top {
+  background-color: $green;
+  background-image: url(../images/world-small.png);
+  background-size: cover;
+  padding: 0 0 0.3em 0;
+  margin-bottom: 0;
+  overflow: auto;
+}
+
+@media (min-width: 64em) {
+  header.site-header .top {
+    background-image: url(../images/world.png);
+  }
+}
+
+header.site-header nav {
+  overflow: auto;
+  clear: right;
+  padding: 0 0.5em;
+}
+
+@media (min-width: 40em) {
+  header.site-header nav {
+    padding: 0 1em;
+  }
+}
+
+header.site-header nav ul {
+  padding: 0;
+  margin: 1em 0 0 0;
+  overflow: hidden;
+}
+
+@media (min-width: 64em) {
+  header.site-header nav ul {
+    float: right;
+    margin-top: 0.2em;
+  }
+}
+
+header.site-header nav li {
+  float: left;
+  list-style: none;
+  padding: 0.2em 0 0 0;
+  margin: 0;
+  width: 50%;
+  text-align: center;
+  font-family: Raleway, sans-serif;
+  font-size: 1.1em;
+}
+
+@media (min-width: 64em) {
+  header.site-header nav li {
+    float: left;
+    list-style: none;
+    padding: 0.5em 0 0 0.5em;
+    margin-left: 0.5em;
+    margin-bottom: 0.4em;
+    width: auto;
+  }
+}
+
+header.site-header nav li a {
+  padding-bottom: 0.3em;
+  display: block;
+  border-bottom: 0.5em solid transparent;
+  text-decoration: none;
+}
+
+header.site-header nav li a:hover {
+  text-decoration: underline;
+}
+
+@media (min-width: 64em) {
+  header.site-header nav li a {
+    display: inline-block;
+  }
+}
+
+header.site-header nav li.active a {
+  border-bottom: 0.5em solid $header-link-color;
+}
+
+header.site-header nav li a {
+  color: $header-link-color;
+  font-weight: 400;
+  text-transform: lowercase;
+}
+
+header.site-header span.separator {
+  display: inline-block;
+  margin-left: 0.5em;
+  color: #666;
+}
+
+header.site-header span.separator {
+  display: none;
+}
+
+@media (min-width: 64em) {
+  header.site-header span.separator {
+    display: inline;
+  }
+}
+
+/* BY */
+
+.by {
+  padding: 0.5em;
+  margin: 0;
+  text-align: right;
+  font-weight: 300;
+  box-shadow: inset 0px 0.2em 0.3em -0.1em $header-bottom-shadow;
+}
+
+.by img {
+  vertical-align: middle;
+  margin-left: 0.3em;
+}
+
+/* DONATE */
+
+p.donate {
+  float: right;
+  background-color: $donate-colour;
+  margin: 0.5em 0 0 0;
+}
+
+p.donate a {
+  display: inline-block;
+  padding: 0.2em 0.5em;
+  color: #fff;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+p.donate a:hover {
+  text-decoration: underline;
+}
+
+/* READ MORE */
+
+a.read-more {
+  font-size: .7em;
+  font-weight: 400;
+  text-transform: uppercase;
+
+  span {
+    font-size: 1.3em;
+    line-height: 0;
+  }
+}
