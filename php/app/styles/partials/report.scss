@@ -1,0 +1,38 @@
+/* SIDEBAR TAGS */
+
+ul.report-tags {
+  @for $i from 1 to 7 {
+    li:nth-child(#{$i}) a {
+      background-color: nth($report-colours, $i);
+    }
+
+    li.active:nth-child(#{$i}) a {
+      border-color: nth($report-colours, $i);
+      border-bottom-color: darken(nth($report-colours, $i), 18%);
+    }
+  }
+}
+
+/* ARTICLES */
+
+section.report-articles {
+  ul.tags a {
+    color: #0f0f0f;
+  }
+
+  @for $i from 1 to 7 {
+    article:nth-of-type(#{$i}) {
+      .chapter {
+        background-color: nth($report-colours, $i);
+      }
+
+      h3:before, h4:before, h5:before {
+        color: nth($report-colours, $i);
+      }
+
+      ul.tags li a {
+        background-color: scale-color(nth($report-colours, $i), $lightness: 20%);
+      }
+    }
+  }
+}
