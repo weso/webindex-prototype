@@ -59,6 +59,10 @@ module.exports = function (grunt) {
       fonts: {
       	files: ['<%= config.app %>/fonts/{,*/}*'],
       },
+      libraries: {
+      	files: ['<%= config.app %>/scripts/libraries/{,*/}*'],
+      	tasks: ['newer:copy:libraries']
+      },
       livereload: {
         options: {
           livereload: '<%= connect.options.livereload %>'

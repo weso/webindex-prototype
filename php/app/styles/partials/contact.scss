@@ -1,0 +1,74 @@
+div.half {
+  @include span-columns(6);
+  margin-top: 2em;
+}
+
+div.half:nth-of-type(2) {
+  background-color: #DADBC1;
+  padding: 1em;
+}
+
+form {
+  select {
+    width: 100%;
+    margin-left: 0.1em;
+    margin-right: 0.1em;
+  }
+
+  input[type=submit] {
+    background-color: $button-colour;
+  }
+
+  input[type=submit]:hover {
+    background-color: darken($button-colour, 20%);
+  }
+}
+
+div.box {
+  padding: 1em;
+  background-color: nth($contact-colours, 1);
+  margin-bottom: 2em;
+  overflow: hidden;
+
+  h1 {
+    margin-bottom: 0;
+    color: white;
+  }
+}
+
+div.box:nth-of-type(2) {
+  background-color: nth($contact-colours, 2);
+}
+
+div.box:nth-of-type(3) {
+  margin-bottom: 0;
+  background-color: nth($contact-colours, 3);
+}
+
+div.box-follow {
+  text-align: center;
+  padding-top: 1em;
+
+  a {
+    @include span-columns(2 of 6);
+    display: inline-block;
+    padding: 2em 0 1.5em 0;
+    color: #222;
+  }
+
+  i {
+    margin-bottom: 0.2em;
+    color: white;
+  }
+
+  @for $i from 1 to 4 {
+    a:nth-child(#{$i}) {
+      background-color: nth($contact-colours, $i + 3);
+    }
+
+    a:nth-child(#{$i}):hover {
+      background-color: darken(nth($contact-colours, $i + 3), 20%);
+      color: white;
+    }
+  }
+}

@@ -1,0 +1,234 @@
+.data-container{
+  h1 {
+    margin-bottom: 0 !important;
+  }
+
+  .indicator-selector {
+    height: 2.5em;
+    overflow: hidden;
+    background: url(../images/select_arrow.png) no-repeat right #f1f1f1;
+    border: 0.1em solid #ddd;
+
+    select {
+      width: 100%;
+      background: transparent;
+      padding: 0.2em 0.5em;
+      line-height: 1;
+      border: 0;
+      border-radius: 0;
+      height: 2.5em;
+      -webkit-appearance: none;
+      color: #333;
+    }
+  }
+}
+
+/* TIMELINE */
+
+div.timeline {
+  div.line {
+    a.circle {
+      width: 1.5em;
+      height: 1.5em;
+      border: none;
+      background-color: #ccc;
+    }
+  }
+
+  div.line:before {
+    border: none;
+  }
+
+  div.line a.circle:hover, div.selected a.circle {
+    background-color: darken(nth($data-selector-colours, 2), 25%) !important;
+  }
+
+  div.element a {
+    color: #333 !important;
+  }
+}
+
+/* BOXES */
+
+.data-box {
+  padding: 0.5em;
+  background-color: #aaa;
+
+  header {
+    border-bottom: 0.1em solid #999;
+    overflow: hidden;
+    margin-bottom: 1em;
+  }
+
+  h2 {
+    @include span-columns(6);
+    font-size: 1.7em;
+    margin-bottom: 0.3em;
+    color: #444;
+    text-align: left;
+  }
+}
+
+.map-box {
+  background-color: $data-map-background-color;
+  margin-top: 1.2em;
+
+  hr {
+    border-color: #bbb;
+    margin: 0.4em 0 0.2em 0;
+  }
+}
+
+.table-box {
+  background-color: $data-table-background-color;
+  margin-top: 1em;
+}
+
+div.middle-section {
+  @include outer-container;
+  margin-top: 1em;
+
+  div {
+    padding: 0;
+  }
+
+  div.box-mini {
+    @include span-columns(3);
+    background-color: #ccc;
+    color: white;
+    padding: 0.8em 0.5em 0.3em 0.5em;
+    text-align: center;
+
+    p {
+      margin: 0.5em 0 0 0;
+    }
+
+    .value {
+      font-size: 3em;
+      font-family: "Roboto" sans-serif;
+      font-weight: 300;
+      margin: 0 0 0.2em 0;
+    }
+  }
+
+  @for $i from 1 to 5 {
+    div.box-mini:nth-child(#{$i}) {
+      background-color: nth($data-mini-background-colours, $i);
+    }
+  }
+}
+
+div.country-box {
+  padding: 0.5em;
+
+  h2 {
+
+  }
+
+  .tabs {
+    width: 100%;
+    float: none;
+
+    li {
+      width: 100%;
+      text-align: left;
+    }
+  }
+
+  .selector ul {
+    font-size: 0.9em;
+
+    a {
+      color: #555;
+    }
+
+    li.selected a {
+      color: #111;
+
+      div.circle {
+        background-color: darken($data-country-selector-colour, 20%);
+        color: white;
+      }
+    }
+
+    li {
+      margin-bottom: 0.1em;
+
+      ul {
+        padding-left: 2em;
+      }
+
+      div.title {
+        margin-top: 0;
+      }
+    }
+
+    div.circle {
+      width: 1.3em;
+      height: 1.3em;
+      border: none;
+      background-color: #ccc;
+    }
+  }
+}
+
+/* MAP */
+
+div.map {
+  height: 30em;
+  clear: both;
+
+  .buttons {
+    display: none;
+  }
+
+  .visor {
+    background-color: transparent;
+  }
+}
+
+
+/* BARS */
+
+div.bars {
+  height: 8.5em;
+}
+
+/* TABS */
+
+nav.tabs {
+  @include span-columns(6);
+  margin-top: 0.2em;
+
+  ul {
+    overflow: hidden;
+    padding-top: 0.2em;
+    padding-bottom: 0.3em;
+    width: 100%;
+    float: right;
+
+    li {
+      float: left;
+      width: 50%;
+      text-align: center;
+
+      a {
+        color: #444;
+      }
+    }
+
+    li.selected span {
+      background-color: darken($data-table-background-color, 40%);
+    }
+  }
+
+  span {
+    display: inline-block;
+    vertical-align: middle;
+    width: 1.6em;
+    height: 1.6em;
+    border-radius: 50%;
+    margin-right: 0.5em;
+    background-color: white;
+  }
+}

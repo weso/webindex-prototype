@@ -1,0 +1,32 @@
+/* TAGS */
+
+ul.tags {
+  padding: 0;
+  list-style: none;
+  overflow: hidden;
+
+  li {
+    float: left;
+    margin-right: 0.1em;
+    margin-bottom: 0.1em;
+
+    a {
+      display: inline-block;
+      background-color: #e0272a;
+      font-weight: 600;
+      color: #fff;
+      padding: 0.2em 0.5em;
+      border: 0.35em solid #fff;
+      border-radius: 0.6em;
+    }
+  }
+
+  li.active a {
+    color: #111;
+    border-bottom-color: #555;
+  }
+}
+
+article ul.tags {
+  font-size: 0.8em;
+}

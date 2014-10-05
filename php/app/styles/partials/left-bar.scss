@@ -1,0 +1,92 @@
+/* LEFT BAR */
+
+aside.left-bar {
+  padding: 0;
+
+  h1 {
+    background-color: #fff;
+  }
+
+  nav {
+    background-color: #fff;
+    padding: 0.5em 0.2em;
+  }
+
+  .bar {
+    height: 1.5em;
+    @include background-image(linear-gradient(to bottom, #fff, rgba(#fff, 0.5)));
+  }
+}
+
+@media (min-width: 64em) {
+  aside.left-bar {
+    width: 30%;
+    height: 100%;
+    float: left;
+    padding: 0;
+
+    h1 {
+      font-size: 2em;
+      text-align: left;
+      margin-bottom: 1em;
+      background-color: transparent;
+    }
+
+    nav {
+      padding: 0;
+      background-color: transparent;
+    }
+
+    .bar {
+      display: none;
+    }
+  }
+
+  aside.left-bar > div {
+    margin-right: 1em;
+  }
+
+  section.right-content {
+    padding-left: 32%;
+  }
+
+  section.right-content article:first-child h2:first-child, section.right-content h2:first-child {
+    margin-top: 0;
+  }
+}
+
+@media (min-width: 66em) {
+  aside.left-bar {
+    width: 18em;
+    float: left;
+  }
+
+  section.right-content {
+    padding-left: 19em;
+    margin-bottom: 30em;
+  }
+}
+ /* FIXED */
+
+ .absolute {
+   position: absolute;
+ }
+
+ .fixed {
+   position: fixed;
+   top: 0;
+
+   h1 {
+     display: none;
+   }
+ }
+
+  @media (min-width: 64em) {
+    .fixed {
+      top: 1em;
+
+      h1 {
+        display: block;
+      }
+    }
+  }

@@ -7,6 +7,8 @@
   </head>
   <body>
     <script>
+      this.mode = "debug";
+      
       var view = window.location.hash ? window.location.hash.substring(1) : 'index';
 
       loadPartials(['head', 'top-header', 'header', 'header-index', 'footer'], function() {

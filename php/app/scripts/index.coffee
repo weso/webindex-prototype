@@ -1,9 +1,4 @@
-# Ranking
-
-if window.attachEvent
-  window.attachEvent("onresize", init)
-else
-  window.addEventListener("resize", init, false)
+# Load function definition
 
 init = ->
   options = {
@@ -20,7 +15,7 @@ init = ->
     },
     xAxis: {
       "font-family": "'Kite One', sans-serif",
-      "font-size": "14px"
+      "font-size": "14px",
       title: ""
     },
     yAxis: {
@@ -132,7 +127,11 @@ init = ->
 
   # Header Bar chart
 
-  options.container = "#ranking-bars"
+  container = "ranking-bars"
+
+  document.getElementById(container)?.innerHTML = ""
+
+  options.container = "\##{container}"
   options.height = document.getElementById("ranking-bars").offsetHeight
   options.height = if options.height > 0 then options.height else "200"
 
@@ -197,4 +196,15 @@ init = ->
 
   wesCountry.charts.chart options
 
-init()
+# Resize
+
+if window.attachEvent
+  window.attachEvent("onresize", init)
+else
+  window.addEventListener("resize", init, false)
+
+# Script load
+
+setTimeout(->
+            init()
+, @settings.elapseTimeout)

@@ -1,68 +1,29 @@
-/* LEFT BAR */
-
-@media (min-width: 64em) {
-  aside.left-bar {
-    width: 30%;
-    float: left;
-    position: fixed;
-
-    h1 {
-      font-size: 2em;
-      text-align: left;
-    }
-  }
-
-  aside.left-bar > div {
-    margin-right: 1em;
-  }
-
-  section.right-content {
-    padding-left: 30%;
-  }
-
-  section.right-content article:first-child h2:first-child, section.right-content h2:first-child {
-    margin-top: 0;
-  }
-}
-
-@media (min-width: 66em) {
-  aside.left-bar {
-    width: 18em;
-    float: left;
-  }
-
-  section.right-content {
-    padding-left: 18em;
-  }
-}
-
 /* ARTICLE */
 
-article.type-system-serif {
+article.text-article {
   $serif-2: 'Merriweather', serif;
   $sans-serif: 'Merriweather Sans', sans-serif;
 
   @include clearfix;
   text-align: left;
 
-  img {
+  img:not([alt]) {
     width: 100%;
     margin-bottom: 0.5em;
   }
 
-  .type {
-    display: inline-block;
+  .chapter {
     font-family: $sans-serif;
     font-size: 1.4em;
     font-weight: 700;
-    margin-bottom: 0;
+    margin: 0;
     padding: 0.2em 0 0 0;
     text-align: left;
     text-transform: uppercase;
     width: 2em;
     height: 2em;
     border-radius: 50%;
-    background-color: black;
+    background-color: red;
     color: white;
     text-align: center;
   }
@@ -73,6 +34,7 @@ article.type-system-serif {
     font-weight: 700;
     margin-bottom: .5em;
     margin-top: 0;
+    text-align: center;
 
     @include media($medium-screen) {
       font-size: 2.6em;
@@ -98,6 +60,18 @@ article.type-system-serif {
     font-size: 1.3em;
   }
 
+  h4:before {
+    content: "□ ";
+    color: red;
+    font-size: 1.1em;
+  }
+
+  h5:before {
+    content: "‣ ";
+    color: red;
+    font-size: 1.2em;
+  }
+
   code {
     white-space: nowrap;
     font-family: monaco;
@@ -115,6 +89,14 @@ article.type-system-serif {
     font-weight: 400;
     line-height: 1.3em;
     margin-bottom: .4em;
+  }
+
+  p.date {
+    color: transparentize($base-font-color, .6);
+    font-family: $sans-serif;
+    font-style: italic;
+    font-size: 1em;
+    margin-bottom: .3em;
   }
 
   p {
@@ -141,10 +123,7 @@ article.type-system-serif {
     span {
       font-family: $sans-serif;
       font-style: normal;
-      position: absolute;
       font-size: 1.5em;
-      top: -1px;
-      right: -12px;
     }
   }
 
@@ -152,30 +131,16 @@ article.type-system-serif {
     width: 3em;
   }
 
-  ul.tags {
-    font-size: 0.8em;
+  p.author {
+    font-family: $serif-2;
+    font-style: italic;
+    text-align: right;
   }
-}
 
-/* TAGS */
-
-ul.tags {
-  padding: 0;
-  list-style: none;
-  overflow: auto;
-}
-
-ul.tags li {
-  float: left;
-  margin-right: 0.5em;
-  margin-bottom: 0.5em;
-}
-
-ul.tags li a {
-  display: inline-block;
-  background-color: #e0272a;
-  font-weight: 600;
-  color: #fff;
-  padding: 0.2em 0.5em;
-  border-radius: 0.2em;
+  iframe {
+    width: 100%;
+    height: 25em;
+    margin-top: 1em;
+    margin-bottom: 1em;
+  }
 }

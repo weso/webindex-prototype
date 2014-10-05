@@ -7,10 +7,17 @@
 @import "base/base";
 
 @import "partials/colours";
+@import "partials/left-bar";
+@import "partials/tags";
+@import "partials/article";
 @import "partials/header";
 @import "partials/footer";
 @import "partials/index";
 @import "partials/report";
+@import "partials/about";
+@import "partials/blog";
+@import "partials/contact";
+@import "partials/data";
 
 body {
   font-family: Raleway, sans-serif;
@@ -24,6 +31,8 @@ body {
 
 .container {
   @include outer-container;
+  height: 100%;
+  overflow: hidden;
 }
 
 .text-left {
@@ -36,4 +45,28 @@ body {
 
 .text-center {
   text-align: center;
+}
+
+.clear {
+  clear: both;
+}
+
+h1 {
+  margin: 0 0 0.3em 0;
+  font-size: 3em;
+  letter-spacing: 0.05em;
+  font-family: 'Raleway', sans-serif;
+  text-align: left;
+  font-weight: 400;
+}
+
+h2 {
+  margin: 0 0 1.5em 0;
+  font-size: 1.5em;
+  font-weight: 300;
+  text-align: center;
+}
+
+a:hover {
+  text-decoration: underline;
 }

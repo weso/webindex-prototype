@@ -1,0 +1,38 @@
+/* SIDEBAR TAGS */
+
+ul.about-tags {
+  @for $i from 1 to 5 {
+    li:nth-child(#{$i}) a {
+      background-color: nth($about-colours, $i);
+    }
+
+    li.active:nth-child(#{$i}) a {
+      border-color: nth($about-colours, $i);
+      border-bottom-color: darken(nth($about-colours, $i), 15%);
+    }
+  }
+}
+
+/* ARTICLES */
+
+section.about-articles {
+  ul.tags a {
+    color: #0f0f0f;
+  }
+
+  @for $i from 1 to 5 {
+    article:nth-of-type(#{$i}) {
+      .chapter {
+        background-color: nth($about-colours, $i);
+      }
+
+      h3:before, h4:before, h5:before {
+        color: nth($about-colours, $i);
+      }
+
+      ul.tags li a {
+        background-color: scale-color(nth($about-colours, $i), $lightness: 20%);
+      }
+    }
+  }
+}

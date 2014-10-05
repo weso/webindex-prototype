@@ -1,3 +1,7 @@
+header.site-header {
+
+}
+
 header.site-header .logo {
   margin: 0.5em 0 0 0.5em;
   display: inline-block;
@@ -127,9 +131,14 @@ header.site-header span.separator {
 /* DONATE */
 
 p.donate {
+  font-family: Raleway, sans-serif !important;
   float: right;
   background-color: $donate-colour;
   margin: 0.5em 0 0 0;
+}
+
+p.donate:hover {
+  background-color: darken($donate-colour, $amount: 20%);
 }
 
 p.donate a {
