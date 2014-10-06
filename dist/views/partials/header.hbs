@@ -1,0 +1,53 @@
+<head>
+  <meta charset="utf-8">
+  <title>The Web Index</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width">
+  <link rel="shortcut icon" href="/favicon.ico">
+  <link href="http://fonts.googleapis.com/css?family=Raleway:300,400,600|Roboto:300|Varela+Round" rel="stylesheet" type="text/css">
+  <link href='http://fonts.googleapis.com/css?family=Merriweather:400,300,300italic,400italic,700,700italic,900,900italic|Merriweather+Sans:400,300,300italic,400italic,700italic,700,800,800italic' rel='stylesheet' type='text/css'>
+  <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+  <!-- build:css(.) styles/vendor.css -->
+  <!-- bower:css -->
+  <!-- endbower -->
+  <!-- endbuild -->
+  <!-- build:css(.tmp) styles/main.css -->
+  <link rel="stylesheet" href="styles/font-awesome.min.css">
+  <link rel="stylesheet" href="styles/wesCountry.min.css">
+  <link rel="stylesheet" href="styles/main.css">
+  <!-- endbuild -->
+  <!-- build:js scripts/vendor/modernizr.js -->
+  <script src="bower_components/modernizr/modernizr.js"></script>
+  <script src="scripts/libraries/wesCountry.min.js"></script>
+  <script src="scripts/libraries/scrolledIntoView.js"></script>
+  <!-- endbuild -->
+</head>
+
+<!--[if lt IE 10]>
+  <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+<![endif]-->
+
+<header class="site-header">
+  <div class="top">
+    <a href="thewebindex.org" class="logo">
+      <img src="images/webindex.png" alt="" />
+    </a>
+    <p class="donate">
+      <a href="http://www.webfoundation.org/" target="_blank" title="link opens in new window">Donate now</a>
+    </p>
+    <nav>
+      <ul>
+        {{#navigation}}
+          {{#if selected}}
+            <li class="active">
+          {{else}}
+            <li>
+          {{/if}}
+            <a href="/{{path}}">{{label}}</a> <span class="separator">|</span>
+          </li>
+        {{/navigation}}
+      </ul>
+    </nav>
+  </div>
+</header>
+<main class="content">

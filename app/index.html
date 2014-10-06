@@ -1,0 +1,21 @@
+<!doctype html>
+<html class="no-js">
+  <head>
+    <script src="tmpScripts/jquery.min.js"></script>
+    <script src="tmpScripts/handlebars-v2.0.0.js"></script>
+    <script src="tmpScripts/data.js"></script>
+    <script src="tmpScripts/loadTemplate.js"></script>
+  </head>
+  <body>
+    <script>
+      this.mode = "debug";
+
+      var view = window.location.hash ? window.location.hash.substring(1) : 'index';
+
+      loadPartials(['by', 'header', 'header', 'footer'], function() {
+        loadTemplate(view, jsonData);
+      });
+    </script>
+    <div id="content"></div>
+  </body>
+</html>
