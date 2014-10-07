@@ -106,10 +106,10 @@
       <div>
         <a href="javascript:void(0)" class="grid-item news">
           <header>
-            Visualisation of the Week: Web Index and CIA World Factbook data
+            {{{data.news.0.title}}}
           </header>
           <p class="content">
-            Our Visualisation of the Week has been produced by Niels Doekemeijer and Jeff Smits.  It is an interactive visualisation...
+            {{{data.news.0.content}}}
           </p>
           <p class="text-right read-more">
             READ MORE <span>&#187;</span>
@@ -117,26 +117,26 @@
         </a>
         <div class="grid-item tweet">
           <header>
-            <a href="">
-              <img src="https://pbs.twimg.com/profile_images/528558100/WebFoundationCircles_bigger.PNG" alt="" />
+            <a href="https://twitter.com/{{data.tweets.0.account.name}}">
+              <img src="{{data.tweets.0.account.img}}" alt="" />
             </a>
-            <a href="" class="name">
-              The Web Foundation
+            <a href="https://twitter.com/{{data.tweets.0.account.name}}" class="name">
+              {{data.tweets.0.account.displayName}}
             </a>
-            <a href="" class="account">
-              @webfoundation
+            <a href="https://twitter.com/{{data.tweets.0.account.name}}" class="account">
+              @{{data.tweets.0.account.name}}
             </a>
           </header>
           <p class="content">
-            The Internet as en engine of growth? See how our <a href="">#WebIndex</a> ranks your country. <a href="">http://thewebindex.org</a>  <a href="">#IGF2014</a>
+            {{{data.tweets.0.content}}}
           </p>
         </div>
         <a href="javascript:void(0)" class="grid-item news">
           <header>
-            Visualisation of the Week – The Free Internet Equation
+            {{{data.news.1.title}}}
           </header>
           <p class="content">
-            Our visualisation this week was produced by Diana Suvorova and is called 'The Free Internet...
+            {{{data.news.1.content}}}
           </p>
           <p class="text-right read-more">
             READ MORE <span>&#187;</span>
@@ -144,26 +144,26 @@
         </a>
         <div class="grid-item tweet">
           <header>
-            <a href="">
-              <img src="https://pbs.twimg.com/profile_images/528558100/WebFoundationCircles_bigger.PNG" alt="" />
+            <a href="https://twitter.com/{{data.tweets.1.account.name}}">
+              <img src="{{data.tweets.1.account.img}}" alt="" />
             </a>
-            <a href="" class="name">
-              The Web Foundation
+            <a href="https://twitter.com/{{data.tweets.1.account.name}}" class="name">
+              {{data.tweets.1.account.displayName}}
             </a>
-            <a href="" class="account">
-              @webfoundation
+            <a href="https://twitter.com/{{data.tweets.1.account.name}}" class="account">
+              @{{data.tweets.1.account.name}}
             </a>
           </header>
           <p class="content">
-            The Internet as en engine of growth? See how our <a href="">#WebIndex</a> ranks your country. <a href="">http://thewebindex.org</a>  <a href="">#IGF2014</a>
+            {{{data.tweets.1.content}}}
           </p>
         </div>
         <a href="javascript:void(0)" class="grid-item news">
           <header>
-            Visualisation of the Week – Cube Stacks
+            {{{data.news.2.title}}}
           </header>
           <p class="content">
-            Over the coming weeks, the World Wide Web Foundation will be showcasing some of the clever, colourful and stylish visualisations...
+            {{{data.news.2.content}}}
           </p>
           <p class="text-right read-more">
             READ MORE <span>&#187;</span>
@@ -171,18 +171,18 @@
         </a>
         <div class="grid-item tweet">
           <header>
-            <a href="">
-              <img src="https://pbs.twimg.com/profile_images/528558100/WebFoundationCircles_bigger.PNG" alt="" />
+            <a href="https://twitter.com/{{data.tweets.2.account.name}}">
+              <img src="{{data.tweets.2.account.img}}" alt="" />
             </a>
-            <a href="" class="name">
-              The Web Foundation
+            <a href="https://twitter.com/{{data.tweets.2.account.name}}" class="name">
+              {{data.tweets.2.account.displayName}}
             </a>
-            <a href="" class="account">
-              @webfoundation
+            <a href="https://twitter.com/{{data.tweets.2.account.name}}" class="account">
+              @{{data.tweets.2.account.name}}
             </a>
           </header>
           <p class="content">
-            The Internet as en engine of growth? See how our <a href="">#WebIndex</a> ranks your country. <a href="">http://thewebindex.org</a>  <a href="">#IGF2014</a>
+            {{{data.tweets.2.content}}}
           </p>
         </div>
       </div>
