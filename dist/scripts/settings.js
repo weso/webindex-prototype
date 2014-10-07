@@ -1,1 +1,0 @@
-(function(){var a;a={debug:{debug:!0,elapseTimeout:100,server:{method:"JSONP",url:"http://localhost:5000"}},release:{debug:!1,elapseTimeout:0,server:{method:"JSONP",url:"http://localhost:5000"}},mode:this.mode?this.mode:"release"},this.settings=a[a.mode]}).call(this);

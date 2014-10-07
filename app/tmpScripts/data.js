@@ -1,31 +1,6 @@
 var jsonData = {
-  navigation: [
-    {
-      path: "home",
-      label: "Home",
-      selected: true
-    },
-    {
-      path: "report",
-      label: "The Report"
-    },
-    {
-      path: "data",
-      label: "The Data"
-    },
-    {
-      path: "blog",
-      label: "Blog"
-    },
-    {
-      path: "media",
-      label: "Media Centre"
-    },
-    {
-      path: "about",
-      label: "About"
-    }
-  ],
+  navigation: '<div class="menu-menu-1-container"><ul id="menu-menu-1" class="menu"><li id="menu-item-46" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-46"><a href="http://156.35.82.103/wordpress/">Home</a></li><li id="menu-item-50" class="menu-item menu-item-type-post_type menu-item-object-page current-menu-item page_item page-item-21 current_page_item menu-item-50"><a href="http://156.35.82.103/wordpress/report/">Report</a></li><li id="menu-item-48" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-48"><a href="http://156.35.82.103/wordpress/data/">Data</a></li><li id="menu-item-49" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-49"><a href="http://156.35.82.103/wordpress/media-centre/">Media centre</a></li><li id="menu-item-47" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-47"><a href="http://156.35.82.103/wordpress/about/">About</a></li></ul></div>',
+  path: ".",
   labels: {
     "a_home": "Home",
     "a_report": "The Report",

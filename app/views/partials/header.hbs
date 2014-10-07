@@ -11,15 +11,23 @@
   <!-- bower:css -->
   <!-- endbower -->
   <!-- endbuild -->
+  <!-- build:css(.tmp) styles/font-awesome.min.css -->
+  <link rel="stylesheet" href="{{path}}/styles/font-awesome.min.css">
+  <!-- endbuild -->
+  <!-- build:css(.tmp) styles/wesCountry.min.css -->
+  <link rel="stylesheet" href="{{path}}/styles/wesCountry.min.css">
+  <!-- endbuild -->
   <!-- build:css(.tmp) styles/main.css -->
-  <link rel="stylesheet" href="styles/font-awesome.min.css">
-  <link rel="stylesheet" href="styles/wesCountry.min.css">
-  <link rel="stylesheet" href="styles/main.css">
+  <link rel="stylesheet" href="{{path}}/styles/main.css">
   <!-- endbuild -->
   <!-- build:js scripts/vendor/modernizr.js -->
-  <script src="bower_components/modernizr/modernizr.js"></script>
-  <script src="scripts/libraries/wesCountry.min.js"></script>
-  <script src="scripts/libraries/scrolledIntoView.js"></script>
+  <script src="{{path}}/bower_components/modernizr/modernizr.js"></script>
+  <!-- endbuild -->
+  <!-- build:js scripts/libraries/wesCountry.min.js -->
+  <script src="{{path}}/scripts/libraries/wesCountry.min.js"></script>
+  <!-- endbuild -->
+  <!-- build:js scripts/libraries/scrolledIntoView.js -->
+  <script src="{{path}}/scripts/libraries/scrolledIntoView.js"></script>
   <!-- endbuild -->
 </head>
 
@@ -30,23 +38,13 @@
 <header class="site-header">
   <div class="top">
     <a href="thewebindex.org" class="logo">
-      <img src="images/webindex.png" alt="" />
+      <img src="{{path}}/images/webindex.png" alt="" />
     </a>
     <p class="donate">
       <a href="http://www.webfoundation.org/" target="_blank" title="link opens in new window">Donate now</a>
     </p>
     <nav>
-      <ul>
-        {{#navigation}}
-          {{#if selected}}
-            <li class="active">
-          {{else}}
-            <li>
-          {{/if}}
-            <a href="/{{path}}">{{label}}</a> <span class="separator">|</span>
-          </li>
-        {{/navigation}}
-      </ul>
+      {{{navigation}}}
     </nav>
   </div>
 </header>
