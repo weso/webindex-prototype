@@ -215,6 +215,7 @@ updateInfo = () ->
   getObservations(indicator, countries, year)
 
 renderCharts = (data) ->
+  console.log data
   mapContainer = "#map"
   barContainer = "#country-bars"
 

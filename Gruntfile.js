@@ -174,6 +174,13 @@ module.exports = function (grunt) {
           src: '{,*/}*.{coffee,litcoffee,coffee.md}',
           dest: '.tmp/scripts',
           ext: '.js'
+        },
+        {
+          expand: true,
+          cwd: '<%= config.app %>/scripts',
+          src: '{,*/}*.{coffee,litcoffee,coffee.md}',
+          dest: '<%= config.dist %>/scripts',
+          ext: '.js'
         }]
       },
       test: {
@@ -199,6 +206,13 @@ module.exports = function (grunt) {
           cwd: '<%= config.app %>/styles',
           src: ['*.{scss,sass}'],
           dest: '.tmp/styles',
+          ext: '.css'
+        },
+        {
+          expand: true,
+          cwd: '<%= config.app %>/styles',
+          src: ['*.{scss,sass}'],
+          dest: '<%= config.dist %>/styles',
           ext: '.css'
         }]
       },
