@@ -161,6 +161,7 @@ getCountries = () ->
     valueName: "iso3",
     childrenName: "countries",
     sort: false })
+
   document.getElementById("country-selector").appendChild(global.options.countrySelector.render())
 
   global.selectorDataReady.countries = true
@@ -174,7 +175,7 @@ checkSelectorDataReady = ->
 
 getObservations = (indicator, countries, year) ->
   host = @settings.server.url
-  url = "#{host}/observations/#{indicator}/#{countries}/#{year}"
+  url = "#{host}/visualisations/#{indicator}/#{countries}/#{year}"
 
   if @settings.server.method is "JSONP"
     url += "?callback=getObservationsCallback"
@@ -213,12 +214,17 @@ updateInfo = () ->
 
   getObservations(indicator, countries, year)
 
-renderCharts = (observations) ->
+renderCharts = (data) ->
+  mapContainer = "#map"
+  barContainer = "#country-bars"
 
-  # Map
+  if global.selections.countries == "ALL"
+    # Show map
+    document.querySelector(mapContainer)?.style.display = 'block';
+    # Hide country bars
+    document.querySelector(barContainer)?.style.display = 'none';
 
-  createMap = ->
-    mapContainer = "#map"
+    # Map
 
     document.querySelector(mapContainer)?.innerHTML = ""
 
@@ -228,11 +234,45 @@ renderCharts = (observations) ->
       landColour: "#E4E5D8",
       borderColour: "#E4E5D8",
       backgroundColour: "none",
-      countries: observations,
+      countries: data.observations,
       colourRange: ["#E5E066", "#83C04C", "#1B7A65", "#1B4E5A", "#005475"]
     })
+  else
+    # Show country bars
+    document.querySelector(barContainer)?.style.display = 'block';
+    # Hide map
+    document.querySelector(mapContainer)?.style.display = 'none';
 
-  createMap()
+    document.querySelector(barContainer)?.innerHTML = ""
+
+    options = {
+      container: barContainer,
+      chartType: "bar",
+      legend: {
+        show: false
+      },
+      margins: [8, 1, 0, 2.5],
+      yAxis: {
+        margin: 2,
+        title: ""
+      },
+      valueOnItem: {
+        show: false
+      },
+      xAxis: {
+        values: [],
+        title: ""
+      },
+      groupMargin: 0,
+      series: data.observations,
+      mean: {
+        show: true
+      },
+      median: {
+        show: true
+      }
+    }
+  wesCountry.charts.chart options
 
   # Bar chart
 
@@ -259,7 +299,7 @@ renderCharts = (observations) ->
       title: ""
     },
     groupMargin: 0,
-    series: observations,
+    series: data.bars,
     mean: {
       show: true
     },
@@ -268,7 +308,7 @@ renderCharts = (observations) ->
     }
   }
 
-  length = observations.length
+  length = data.bars.length
 
   colours = [
     {
@@ -303,7 +343,6 @@ renderCharts = (observations) ->
   index = 0
   colourLength = colours.length
 
-  length = observations.length
   intervalLength = length / (colourLength - 1)
   range = [0..intervalLength]
 
