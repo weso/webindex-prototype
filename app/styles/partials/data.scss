@@ -152,7 +152,8 @@ div.country-box {
     }
 
     li {
-      margin-bottom: 0.1em;
+      margin-bottom: 0.3em;
+      vertical-align: middle;
 
       ul {
         padding-left: 2em;
@@ -161,6 +162,13 @@ div.country-box {
       div.title {
         margin-top: 0;
       }
+
+      .plusOrMinus {
+        font-size: 1.5em;
+        line-height: 1em;
+        font-weight: 300;
+        margin-right: 0.4em;
+      }
     }
 
     div.circle {
@@ -168,6 +176,8 @@ div.country-box {
       height: 1.3em;
       border: none;
       background-color: #ccc;
+      padding-top: 0;
+      line-height: 1.2em;
     }
   }
 }
@@ -217,12 +227,12 @@ nav.tabs {
       }
     }
 
-    li.selected span {
+    li.selected span.circle {
       background-color: darken($data-table-background-color, 40%);
     }
   }
 
-  span {
+  span.circle {
     display: inline-block;
     vertical-align: middle;
     width: 1.6em;
@@ -230,5 +240,53 @@ nav.tabs {
     border-radius: 50%;
     margin-right: 0.5em;
     background-color: white;
+  }
+}
+
+.charts-view div:nth-child(2) {
+  display: none;
+}
+
+table.full-ranking {
+  table-layout: auto;
+
+  th {
+    text-align: center;
+  }
+
+  img {
+    vertical-align: middle;
+    margin-right: 1em;
+  }
+
+  td[data-title="Country"] {
+    width: 55%;
+  }
+
+  td[data-title="Rank"] {
+    text-align: center;
+    width: 15%;
+  }
+
+  td[data-title="Value"] {
+    text-align: right;
+    width: 15%;
+
+    i {
+      margin-left: 1em;
+      color: #555;
+    }
+  }
+
+  td[data-title="Tendency"] {
+    width: 15%;
+
+    div {
+      height: 2.5em;
+
+      .wesCountry-body .signature {
+        display: none;
+      }
+    }
   }
 }
