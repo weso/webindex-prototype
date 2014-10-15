@@ -375,11 +375,20 @@ module.exports = function (grunt) {
         }]
       },
       styles: {
-        expand: true,
-        dot: true,
-        cwd: '<%= config.app %>/styles',
-        dest: '.tmp/styles/',
-        src: '{,*/}*.css'
+      	files: [{
+       		expand: true,
+        	dot: true,
+        	cwd: '<%= config.app %>/styles',
+        	dest: '.tmp/styles/',
+        	src: '{,*/}*.css'
+      	},
+      	{
+       		expand: true,
+        	dot: true,
+        	cwd: '<%= config.app %>/styles',
+        	dest: '<%= config.dist %>/styles/',
+        	src: '{,*/}*.css'
+      	}]
       },
       views: {
         expand: true,

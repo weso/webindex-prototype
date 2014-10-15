@@ -12,7 +12,7 @@ settings = {
     elapseTimeout: 0,
     server: {
       method: "JSONP",
-      url: "http://localhost:5000"
+      url: "http://intertip.webfoundation.org/api"
     }
   },
   mode: if @mode then @mode else "release"

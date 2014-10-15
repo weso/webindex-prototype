@@ -16,6 +16,21 @@ ul.blog-tags {
 /* ARTICLES */
 
 section.blog-articles {
+  article {
+    margin-bottom: 2em;
+  }
+
+  h1 {
+    font-size: 2.6em;
+
+    a {
+      color: #333;
+      font-family: 'Merriweather Sans', sans-serif;
+      font-size: 1em;
+      font-weight: 700;
+    }
+  }
+
   ul.tags a {
     color: #0f0f0f;
   }

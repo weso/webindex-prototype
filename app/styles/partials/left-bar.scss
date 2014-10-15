@@ -16,6 +16,10 @@ aside.left-bar {
     height: 1.5em;
     @include background-image(linear-gradient(to bottom, #fff, rgba(#fff, 0.5)));
   }
+
+  li > ul {
+    display: none;
+  }
 }
 
 @media (min-width: 64em) {

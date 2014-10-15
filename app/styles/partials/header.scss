@@ -171,3 +171,26 @@ a.read-more {
     line-height: 0;
   }
 }
+
+/* TRANSLATOR */
+
+div.translator {
+  float: right;
+  margin: 0.5em 1em 0 0;
+
+  div {
+    font-size: 1em;
+  }
+
+  a:hover {
+    text-decoration: none;
+  }
+
+  img.goog-te-gadget-icon {
+    display: none;
+  }
+}
+
+div.goog-te-menu2 {
+  min-height: 12em !important;
+}
