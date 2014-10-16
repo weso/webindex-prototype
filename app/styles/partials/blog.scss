@@ -1,16 +1,16 @@
 /* SIDEBAR TAGS */
 
-ul.blog-tags {
-  @for $i from 1 to 5 {
-    li:nth-child(#{$i}) a {
-      background-color: nth($blog-colours, $i);
-    }
+.cat-links a, li.cat-item a {
+  display: inline-block;
+  background-color: $button-colour;
+  padding: 0.1em 0.3em;
+  color: white;
+  border-radius: 0.2em;
+}
 
-    li.active:nth-child(#{$i}) a {
-      border-color: nth($blog-colours, $i);
-      border-bottom-color: darken(nth($blog-colours, $i), 15%);
-    }
-  }
+/* News */
+.cat-links a[href$="/news/"], li.cat-item a[href$="/news/"] {
+  background-color: nth($blog-colours, 1);
 }
 
 /* ARTICLES */
@@ -34,30 +34,13 @@ section.blog-articles {
   ul.tags a {
     color: #0f0f0f;
   }
-
-  @for $i from 1 to 5 {
-    article:nth-of-type(#{$i}) {
-      .chapter {
-        background-color: nth($blog-colours, $i);
-      }
-
-      h3:before, h4:before, h5:before {
-        color: nth($blog-colours, $i);
-      }
-
-      ul.tags li a {
-        background-color: scale-color(nth($blog-colours, $i), $lightness: 20%);
-      }
-    }
-  }
 }
 
 /* GALLERY */
 
-div.gallery {
+div.hslice {
   @include outer-container;
   margin-top: 1em;
-  margin-left: 0.4em;
   overflow: hidden;
 
   a {
@@ -71,6 +54,11 @@ div.gallery {
     img {
       width: 100%;
     }
+  }
+
+  span.entry-title {
+    display: block;
+    margin-bottom: 0.5em;
   }
 }
 
