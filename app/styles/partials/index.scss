@@ -352,7 +352,8 @@
   margin: 0 0.3em 1.5em 0.3em;
   clear: both;
 
-  h1, h2, h3, h4, h5, h6 {
+  h1, h2, h3, h4, h5, h6, span {
+    display: block;
     margin-bottom: 1.4em;
     background: white;
     color: gray;

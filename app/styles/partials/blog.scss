@@ -41,6 +41,7 @@ section.blog-articles {
 div.hslice {
   @include outer-container;
   margin-top: 1em;
+  margin-right: 0 !important;
   overflow: hidden;
 
   a {
@@ -55,10 +56,16 @@ div.hslice {
       width: 100%;
     }
   }
+}
 
-  span.entry-title {
-    display: block;
-    margin-bottom: 0.5em;
+aside.left-bar {
+  .line-behind-text {
+    margin-left: 0;
+    margin-right: 0;
+
+    span {
+      font-size: 0.8em;
+    }
   }
 }
 
