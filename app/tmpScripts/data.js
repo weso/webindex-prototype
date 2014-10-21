@@ -13,39 +13,42 @@ var jsonData = {
   data: {
     news: [
       {
+        link: "",
         title: "Visualisation of the Week: Web Index and CIA World Factbook data",
-        content: "Our Visualisation of the Week has been produced by Niels Doekemeijer and Jeff Smits.  It is an interactive visualisation..."
+        content: "Our Visualisation of the Week has been produced by Niels Doekemeijer and Jeff Smits.  It is an interactive visualisation. Our Visualisation of the Week has been produced by Niels Doekemeijer and Jeff Smits.  It is an interactive visualisation"
       },
       {
+        link: "",
         title: "Visualisation of the Week – The Free Internet Equation",
-        content: "Our visualisation this week was produced by Diana Suvorova and is called 'The Free Internet..."
+        content: "Our visualisation this week was produced by Diana Suvorova and is called 'The Free Internet. Our Visualisation of the Week has been produced by Niels Doekemeijer and Jeff Smits.  It is an interactive visualisation"
       },
       {
+        link: "",
         title: "Visualisation of the Week – Cube Stacks",
-        content: "Over the coming weeks, the World Wide Web Foundation will be showcasing some of the clever, colourful and stylish visualisations..."
+        content: "Over the coming weeks, the World Wide Web Foundation will be showcasing some of the clever, colourful and stylish visualisations. Our Visualisation of the Week has been produced by Niels Doekemeijer and Jeff Smits.  It is an interactive visualisation"
       }
     ],
     tweets: [
       {
         account: {
-          name: "webfoundation",
-          displayName: "The Web Foundation",
+          name: "The Web Foundation",
+          displayName: "webfoundation",
           img: "https://pbs.twimg.com/profile_images/528558100/WebFoundationCircles_bigger.PNG"
         },
         content: 'The Internet as en engine of growth? See how our <a href="">#WebIndex</a> ranks your country. <a href="">http://thewebindex.org</a>  <a href="">#IGF2014</a>'
       },
       {
         account: {
-          name: "webfoundation",
-          displayName: "The Web Foundation",
+          name: "The Web Foundation",
+          displayName: "webfoundation",
           img: "https://pbs.twimg.com/profile_images/528558100/WebFoundationCircles_bigger.PNG"
         },
         content: '<a href="">@bantigito</a>: 7 of the 10 bottom countries in the <a href="">@webfoundation</a> <a href="">#webindex</a> are African. <a href="">#gdnactivate</a>'
       },
       {
         account: {
-          name: "webfoundation",
-          displayName: "The Web Foundation",
+          name: "The Web Foundation",
+          displayName: "webfoundation",
           img: "https://pbs.twimg.com/profile_images/528558100/WebFoundationCircles_bigger.PNG"
         },
         content: 'The full results and findings of the <a href="">#WebIndex</a> can be accessed on the Web Index Website at <a href="">http://thewebindex.org</a>'

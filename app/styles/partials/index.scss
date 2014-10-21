@@ -165,26 +165,39 @@
         margin-right: 2em;
       }
 
+      i {
+        float: left;
+        margin-right: 0.4em;
+        color: $tweet-bird;
+      }
+
       .name {
         font-weight: bold;
+        display: block;
       }
 
       .account {
         color: #555;
+        display: block;
       }
     }
 
     p.content {
       clear: both;
-      margin: 2em 0 0 0;
+      margin: 1em 0 0 0;
       color: #333;
     }
+  }
+
+  .tweet:hover {
+    background-color: darken($tweet-colour, 10) !important;
   }
 
   .news {
     padding-top: 0.8em;
     padding-bottom: 0.2em;
     text-align: left;
+    position: relative;
 
     header {
       color: #111;
@@ -195,15 +208,52 @@
       margin: 1em 0;
     }
 
+    iframe, img {
+      display: none;
+    }
+
     .read-more {
       color: $news-read-more;
+      background-color: rgba($grid-item-background, 0.7);
       font-size: 1em;
+      position: absolute;
+      width: 100%;
+      max-width: 100%;
+      bottom: 0;
+      left: 0;
+      padding: 1em;
+
+      a {
+        color: white;
+      }
+    }
+
+    a:hover {
+      color: white;
     }
   }
 
-  @for $i from 1 to 4 {
-    .news:nth-of-type(#{$i}) {
-      background-color: nth($news-colour, $i);
+  .news:nth-of-type(1) {
+    background-color: nth($news-colour, 1);
+
+    .read-more {
+      background-color: rgba(nth($news-colour, 1), 0.8);
+    }
+  }
+
+  .news:nth-of-type(3) {
+    background-color: nth($news-colour, 2);
+
+    .read-more {
+      background-color: rgba(nth($news-colour, 2), 0.8);
+    }
+  }
+
+  .news:nth-of-type(5) {
+    background-color: nth($news-colour, 3);
+
+    .read-more {
+      background-color: rgba(nth($news-colour, 3), 0.8);
     }
   }
 }
