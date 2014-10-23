@@ -6,8 +6,8 @@
   .indicator-selector {
     height: 2.5em;
     overflow: hidden;
-    background: url(../images/select_arrow.png) no-repeat right #f1f1f1;
-    border: 0.1em solid #ddd;
+    background: url(../images/select_arrow.png) no-repeat right white;
+    border: 0.1em solid white;
 
     select {
       width: 100%;
@@ -23,6 +23,68 @@
   }
 }
 
+/* SELECT-BOX */
+
+div.select-box {
+  margin: 0.5em 0 !important;
+  padding: 0.5em;
+  background-color: nth($data-select-colours, 1);
+
+  h2 {
+    margin-bottom: 0.5em;
+  }
+
+  div.circle-number {
+    width: 1.6em;
+    height: 1.6em;
+    font-size: 1.8em;
+    margin: 0 auto !important;
+    background-color: darken(nth($data-select-colours, 1), 30%);
+    color: white;
+    text-align: center;
+    border-radius: 50%;
+  }
+}
+
+
+div.select-box.first-box {
+  background-color: nth($data-select-colours, 1);
+
+  div.circle-number {
+    background-color: darken(nth($data-select-colours, 1), 20%);
+  }
+}
+
+div.select-box.second-box {
+  background-color: nth($data-select-colours, 2);
+
+  div.circle-number {
+    background-color: darken(nth($data-select-colours, 2), 20%);
+  }
+}
+
+div.select-box.third-box {
+  background-color: nth($data-select-colours, 3);
+
+  div.circle-number {
+    background-color: darken(nth($data-select-colours, 3), 20%);
+  }
+}
+
+div.down-arrow {
+  text-align: center;
+  margin: 0.3em 0 !important;
+
+  i {
+    line-height: 0.5em;
+    color: $data-select-arrow-colour;
+  }
+}
+
+div.first-box {
+  margin-top: 1.7em !important;
+}
+
 /* TIMELINE */
 
 div.timeline {
@@ -31,7 +93,7 @@ div.timeline {
       width: 1.5em;
       height: 1.5em;
       border: none;
-      background-color: #ccc;
+      background-color: white;
     }
   }
 
@@ -40,11 +102,12 @@ div.timeline {
   }
 
   div.line a.circle:hover, div.selected a.circle {
-    background-color: darken(nth($data-selector-colours, 2), 25%) !important;
+    background-color: darken(nth($data-select-colours, 2), 30%) !important;
   }
 
   div.element a {
     color: #333 !important;
+    font-size: 0.9em;
   }
 }
 
@@ -139,14 +202,14 @@ div.country-box {
     font-size: 0.9em;
 
     a {
-      color: #555;
+      color: #222;
     }
 
     li.selected a {
       color: #111;
 
       div.circle {
-        background-color: darken($data-country-selector-colour, 20%);
+        background-color: darken(nth($data-select-colours, 3), 20%) !important;
         color: white;
       }
     }
@@ -175,7 +238,7 @@ div.country-box {
       width: 1.3em;
       height: 1.3em;
       border: none;
-      background-color: #ccc;
+      background-color: white;
       padding-top: 0;
       line-height: 1.2em;
     }
@@ -259,6 +322,10 @@ table.full-ranking {
     margin-right: 1em;
   }
 
+  tr.hidden {
+    display: none;
+  }
+
   td[data-title="Country"] {
     width: 55%;
   }
@@ -274,7 +341,14 @@ table.full-ranking {
 
     i {
       margin-left: 1em;
-      color: #555;
+    }
+
+    i.red {
+      color: $data-down-arrow;
+    }
+
+    i.green {
+      color: $data-up-arrow;
     }
   }
 
@@ -287,6 +361,16 @@ table.full-ranking {
       .wesCountry-body .signature {
         display: none;
       }
+    }
+  }
+
+  td.view-more {
+    text-align: right;
+    border-bottom: none;
+    padding-bottom: 0;
+
+    a {
+      cursor: pointer;
     }
   }
 }

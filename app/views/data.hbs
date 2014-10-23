@@ -4,22 +4,31 @@
   <div class="container data-container">
     <aside class="left-bar absolute">
       <h1>The Data</h1>
-      <div class="line-behind-text">
+      <div class="select-box first-box">
+        <div class="circle-number">1</div>
         <h2>Select an indicator</h2>
+        <div class="indicator-selector">
+          <select id="indicator-select">
+          </select>
+        </div>
       </div>
-      <div class="indicator-selector">
-        <select id="indicator-select">
-        </select>
+      <div class="down-arrow">
+        <i class="fa fa-angle-down fa-5x"></i>
       </div>
-      <div class="line-behind-text">
+      <div class="select-box second-box">
+        <div class="circle-number">2</div>
         <h2>Choose a year</h2>
+        <div id="timeline"></div>
       </div>
-      <div id="timeline"></div>
-      <div class="line-behind-text">
+      <div class="down-arrow">
+        <i class="fa fa-angle-down fa-5x"></i>
+      </div>
+      <div class="select-box third-box">
+      <div class="circle-number">3</div>
         <h2>Pick the countries</h2>
-      </div>
-      <div class="country-box">
-        <div id="country-selector" class="selector"></div>
+        <div class="country-box">
+          <div id="country-selector" class="selector"></div>
+        </div>
       </div>
       <div class="bar"></div>
     </aside>
@@ -32,7 +41,7 @@
             <h2>Country Ranking</h2>
             <nav class="tabs">
               <ul data-selector="charts-view-map">
-                <li class="selected" data-selector="first"><a href="javascript: void(0)"><span class="circle"></span> map</a></li>
+                <li class="selected" data-selector="first" data-info="map"><a href="javascript: void(0)"><span class="circle"></span> map</a></li>
                 <li data-selector="second"><a href="javascript: void(0)"><span class="circle"></span> by continent</a></li>
               </ul>
             </nav>
@@ -83,12 +92,6 @@
         <div id="table" class="table">
           <header>
             <h2>Extra info</h2>
-            <nav class="tabs">
-              <ul>
-                <li class="selected" data-selector=""><a href="javascript: void(0)"><span class="circle"></span> full ranking</a></li>
-                <li data-selector=""><a href="javascript: void(0)"><span class="circle"></span> by component</a></li>
-              </ul>
-            </nav>
           </header>
           <table id="data-table" class="sortable full-ranking">
             <thead>

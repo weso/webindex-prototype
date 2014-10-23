@@ -6,6 +6,7 @@ global.selections = {
   countries: null,
   year: null
 }
+global.maxTableRows = 7
 
 ################################################################################
 #                                 INIT SELECTORS
@@ -22,7 +23,6 @@ setPageStateful = ->
   wesCountry.stateful.start({
     init: (parameters, selectors) ->
       if settings.debug then console.log "init"
-
     urlChanged: (parameters, selectors) ->
       url = wesCountry.stateful.getFullURL()
 
@@ -50,6 +50,7 @@ setPageStateful = ->
       {
         name: "country",
         selector: global.options.countrySelector,
+        value: "ALL",
         onChange: (index, value, parameters, selectors) ->
           if settings.debug then console.log "country:onChange index:#{index} value:#{value}"
 
@@ -154,12 +155,13 @@ getCountries = () ->
 
   global.options.countrySelector = new wesCountry.selector.basic({
     data: countries,
-    onChange: null,
     selectedItems: ["ALL"],
-    maxSelectedItems: 3,
+    maxSelectedItems: global.maxTableRows,
     labelName: "name",
     valueName: "iso3",
     childrenName: "countries",
+    autoClose: true,
+    selectParentNodes: false,
     beforeChange: (selectedItems, element) ->
       if !global.options.countrySelector
         return
@@ -167,8 +169,9 @@ getCountries = () ->
       if selectedItems.length == 0
         global.options.countrySelector.select("ALL")
       else if element.code == "ALL"
-        global.options.countrySelector.clear()
-        global.options.countrySelector.select("ALL")
+        if selectedItems.length > 1
+          global.options.countrySelector.clear()
+          global.options.countrySelector.select("ALL")
       else if selectedItems.search("ALL") != -1
         global.options.countrySelector.unselect("ALL")
 
@@ -232,6 +235,7 @@ renderCharts = (data) ->
   mapContainer = "#map"
   barContainer = "#country-bars"
   lineContainer = "#lines"
+  rankingContainer = "#ranking"
 
   mapView = "#map-view"
   countryView = "#country-view"
@@ -243,33 +247,20 @@ renderCharts = (data) ->
     document.querySelector(countryView)?.style.display = 'none'
 
     view = document.querySelector(mapView)
-
     # Map
 
-    document.querySelector(mapContainer)?.innerHTML = ""
+    global.observations = data.observations
 
-    map = wesCountry.maps.createMap({
-      container: mapContainer,
-      borderWidth: 1.5,
-      landColour: "#E4E5D8",
-      borderColour: "#E4E5D8",
-      backgroundColour: "none",
-      countries: data.observations,
-      width: view.offsetWidth,
-      height: view.offsetHeight,
-      colourRange: ["#E5E066", "#83C04C", "#1B7A65", "#1B4E5A", "#005475"],
-      onCountryClick: (info) ->
-        code = info.iso3
-        global.options.countrySelector.select(code)
-        global.options.countrySelector.refresh()
-    })
+    renderMap()
 
     # Ranking
+
+    document.querySelector(rankingContainer)?.innerHTML = ""
 
     options = {
       maxRankingRows: 10,
       margins: [4, 12, 1, 0],
-      container: "#ranking",
+      container: rankingContainer,
       chartType: "ranking",
       rankingElementShape: "square",
       rankingDirection: "HigherToLower",
@@ -309,6 +300,8 @@ renderCharts = (data) ->
       width: view.offsetWidth,
       height: view.offsetHeight,
       series: data.secondVisualisation,
+      getName: (serie) ->
+        serie.code
       getElementColour: (options, element, index) ->
         pos = 0
 
@@ -347,7 +340,7 @@ renderCharts = (data) ->
 
         for i in range
           elements[i] = {
-            name: elements[i],
+            code: elements[i],
             continent: elements[i]
           }
 
@@ -439,9 +432,9 @@ renderCharts = (data) ->
       },
       xAxis: {
         title: "",
-        values: data.secondVisualisation.years
+        values: if data.years then data.years else []
       },
-      series: data.secondVisualisation.series,
+      series: if data.secondVisualisation then data.secondVisualisation else [],
       width: view.offsetWidth,
       height: view.offsetHeight,
       valueOnItem: {
@@ -450,12 +443,15 @@ renderCharts = (data) ->
       vertex: {
         show: true
       },
+      serieColours: ["#FF9900", "#E3493B", "#23B5AF", "#336699", "#FF6600", "#931FC4", "#795227"]
       events: {
         onclick: (info) ->
           code = info["data-code"]
           global.options.countrySelector.select(code)
           global.options.countrySelector.refresh()
-      }
+      },
+      getName: (serie) ->
+        serie.area_name
     }
 
     wesCountry.charts.chart options
@@ -523,7 +519,29 @@ renderCharts = (data) ->
     window.addEventListener("resize", resize, false)
 
   resize = ->
-    createMap()
+    #createMap()
+
+renderMap = ->
+  mapContainer = "#map"
+  document.querySelector(mapContainer)?.innerHTML = ""
+
+  map = wesCountry.maps.createMap({
+    container: mapContainer,
+    borderWidth: 1.5,
+    landColour: "#E4E5D8",
+    borderColour: "#E4E5D8",
+    backgroundColour: "none",
+    countries: global.observations,
+    #width: view.offsetWidth,
+    #height: view.offsetHeight,
+    colourRange: ["#E5E066", "#83C04C", "#1B7A65", "#1B4E5A", "#005475"],
+    onCountryClick: (info) ->
+      code = info.iso3
+      global.options.countrySelector.select(code)
+      global.options.countrySelector.refresh()
+    getValue: (country) ->
+      if country.values || country.values.length > 0 then country.values[0] else country.value
+  })
 
 renderTable = (data) ->
   observations = data.observations
@@ -535,12 +553,15 @@ renderTable = (data) ->
 
   table.innerHTML = ""
 
+  count = 0
+
   for observation in observations
+    count++
     code = observation.code
     name = observation.area_name
-    rank = observation.rank
-    value = observation.value
-    previousValue = observation["previous-value"]
+    rank = if observation.rank then observation.rank else count
+    value = if observation.values && observation.values.length > 0 then observation.values[0] else observation.value
+    previousValue = observation.previous_value
     tendency = 0
 
     if previousValue
@@ -548,6 +569,9 @@ renderTable = (data) ->
 
     tr = document.createElement "tr"
     table.appendChild tr
+
+    if count > global.maxTableRows
+      tr.className = "to-hide"
 
     td = document.createElement "td"
     td.setAttribute("data-title", "Country")
@@ -578,10 +602,10 @@ renderTable = (data) ->
     className = "fa fa-minus"
 
     if tendency == 1
-      className = "fa fa-long-arrow-up"
+      className = "fa fa-long-arrow-up green"
 
     if tendency == -1
-      className = "fa fa-long-arrow-down"
+      className = "fa fa-long-arrow-down red"
 
     i.className = className
     td.appendChild i
@@ -597,7 +621,45 @@ renderTable = (data) ->
 
     renderTendencyChart("#g#{id}", byCountry[code], years)
 
+  if count > global.maxTableRows
+    rows = table.querySelectorAll(".to-hide")
+
+    for row in rows
+      row.className = "hidden"
+
+    tr = document.createElement "tr"
+    table.appendChild tr
+
+    td = document.createElement "td"
+    td.colSpan = 4
+    td.className = "view-more"
+    tr.appendChild td
+
+    a = document.createElement "a"
+    a.innerHTML = "View more"
+    td.appendChild a
+
+    a.collapsed = true
+    a.table = table
+
+    a.onclick = ->
+      collapsed = this.collapsed
+      this.collapsed = !collapsed
+
+      className = if collapsed then "hidden" else "shown"
+      newClassName = if collapsed then "shown" else "hidden"
+      text = if collapsed then "View less" else "View more"
+
+      this.innerHTML = text
+
+      rows = this.table.querySelectorAll("tr.#{className}")
+
+      for row in rows
+        row.className = newClassName
+
 renderTendencyChart = (container, serie, years) ->
+  if !serie then return
+
   options = {
     container: container,
     chartType: "line",
@@ -634,8 +696,8 @@ renderBoxes = (data) ->
   higher = data.higher.area
   lower = data.lower.area
 
-  document.getElementById("mean")?.innerHTML = mean
-  document.getElementById("median")?.innerHTML = median
+  document.getElementById("mean")?.innerHTML = mean.toFixed(2);
+  document.getElementById("median")?.innerHTML = median.toFixed(2);
   document.getElementById("higher")?.innerHTML = higher
   document.getElementById("lower")?.innerHTML = lower
 
@@ -676,3 +738,8 @@ for li in chartSelectors
 
     for block in blocks
       block.style.display = 'block'
+
+    info = this.getAttribute("data-info")
+
+    if info && info == "map"
+      renderMap()
