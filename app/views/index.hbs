@@ -5,27 +5,27 @@
   </div>
   {{>by}}
   <div class="container">
-    <h1 class="text-center">MEASURING THE WEB'S GLOBAL IMPACT</h1>
-    <h2>Designed and produced by the World Wide Web Foundation, the Web Index is the world's first multi-dimensional measure of the Web's growth, utility and impact on people and nations. <a href="" class="read-more">Read more <span>&#187;</span></a></h2>
+    <h1 class="text-center">{{#labels}}{{home_title}}{{/labels}}</h1>
+    <h2>{{#labels}}{{home_description}}{{/labels}} <a href="{{host}}/about" class="read-more">{{#labels}}{{read_more}}{{/labels}} <span>&#187;</span></a></h2>
     <!-- GRID -->
     <div class="grid-items">
       <a href="javascript:void(0)" class="grid-item">
         <i class="fa fa-play fa-3x"></i>
-        <h1>Watch the video</h1>
+        <h1>{{#labels}}{{home_video_box}}{{/labels}}</h1>
       </a>
       <a href="javascript:void(0)" class="grid-item">
         <i class="fa fa-file-text fa-3x"></i>
-        <h1>Read the report</h1>
+        <h1>{{#labels}}{{home_report_box}}{{/labels}}</h1>
       </a>
       <a href="javascript:void(0)" class="grid-item">
         <i class="fa fa-line-chart fa-3x"></i>
-        <h1>Explore the data</h1>
+        <h1>{{#labels}}{{home_data_box}}{{/labels}}</h1>
       </a>
       <div class="grid-item grid-item-full">
         <img src="{{path}}/images/illustrations/illustration1.svg" />
       </div>
       <div class="grid-item grid-item-big grid-item-taller">
-        <h1>Top Five</h1>
+        <h1>{{#labels}}{{home_top_five}}{{/labels}}</h1>
         <table class="ranking sortable">
           <thead>
             <tr class="sorter" role="row">
@@ -91,19 +91,19 @@
           </tbody>
         </table>
         <p class="text-right">
-          <a href="" class="read-more">View the full list <span>&#187;</span></a>
+          <a href="{{host}}/data" class="read-more">{{#labels}}{{home_view_full_list}}{{/labels}} <span>&#187;</span></a>
         </p>
       </div>
       <div class="grid-item grid-item-taller follow-box">
         <div class="sign-up">
           <i class="fa fa-envelope fa-3x"></i>
-          <h1>Follow us</h1>
-          <p>Be the first to hear about exciting program developments and events. Enter your email.</p>
+          <h1>{{#labels}}{{home_follow_us}}{{/labels}}</h1>
+          <p>{{#labels}}{{home_follow_us_description}}{{/labels}}</p>
           <div class="newsletter-bar">
             <div class="newsletter-and-submit">
               <input type="email" placeholder="Enter your email account" />
               <button type="submit">
-                Sign up
+                {{#labels}}{{home_sign_up}}{{/labels}}
               </button>
             </div>
           </div>
@@ -117,7 +117,7 @@
         </div>
       </div>
       <div class="line-behind-text news-header">
-        <h3>News</h3>
+        <h3>{{#labels}}{{home_news}}{{/labels}}</h3>
       </div>
       <div>
         <div class="grid-item news">
@@ -128,7 +128,7 @@
             {{{data.news.0.content}}}
           </p>
           <p class="text-right read-more">
-            <a href="{{data.news.0.link}}">READ MORE <span>&#187;</span></a>
+            <a href="{{data.news.0.link}}">{{#labels}}{{read_more}}{{/labels}} <span>&#187;</span></a>
           </p>
         </div>
         <div class="grid-item tweet">
@@ -155,7 +155,7 @@
             {{{data.news.1.content}}}
           </p>
           <p class="text-right read-more">
-            <a href="{{data.news.1.link}}">READ MORE <span>&#187;</span></a>
+            <a href="{{data.news.1.link}}">{{#labels}}{{read_more}}{{/labels}} <span>&#187;</span></a>
           </p>
         </div>
         <div class="grid-item tweet">
@@ -182,7 +182,7 @@
             {{{data.news.2.content}}}
           </p>
           <p class="text-right read-more">
-            <a href="{{data.news.2.link}}">READ MORE <span>&#187;</span></a>
+            <a href="{{data.news.2.link}}">{{#labels}}{{read_more}}{{/labels}} <span>&#187;</span></a>
           </p>
         </div>
         <div class="grid-item tweet">

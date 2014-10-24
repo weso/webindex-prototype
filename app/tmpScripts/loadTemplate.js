@@ -3,14 +3,32 @@ function loadTemplate(name, templateData) {
   var template;
   var path = 'views/' + name + '.hbs'
 
+  loadLabels("en", function(labels) {
+    templateData.labels = labels;
+
+    $.ajax({
+        url: path,
+        cache: true,
+        success: function (data) {
+          source = "{{>header}}" + data + "{{>footer}}";
+          template = Handlebars.compile(source);
+
+          $('#content').html(template(templateData));
+        }
+    });
+  });
+};
+
+function loadLabels(language, callback) {
+  var source;
+  var template;
+  var path = 'lang/' + language + '.json'
+
   $.ajax({
       url: path,
       cache: true,
       success: function (data) {
-        source = "{{>header}}" + data + "{{>footer}}";
-        template = Handlebars.compile(source);
-
-        $('#content').html(template(templateData));
+        callback(data)
       }
   });
 };

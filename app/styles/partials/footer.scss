@@ -56,9 +56,10 @@
 
   li h3 {
     color: $footer-color;
-    font-size: 1em;
+    font-size: 0.9em;
     font-weight: 800;
     margin-bottom: .4em;
+    text-transform: uppercase;
   }
 
   hr {
@@ -72,7 +73,7 @@
     font-size: .9em;
     line-height: 1.5em;
     margin: auto;
-    max-width: 39em;
+    max-width: 40em;
     text-align: center;
   }
 

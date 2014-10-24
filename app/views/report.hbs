@@ -2,7 +2,7 @@
   {{>by}}
   <div class="container">
     <aside class="left-bar">
-      <h1>The Report</h1>
+      <h1>{{#labels}}{{report_title}}{{/labels}}</h1>
       <nav>
         <ul class="tags report-tags">
           {{{data.report.ul}}}
@@ -11,7 +11,7 @@
     </aside>
     <section class="right-content report-articles">
       <p class="text-right">
-        <a href=""><i class="fa fa-file-pdf-o"></i> Download the PDF version</a>
+        <a href="{{#labels}}{{report_download_link}}{{/labels}}"><i class="fa fa-file-pdf-o"></i> {{#labels}}{{report_download_label}}{{/labels}}</a>
       </p>
       {{{data.report.content}}}
     </section>
