@@ -1,27 +1,64 @@
 /* SIDEBAR TAGS */
 
+.sidebar-title:nth-child(2) {
+  display: none;
+}
+
+ul {
+  overflow: hidden;
+}
+
+li.cat-item {
+  float: left;
+  margin-right: 0.2em;
+  font-size: 1em;
+}
+
+.cat-links {
+  color: transparent;
+  text-align: right;
+}
+
 .cat-links a, li.cat-item a {
   display: inline-block;
   background-color: $button-colour;
   padding: 0.1em 0.3em;
   color: white;
   border-radius: 0.2em;
+  margin-bottom: 0.6em;
 }
 
-/* News */
-.cat-links a[href$="/news/"], li.cat-item a[href$="/news/"] {
+/* Gallery */
+.cat-links a[href$="/gallery/"], li.cat-item a[href$="/gallery/"] {
   background-color: nth($blog-colours, 1);
+}
+
+/* In the press */
+.cat-links a[href$="/in-the-press/"], li.cat-item a[href$="/in-the-press/"] {
+  background-color: nth($blog-colours, 2);
+}
+
+/* Latest news */
+.cat-links a[href$="/latest-news/"], li.cat-item a[href$="/latest-news/"] {
+  background-color: nth($blog-colours, 3);
+}
+
+/* News media */
+.cat-links a[href$="/news-media/"], li.cat-item a[href$="/news-media/"] {
+  background-color: nth($blog-colours, 4);
 }
 
 /* ARTICLES */
 
 section.blog-articles {
   article {
-    margin-bottom: 2em;
+    margin-bottom: 2.5em;
+    padding-bottom: 0.5em;
+    border-bottom: 0.1em solid #ccc;
   }
 
   h1 {
-    font-size: 2.6em;
+    font-size: 2.2em;
 
     a {
       color: #333;
@@ -34,13 +71,30 @@ section.blog-articles {
   ul.tags a {
     color: #0f0f0f;
   }
+
+  .cat-links a {
+    font-size: 0.8em;
+  }
+
+  .entry-meta {
+    margin-bottom: 1em;
+  }
+
+  figure {
+    margin: 0;
+    width: 100% !important;
+
+    img {
+      width: 100%;
+      height: auto;
+    }
+  }
 }
 
 /* GALLERY */
 
 div.hslice {
   @include outer-container;
-  margin-top: 1em;
   margin-right: 0 !important;
   overflow: hidden;
 

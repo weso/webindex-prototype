@@ -37,14 +37,16 @@
   $grid-item-border-size: 1em;
   $grid-item-columns: 4;
   $grid-item-big-columns: 8;
+  $grid-item-full: 12;
   $grid-item-color: #333;
+  $grid-item-height-small: 11em;
   $grid-item-height: 14em;
 
   @include clearfix;
 
   .grid-item {
     @include transition (all 0.2s ease-in-out);
-    height: $grid-item-height;
+    height: $grid-item-height-small;
     background: $grid-item-background;
     width: 100%;
     overflow: hidden;
@@ -95,7 +97,7 @@
 
   .grid-item h1 {
       color: white;
-      font-size: 1.3em;
+      font-size: 1.5em;
       margin-bottom: .4em;
       text-align: center;
     }
@@ -119,6 +121,12 @@
     }
   }
 
+  .grid-item-full {
+    @include grid-item-columns($grid-item-full);
+    height: auto;
+    padding: 0;
+  }
+
   .grid-item-taller {
     height: $grid-item-height * 2;
   }
@@ -136,6 +144,7 @@
     padding-bottom: 0.2em;
     background-color: $tweet-colour !important;
     text-align: left;
+    height: $grid-item-height;
 
     header {
       a {
@@ -182,6 +191,7 @@
     padding-bottom: 0.2em;
     text-align: left;
     position: relative;
+    height: $grid-item-height;
 
     header {
       color: #111;
@@ -268,8 +278,47 @@
 /* NEWSLETTER BAR */
 
 div.follow-box {
+  background-color: white !important;
+  padding: 0 !important;
+
   h1 {
-    margin-bottom: 1em !important;
+
+  }
+
+  div.sign-up {
+    background-color: nth($grid-item-colors, 6);
+    padding: 2em 1em 1em 1em;
+    margin-bottom: 1em;
+  }
+
+  div.links {
+    background-color: $grid-item-share;
+    padding: 2em 1em;
+
+    ul {
+      display: inline-block;
+      overflow: hidden;
+      width: 80%;
+      margin-top: 0.2em;
+    }
+
+    li {
+      float: left;
+      width: 33.33%;
+      text-align: center;
+
+      i {
+        color: $tweet-bird !important;
+      }
+    }
+
+    li:first-child {
+      text-align: left;
+    }
+
+    li:last-child {
+      text-align: right;
+    }
   }
 }
 
@@ -317,28 +366,6 @@ div.follow-box {
     }
   }
 }
- /* LINKS */
-
- .links ul {
-   display: inline-block;
-   overflow: hidden;
-   margin-top: 2.5em;
-   width: 70%;
- }
-
- .links li {
-   float: left;
-   width: 33.33%;
-   text-align: center;
- }
-
- .links li:first-child {
-   text-align: left;
- }
-
- .links li:last-child {
-   text-align: right;
- }
 
  /* RANKING */
 
