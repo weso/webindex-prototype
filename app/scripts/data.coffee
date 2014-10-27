@@ -39,7 +39,7 @@ setPageStateful = ->
           updateInfo()
       },
       {
-        name: "year",
+        name: "time",
         selector: global.options.timeline,
         onChange: (index, value, parameters, selectors) ->
           if settings.debug then console.log "year:onChange index:#{index} value:#{value}"
