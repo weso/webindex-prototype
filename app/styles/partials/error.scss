@@ -1,0 +1,134 @@
+div.water {
+  width: 100%;
+  min-height: 4em;
+  background-color: $error-water-colour;
+  background-repeat: repeat-x;
+  background-image: url(../images/error_water.png)
+}
+
+div.error-links {
+  background-color: $error-water-colour;
+  color: white;
+  padding-top: 1em;
+  padding-bottom: 3em;
+
+  p {
+    font-size: 1.4em;
+    margin-top: 1em;
+
+    a {
+      color: white;
+      text-decoration: underline;
+    }
+
+    a:hover {
+      color: #222;
+    }
+  }
+}
+
+div.lighthouse {
+  text-align: center;
+  margin-bottom: -4em;
+  position: relative;
+
+  h1 {
+    text-align: center;
+    margin-top: 1.2em;
+  }
+
+  img {
+    max-width: 90%;
+  }
+
+  img.clouds {
+    position: absolute;
+    z-index: -1;
+    top: 20%;
+    left: 10%;
+  }
+
+  img.clouds-right {
+    right: 10%;
+    left: auto;
+  }
+}
+
+.error-search-bar {
+  $search-bar-border-color: $base-border-color;
+  $search-bar-border: 1px solid $search-bar-border-color;
+  $search-bar-background: lighten($search-bar-border-color, 10);
+
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  margin-top: 1em;
+
+  input {
+    @include box-sizing(border-box);
+    display: block;
+  }
+
+  div.search-and-submit {
+    position: relative;
+
+    input[type=search] {
+      @include appearance(none);
+      width: 100%;
+      padding: .8em .8em;
+      font-size: 1.1em;
+      font-style: italic;
+      border-radius: $base-border-radius;
+      margin: 0;
+    }
+
+    button[type=submit] {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      outline: none;
+      margin: 0;
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+      padding: 5px 10px;
+      background-color: $error-button;
+
+      img {
+        height: 12px;
+        opacity: .7;
+      }
+    }
+  }
+}
+
+div.error-footer {
+  background-color: $error-water-colour;
+
+  .footer {
+      background-image: none;
+      background-color: transparent;
+      margin-top: 0;
+
+      li a {
+        color: white;
+      }
+
+      i {
+        color: $error-water-colour;
+      }
+
+      p {
+        color: white;
+
+        a {
+          color: white;
+          text-decoration: underline;
+        }
+
+        a:hover {
+          color: #222;
+        }
+      }
+  }
+}

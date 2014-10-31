@@ -77,9 +77,9 @@ getIndicators = () ->
 
   if @settings.server.method is "JSONP"
     url += "?callback=getIndicatorsCallback"
-    processJSONP(url)
+    @processJSONP(url)
   else
-    processAJAX(url, getYearsCallback)
+    @processAJAX(url, getYearsCallback)
 
 @getIndicatorsCallback = (data) ->
   indicators = []
@@ -109,9 +109,9 @@ getYears = () ->
 
   if @settings.server.method is "JSONP"
     url += "?callback=getYearsCallback"
-    processJSONP(url)
+    @processJSONP(url)
   else
-    processAJAX(url, getYearsCallback)
+    @processAJAX(url, getYearsCallback)
 
 @getYearsCallback = (data) ->
   years = []
@@ -137,9 +137,9 @@ getCountries = () ->
 
   if @settings.server.method is "JSONP"
     url += "?callback=getCountriesCallback"
-    processJSONP(url)
+    @processJSONP(url)
   else
-    processAJAX(url, getYearsCallback)
+    @processAJAX(url, getYearsCallback)
 
 @getCountriesCallback = (data) ->
   countries = []
@@ -194,9 +194,9 @@ getObservations = (indicator, countries, year) ->
 
   if @settings.server.method is "JSONP"
     url += "?callback=getObservationsCallback"
-    processJSONP(url)
+    @processJSONP(url)
   else
-    processAJAX(url, getObservationsCallback)
+    @processAJAX(url, getObservationsCallback)
 
 @getObservationsCallback = (data) ->
   if !data.success then return
@@ -205,18 +205,6 @@ getObservations = (indicator, countries, year) ->
   renderCharts(observations)
   renderTable(observations)
   renderBoxes(observations)
-
-# Auxiliary communication functions
-
-processJSONP = (url) ->
-  head = document.head
-  script = document.createElement("script")
-
-  script.setAttribute("src", url)
-  head.appendChild(script)
-  head.removeChild(script)
-
-processAJAX = (url, callback) ->
 
 # Update information
 
@@ -400,7 +388,7 @@ renderCharts = (data) ->
                                                     "#E5E066"
                                                     ], data.bars.length),
       getElementColour: (options, element, index) ->
-        rank = if element.rank then element.rank - 1 else index
+        rank = if element.ranked then element.ranked - 1 else index
         rank = if rank >= 0 and rank < options.serieColours.length then rank else index
 
         colour = options.serieColours[rank]
@@ -414,7 +402,15 @@ renderCharts = (data) ->
           code = info["data-code"]
           global.options.countrySelector.select(code)
           global.options.countrySelector.refresh()
+        onmouseover: (info) ->
+          country = info["data-area_name"]
+          value = info["data-values"]
+          ranked = info["data-ranked"]
+          text = "#{country}: #{value} ##{ranked}"
+          wesCountry.charts.showTooltip(text, info.event)
       }
+      getName: (serie) ->
+        serie["short_name"]
     }
 
     wesCountry.charts.chart options
@@ -506,6 +502,13 @@ renderCharts = (data) ->
         code = info["data-code"]
         global.options.countrySelector.select(code)
         global.options.countrySelector.refresh()
+      onmouseover: (info) ->
+        country = info["data-area_name"]
+        value = info["data-values"]
+        ranked = info["data-ranked"]
+
+        text = "#{country}: #{value} ##{ranked}"
+        wesCountry.charts.showTooltip(text, info.event)
     }
   }
 
@@ -541,6 +544,25 @@ renderMap = ->
       global.options.countrySelector.refresh()
     getValue: (country) ->
       if country.values || country.values.length > 0 then country.values[0] else country.value
+    onCountryOver: (info, visor) ->
+      if (visor)
+        visor.innerHTML = '';
+
+        name = document.createElement('span')
+        name.innerHTML = info.name
+        name.className = 'name'
+        visor.appendChild(name)
+
+        value = document.createElement('span')
+        value.innerHTML = info.value
+        value.className = 'value'
+        visor.appendChild(value)
+
+        ranked = document.createElement('span')
+        rankedValue = if info["data-ranked"] then "#" + info["data-ranked"] else ""
+        ranked.innerHTML = rankedValue
+        ranked.className = 'value'
+        visor.appendChild(ranked)
   })
 
 renderTable = (data) ->
@@ -559,16 +581,21 @@ renderTable = (data) ->
     count++
     code = observation.code
     name = observation.area_name
-    rank = if observation.rank then observation.rank else count
+    rank = if observation.ranked then observation.ranked else count
     value = if observation.values && observation.values.length > 0 then observation.values[0] else observation.value
     previousValue = observation.previous_value
-    tendency = 0
 
     if previousValue
       tendency = previousValue.tendency
 
     tr = document.createElement "tr"
     table.appendChild tr
+
+    tr.code = code
+    tr.onclick = ->
+      code = this.code
+      global.options.countrySelector.select(code)
+      global.options.countrySelector.refresh()
 
     if count > global.maxTableRows
       tr.className = "to-hide"
@@ -596,30 +623,7 @@ renderTable = (data) ->
     td.setAttribute("data-title", "Value")
     tr.appendChild td
 
-    td.innerHTML = value
-
-    i = document.createElement "i"
-    className = "fa fa-minus"
-
-    if tendency == 1
-      className = "fa fa-long-arrow-up green"
-
-    if tendency == -1
-      className = "fa fa-long-arrow-down red"
-
-    i.className = className
-    td.appendChild i
-
-    td = document.createElement "td"
-    td.setAttribute("data-title", "Tendency")
-    tr.appendChild td
-
-    div = document.createElement "div"
-    id = wesCountry.guid()
-    div.id = "g#{id}"
-    td.appendChild div
-
-    renderTendencyChart("#g#{id}", byCountry[code], years)
+    td.innerHTML = value.toFixed(2)
 
   if count > global.maxTableRows
     rows = table.querySelectorAll(".to-hide")

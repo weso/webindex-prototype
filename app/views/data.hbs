@@ -5,6 +5,7 @@
     <aside class="left-bar absolute">
       <h1>{{#labels}}{{data_title}}{{/labels}}</h1>
       <div class="select-box first-box">
+        <abbr class="help" title='{{#labels}}{{data_indicator_help}}{{/labels}}'>?</abbr>
         <div class="circle-number">1</div>
         <h2>{{#labels}}{{data_select_indicator}}{{/labels}}</h2>
         <div class="indicator-selector">
@@ -16,6 +17,7 @@
         <i class="fa fa-angle-down fa-5x"></i>
       </div>
       <div class="select-box second-box">
+        <abbr class="help" title='{{#labels}}{{data_year_help}}{{/labels}}'>?</abbr>
         <div class="circle-number">2</div>
         <h2>{{#labels}}{{data_choose_year}}{{/labels}}</h2>
         <div id="timeline"></div>
@@ -24,7 +26,8 @@
         <i class="fa fa-angle-down fa-5x"></i>
       </div>
       <div class="select-box third-box">
-      <div class="circle-number">3</div>
+        <abbr class="help" title='{{#labels}}{{data_country_help}}{{/labels}}'>?</abbr>
+        <div class="circle-number">3</div>
         <h2>{{#labels}}{{data_pick_countries}}{{/labels}}</h2>
         <div class="country-box">
           <div id="country-selector" class="selector"></div>
@@ -34,6 +37,7 @@
     </aside>
     <section class="right-content about-articles">
       <p><span>{{#labels}}{{data_description}}{{/labels}}</p>
+      <p class="downloads"><a href="{{host}}/downloads"><i class="fa fa-download"></i> {{#labels}}{{data_download}}{{/labels}}</a></p>
 
       <div class="data-box map-box">
         <div id="map-view">
@@ -48,7 +52,7 @@
           </header>
           <div class="charts-view charts-view-map">
             <div id="map" class="map first"></div>
-            <div id="ranking" class="map second"></div>
+            <div id="ranking" class="map second notranslate"></div>
           </div>
         </div>
         <div id="country-view">
@@ -61,13 +65,14 @@
               </ul>
             </nav>
           </header>
+          <abbr class="help" title='{{#labels}}{{data_charts_help}}{{/labels}}'>?</abbr>
           <div class="charts-view charts-view-country">
-            <div id="country-bars" class="map first"></div>
-            <div id="lines" class="map second"></div>
+            <div id="country-bars" class="map first notranslate"></div>
+            <div id="lines" class="map second notranslate"></div>
           </div>
         </div>
         <hr />
-        <div id="bars" class="bars"></div>
+        <div id="bars" class="bars notranslate"></div>
       </div>
 
       <div class="middle-section">
@@ -99,7 +104,6 @@
               <th data-sort-type="text">{{#labels}}{{data_country}}{{/labels}}</th>
               <th data-sort-type="number">{{#labels}}{{data_rank}}{{/labels}}</th>
               <th data-sort-type="number">{{#labels}}{{data_value}}{{/labels}}</th>
-              <th>{{#labels}}{{data_tendency}}{{/labels}}</th>
             </thead>
             <tbody></tbody>
           </table>

@@ -1,7 +1,129 @@
 <main class="content">
-  <div class="visualisations">
-    <img src="{{path}}/images/arrow-left.png" class="arrow-left" />
-    <img src="{{path}}/images/arrow-right.png" class="arrow-right" />
+  <input type="hidden" id="path" value="{{path}}" />
+  <div class="accordion">
+    <article id="tab1">
+      <header>
+        <h1><strong class="percentage"></strong></h1>
+        <h2>privacy & surveillance</h2>
+      </header>
+      <footer>
+        <i class="fa fa-unlock-alt fa-3x"></i>
+      </footer>
+      <section class="extra">
+        <div class="extra-container-padding">
+          <svg id="world" width="280" height="280" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events" version="1.1" baseProfile="full">
+            <defs>
+              <pattern id="world" patternUnits="userSpaceOnUse" width="100%" height="100%">
+                  <image xlink:href="{{path}}/images/accordion/world.png" x="0" y="0" width="100%" height="100%" />
+              </pattern>
+              <pattern id="world-gray" patternUnits="userSpaceOnUse" width="100%" height="100%">
+                  <image xlink:href="{{path}}/images/accordion/world_gray.png" x="0" y="0" width="100%" height="100%" />
+              </pattern>
+              <filter id="shadow">
+                <feGaussianBlur in="SourceAlpha" stdDeviation="3"/>
+                <feOffset dx="0" dy="0" result="offsetblur"/>
+                <feFlood flood-color="#333"/>
+                <feComposite in2="offsetblur" operator="in"/>
+                <feMerge>
+                <feMergeNode/>
+                <feMergeNode in="SourceGraphic"/>
+                </feMerge>
+              </filter>
+            </defs>
+            <circle cx="50%" cy="50%" r="50%" stroke="black" stroke-width="0" fill="url(#world-gray)" />
+            <path id="world-pie" d=""
+              fill="url(#world)"
+              filter="url(#shadow)" />
+          </svg>
+        </div>
+        <footer>
+          <h1><strong class="percentage"></strong> of countries</h1>
+          <h2>do not have effective laws and practices to</h2>
+          <h2>protect the privacy of online communications</h2>
+        </footer>
+      </section>
+    </article>
+    <article id="tab2">
+      <header>
+        <h1><strong class="percentage"></strong></h1>
+        <h2>gender</h2>
+      </header>
+      <footer>
+        <i class="fa fa-female fa-3x"></i>
+      </footer>
+      <section class="extra">
+        <div class="infographic-percentage extra-container-padding">
+          <img class="infographic-icon" alt="" src="{{path}}/images/accordion/woman.svg" />
+        </div>
+        <footer>
+          <h1><strong class="percentage"></strong> of countries</h1>
+          <h2>are not doing enough to stop online</h2>
+          <h2>violence against women</h2>
+        </footer>
+      </section>
+    </article>
+    <article id="tab3">
+      <header>
+        <h1><strong class="percentage"></strong></h1>
+        <h2>empowerment</h2>
+      </header>
+      <footer>
+        <i class="fa fa-trophy fa-3x"></i>
+      </footer>
+      <section class="extra">
+        <div id="infographic-circles" class="infographic-circles extra-container-padding">
+          <div class="model">
+            <svg width="40" height="40">
+              <defs>
+            		<filter id="innerShadow" x0="-50%" y0="-50%" width="200%" height="200%">
+            			<feGaussianBlur in="SourceAlpha" stdDeviation="3" result="blur"></feGaussianBlur>
+            			<feOffset dy="2" dx="3"></feOffset>
+            			<feComposite in2="SourceAlpha" operator="arithmetic" k2="-1" k3="1" result="shadowDiff"></feComposite>
+
+                       <feFlood flood-color="#0F5460" flood-opacity="0.75"></feFlood>
+            		   <feComposite in2="shadowDiff" operator="in"></feComposite>
+            		   <feComposite in2="SourceGraphic" operator="over" result="firstfilter"></feComposite>
+
+
+                      <feGaussianBlur in="firstfilter" stdDeviation="3" result="blur2"></feGaussianBlur>
+            			<feOffset dy="-2" dx="-3"></feOffset>
+            			<feComposite in2="firstfilter" operator="arithmetic" k2="-1" k3="1" result="shadowDiff"></feComposite>
+
+                       <feFlood flood-color="#0F5460" flood-opacity="0.75"></feFlood>
+            			<feComposite in2="shadowDiff" operator="in"></feComposite>
+            			<feComposite in2="firstfilter" operator="over"></feComposite>
+            		</filter>
+            	</defs>
+              <circle cx="50%" cy="50%" r="50%" fill="#01839A" filter="url(#innerShadow)"/>
+              <circle cx="50%" cy="50%" r="50%" fill="#FACC2E" class="circle" />
+            </svg>
+            <p class="country"></p>
+          </div>
+        </div>
+        <footer>
+          <h1><strong class="percentage"></strong> of countries</h1>
+          <h2>do not have effective laws and practices to</h2>
+          <h2>protect the privacy of online communications</h2>
+        </footer>
+      </section>
+    </article>
+    <article id="tab4">
+      <header>
+        <h1><strong class="percentage"></strong></h1>
+        <h2>net neutrality</h2>
+      </header>
+      <footer>
+        <i class="fa fa-university fa-3x"></i>
+      </footer>
+      <section class="extra">
+        <div id="map" class="extra-container"></div>
+        <footer>
+          <h1><strong class="percentage"></strong> of countries</h1>
+          <h2>do not have effective laws and practices to</h2>
+          <h2>protect the privacy of online communications</h2>
+        </footer>
+      </section>
+    </article>
   </div>
   {{>by}}
   <div class="container">
@@ -9,20 +131,27 @@
     <h2>{{#labels}}{{home_description}}{{/labels}} <a href="{{host}}/about" class="read-more">{{#labels}}{{read_more}}{{/labels}} <span>&#187;</span></a></h2>
     <!-- GRID -->
     <div class="grid-items">
-      <a href="javascript:void(0)" class="grid-item">
+      <a href="{{host}}/about" class="grid-item">
         <i class="fa fa-play fa-3x"></i>
         <h1>{{#labels}}{{home_video_box}}{{/labels}}</h1>
       </a>
-      <a href="javascript:void(0)" class="grid-item">
+      <a href="{{host}}/report" class="grid-item">
         <i class="fa fa-file-text fa-3x"></i>
         <h1>{{#labels}}{{home_report_box}}{{/labels}}</h1>
       </a>
-      <a href="javascript:void(0)" class="grid-item">
+      <a href="{{host}}/data" class="grid-item">
         <i class="fa fa-line-chart fa-3x"></i>
         <h1>{{#labels}}{{home_data_box}}{{/labels}}</h1>
       </a>
-      <div class="grid-item grid-item-full">
-        <img src="{{path}}/images/illustrations/illustration1.svg" />
+      <div class="grid-item grid-item-full illustrations">
+        <section class="illustration-buttons">
+          <a href="javascript:void(0);" class="circle selected">1</a>
+          <a href="javascript:void(0);" class="circle">2</a>
+          <a href="javascript:void(0);" class="circle">3</a>
+        </section>
+        <img src="{{path}}/images/illustrations/illustration1.png" />
+        <img src="{{path}}/images/illustrations/illustration2.png" />
+        <img src="{{path}}/images/illustrations/illustration3.png" />
       </div>
       <div class="grid-item grid-item-big grid-item-taller">
         <h1>{{#labels}}{{home_top_five}}{{/labels}}</h1>
@@ -32,62 +161,12 @@
               <th data-sort-type="text"><a class="empty" data-type="sorter"></a>Country</th>
               <th data-sort-type="number"><a class="empty" data-type="sorter"></a>Rank</th>
               <th data-sort-type="number"><a class="empty" data-type="sorter"></a>Universal Access</th>
-              <th data-sort-type="number"><a class="empty" data-type="sorter"></a>Relevant Content</th>
-              <th data-sort-type="number"><a class="empty" data-type="sorter"></a>Freedom And Openness</th>
-              <th data-sort-type="number"><a class="empty" data-type="sorter"></a>Impact And Empowerment</th>
+              <th data-sort-type="number"><a class="empty" data-type="sorter"></a>Relevant content & use</th>
+              <th data-sort-type="number"><a class="empty" data-type="sorter"></a>Freedom & Openness</th>
+              <th data-sort-type="number"><a class="empty" data-type="sorter"></a>Empowerment</th>
             </tr>
           </thead>
           <tbody>
-            <tr>
-    	         <td>
-                 <img class="flag" src="{{path}}/images/flags/SWE.png"> <p class="country-name">Sweden</p>
-               </td>
-               <td data-title="Rank">1</td>
-               <td data-title="Universal Access">94.4</td>
-               <td data-title="Relevant Content">90.1</td>
-               <td data-title="Freedom And Openness">86.1</td>
-               <td data-title="Impact And Empowerment">92.2</td>
-            </tr>
-            <tr>
-  	           <td>
-                 <img class="flag" src="{{path}}/images/flags/NOR.png"> <p class="country-name">Norway</p>
-               </td>
-               <td data-title="Rank">2</td>
-               <td data-title="Universal Access">87.6</td>
-               <td data-title="Relevant Content">90.2</td>
-               <td data-title="Freedom And Openness">100.0</td>
-               <td data-title="Impact And Empowerment">77.8</td>
-            </tr>
-            <tr>
-  	           <td class="column-1 ">
-                 <img class="flag" src="{{path}}/images/flags/GBR.png"> <p class="country-name">United Kingdom Of Great Britain And Northern Ireland</p>
-               </td>
-               <td data-title="Rank">3</td>
-               <td data-title="Universal Access">86.2</td>
-               <td data-title="Relevant Content">100.0</td>
-               <td data-title="Freedom And Openness">73.5</td>
-               <td data-title="Impact And Empowerment">87.3</td>
-            </tr>
-            <tr>
-               <td class="column-1 ">
-                 <img class="flag" src="{{path}}/images/flags/USA.png"> <p class="country-name">United States of America</p>
-               </td>
-               <td data-title="Rank">4</td>
-               <td data-title="Universal Access">86.2</td>
-               <td data-title="Relevant Content">100.0</td>
-               <td data-title="Freedom And Openness">73.5</td>
-               <td data-title="Impact And Empowerment">87.3</td>
-            </tr>
-            <tr>
-               <td class="column-1 ">
-                 <img class="flag" src="{{path}}/images/flags/NZL.png"> <p class="country-name">New Zealand</p>
-               </td>
-               <td data-title="Rank">5</td>
-               <td data-title="Universal Access">86.2</td>
-               <td data-title="Relevant Content">100.0</td>
-               <td data-title="Freedom And Openness">73.5</td>
-               <td data-title="Impact And Empowerment">87.3</td>
-            </tr>
           </tbody>
         </table>
         <p class="text-right">
@@ -110,7 +189,7 @@
         </div>
         <div class="links">
           <ul>
-            <li><a href="#rss"><i class="fa fa-rss fa-3x"></i></a></li>
+            <li><a href="{{host}}/feed"><i class="fa fa-rss fa-3x"></i></a></li>
             <li><a href="https://twitter.com/webfoundation"><i class="fa fa-twitter fa-3x"></i></a></li>
             <li><a href="https://www.facebook.com/webfoundation"><i class="fa fa-facebook fa-3x"></i></a></li>
           </ul>
@@ -204,4 +283,6 @@
       </div>
     </div>
   </div>
+  <script src="{{path}}/scripts/settings.js"></script>
+  <script src="{{path}}/scripts/index.js"></script>
 </main>

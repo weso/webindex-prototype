@@ -12,7 +12,7 @@
 
       var view = window.location.hash ? window.location.hash.substring(1) : 'index';
 
-      loadPartials(['by', 'header', 'header', 'footer'], function() {
+      loadPartials(['by', 'head', 'header', 'header', 'footer'], function() {
         loadTemplate(view, jsonData);
       });
     </script>

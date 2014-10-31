@@ -63,6 +63,10 @@ module.exports = function (grunt) {
       	files: ['<%= config.app %>/scripts/libraries/{,*/}*'],
       	tasks: ['newer:copy:libraries']
       },
+      visualisations: {
+      	files: ['<%= config.app %>/visualisations/{,*/}*'],
+      	tasks: ['newer:copy:visualisations']
+      },
       lang: {
       	files: ['<%= config.app %>/lang/{,*/}*'],
       	tasks: ['newer:copy:lang']
@@ -151,6 +155,7 @@ module.exports = function (grunt) {
         '<%= config.app %>/scripts/{,*/}*.js',
         '!<%= config.app %>/scripts/vendor/*',
         '!<%= config.app %>/scripts/libraries/*',
+        '!<%= config.app %>/visualisations/*',
         'test/spec/{,*/}*.js'
       ]
     },
@@ -327,7 +332,7 @@ module.exports = function (grunt) {
         files: [{
           expand: true,
           cwd: '<%= config.dist %>',
-          src: ['{,*/}*.{html,hbs}', 'views/partials/*.hbs'],
+          src: ['{,*/}*.{html}'],
           dest: '<%= config.dist %>'
         }]
       }
@@ -413,6 +418,22 @@ module.exports = function (grunt) {
 			src: '{,*/}*'
         }]
 	  },
+	  visualisations: {
+      	files: [{
+			expand: true,
+			dot: true,
+			cwd: '<%= config.app %>/visualisations',
+			dest: '.tmp/visualisations/',
+			src: '{,*/}*'
+		},
+		{
+			expand: true,
+			dot: true,
+			cwd: '<%= config.app %>/visualisations',
+			dest: '<%= config.dist %>/visualisations/',
+			src: '{,*/}*'
+        }]
+	  },
       fonts: {
       	files: [{
 			expand: true,
@@ -467,6 +488,7 @@ module.exports = function (grunt) {
         'copy:views',
         'copy:fonts',
         'copy:libraries',
+        'copy:visualisations',
         'copy:lang',
       ],
       test: [
@@ -475,6 +497,7 @@ module.exports = function (grunt) {
         'copy:views',
         'copy:fonts',
         'copy:libraries',
+        'copy:visualisations',
         'copy:lang',
       ],
       dist: [
@@ -484,6 +507,7 @@ module.exports = function (grunt) {
         'copy:views',
         'copy:fonts',
         'copy:libraries',
+        'copy:visualisations',
         'copy:lang',
         'imagemin',
         'svgmin'

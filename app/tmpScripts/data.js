@@ -1,8 +1,14 @@
 var jsonData = {
+  title: "The Web Index",
   navigation: '<div class="menu-menu-1-container"><ul id="menu-menu-1" class="menu"><li id="menu-item-46" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-46"><a href="#">Home</a></li><li id="menu-item-50" class="menu-item menu-item-type-post_type menu-item-object-page current-menu-item page_item page-item-21 current_page_item menu-item-50"><a href="#report/">Report</a></li><li id="menu-item-48" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-48"><a href="#data/">Data</a></li><li id="menu-item-49" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-49"><a href="#media-centre/">Blog</a></li><li id="menu-item-49" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-49"><a href="#media-centre/">Media centre</a></li><li id="menu-item-47" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-47"><a href="#about/">About</a></li></ul></div>',
   path: ".",
   host: ".",
   data: {
+    visualisations: [
+    {"id":"gender","page":"","position":"","caption":"Gender","url":"\/visualisations\/gender.html"},
+    {"id":"neutrality","page":"","position":"","caption":"Neutrality","url":"\/visualisations\/neutrality.html"},
+    {"id":"censorship","page":"","position":"","caption":"Censorship","url":"\/visualisations\/censorship.html"}
+    ],
     news: [
       {
         link: "",

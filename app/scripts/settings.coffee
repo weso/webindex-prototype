@@ -4,7 +4,7 @@ settings = {
     elapseTimeout: 100,
     server: {
       method: "JSONP",
-      url: "http://localhost:5000"
+      url: "http://intertip.webfoundation.org/api"
     }
   },
   release: {
@@ -19,3 +19,15 @@ settings = {
 }
 
 @settings = settings[settings.mode]
+
+# Auxiliary communication functions
+
+@processJSONP = (url) ->
+  head = document.head
+  script = document.createElement("script")
+
+  script.setAttribute("src", url)
+  head.appendChild(script)
+  head.removeChild(script)
+
+@processAJAX = (url, callback) ->

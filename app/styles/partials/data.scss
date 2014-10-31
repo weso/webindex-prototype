@@ -1,6 +1,32 @@
+/* SIGNATURE */
+
+.signature {
+  display: none;
+}
+
+.visor {
+  color: #222 !important;
+}
+
 .data-container{
+  .help {
+      float: right;
+      width: 1.5em;
+      height: 1.5em;
+      text-align: center;
+      display: inline-block;
+      padding: 0.2em;
+      background-color: white;
+      border-radius: 50%;
+      cursor: pointer;
+  }
+
   h1 {
     margin-bottom: 0 !important;
+  }
+
+  .downloads {
+    text-align: right;
   }
 
   .indicator-selector {
@@ -306,7 +332,7 @@ nav.tabs {
   }
 }
 
-.charts-view div:nth-child(2) {
+.charts-view > div:nth-child(2) {
   display: none;
 }
 
@@ -322,8 +348,21 @@ table.full-ranking {
     margin-right: 1em;
   }
 
+  tr {
+    cursor: pointer;
+  }
+
+  tr:hover {
+    background-color: #bbb;
+  }
+
   tr.hidden {
     display: none;
+  }
+
+  td {
+    padding-left: 0.4em;
+    padding-right: 0.4em;
   }
 
   td[data-title="Country"] {
