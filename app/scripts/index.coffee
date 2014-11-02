@@ -58,23 +58,28 @@ for tab in _accordionTabs
 
 for i in [0..accordionTabs.length - 1]
   tab = accordionTabs[i]
-  tab.closedPosition = tab.style.right
+  tab.closedPosition = tab.position = if i == accordionTabs.length - 1 then 0 else 100 - (i + 1) * 10  #tab.style.right
   tab.openedPosition = (accordionTabs.length - 1 - i) * 10
   tab.opened = i == accordionTabs.length - 1
+  tab.touchable = !tab.opened
+  tab.touched = false
   tab.tabs = accordionTabs
   tab.index = i
 
   tab.close = ->
-    this.style.right = this.closedPosition
+    this.style.right = this.closedPosition + "%"
     this.opened = false
+    this.position = this.closedPosition
 
   tab.closeWithIncrement = (increment) ->
     this.style.right = increment + "%"
     this.opened = false
+    this.position = increment
 
   tab.open = ->
     this.style.right = this.openedPosition + "%"
     this.opened = true
+    this.position = this.openedPosition
 
   tab.onclick = ->
     if this.opened
@@ -113,6 +118,23 @@ for i in [0..accordionTabs.length - 1]
     if this.openedTimes == 1 && accordionCallbacks[this.index]
       accordionCallbacks[this.index].call()
 
+  tab.onmouseenter = ->
+    if !this.touchable || this.touched || this.opened
+      return
+
+    this.touched = true
+
+    position = this.position - 2
+    this.style.right = position + "%"
+
+  tab.onmouseout = ->
+    if !this.touched
+      return
+
+    this.touched = false
+
+    this.style.right = this.position + "%"
+
 # Animate numbers
 interval = setInterval( ->
     for i in [0..4]
@@ -124,10 +146,11 @@ interval = setInterval( ->
 
 # Download data
 
-indicator1 = "INDEX"
-indicator2 = "INDEX"
-indicator3 = "INDEX"
-indicator4 = "INDEX"
+indicator1 = "P7"
+indicator2 = "S3"
+indicator3 = "S12"
+indicator4 = "P9"
+
 host = @settings.server.url
 url = "#{host}/home/#{indicator1}/#{indicator2}/#{indicator3}/#{indicator4}"
 
@@ -230,7 +253,8 @@ renderNeutralityTab = (countries, percentage) ->
     zoom: false,
     backgroundColour: "transparent",
     landColour: "#FC6A74",
-    colourRange: ["#E98990", "#C20310"]
+    colourRange: ["#E98990", "#C20310"],
+    onCountryClick: (info) ->
   })
 
   paths = document.querySelectorAll("#map .land-group")

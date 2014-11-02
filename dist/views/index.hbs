@@ -1,9 +1,9 @@
 <main class="content">
   <input type="hidden" id="path" value="{{path}}" />
   <div class="accordion">
-    <article>
+    <article id="tab1">
       <header>
-        <h1>63%</h1>
+        <h1><strong class="percentage"></strong></h1>
         <h2>privacy & surveillance</h2>
       </header>
       <footer>
@@ -11,41 +11,30 @@
       </footer>
       <section class="extra">
         <div class="extra-container-padding">
-          <svg id="world" width="280" height="280">
+          <svg id="world" width="280" height="280" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events" version="1.1" baseProfile="full">
             <defs>
-              <pattern id="world" patternUnits="userSpaceOnUse" width="100%" height="100%">
+              <pattern id="world-colour" patternUnits="userSpaceOnUse" width="100%" height="100%">
                   <image xlink:href="{{path}}/images/accordion/world.png" x="0" y="0" width="100%" height="100%" />
               </pattern>
               <pattern id="world-gray" patternUnits="userSpaceOnUse" width="100%" height="100%">
                   <image xlink:href="{{path}}/images/accordion/world_gray.png" x="0" y="0" width="100%" height="100%" />
               </pattern>
-              <filter id="shadow">
-                <feGaussianBlur in="SourceAlpha" stdDeviation="3"/>
-                <feOffset dx="0" dy="0" result="offsetblur"/>
-                <feFlood flood-color="#333"/>
-                <feComposite in2="offsetblur" operator="in"/>
-                <feMerge>
-                <feMergeNode/>
-                <feMergeNode in="SourceGraphic"/>
-                </feMerge>
-              </filter>
             </defs>
             <circle cx="50%" cy="50%" r="50%" stroke="black" stroke-width="0" fill="url(#world-gray)" />
             <path id="world-pie" d=""
-              fill="url(#world)"
-              filter="url(#shadow)" />
+              fill="url(#world-colour)" />
           </svg>
         </div>
         <footer>
-          <h1><strong>63%</strong> of countries</h1>
+          <h1><strong class="percentage"></strong> of countries</h1>
           <h2>do not have effective laws and practices to</h2>
           <h2>protect the privacy of online communications</h2>
         </footer>
       </section>
     </article>
-    <article>
+    <article id="tab2">
       <header>
-        <h1>65%</h1>
+        <h1><strong class="percentage"></strong></h1>
         <h2>gender</h2>
       </header>
       <footer>
@@ -56,60 +45,42 @@
           <img class="infographic-icon" alt="" src="{{path}}/images/accordion/woman.svg" />
         </div>
         <footer>
-          <h1><strong>65%</strong> of countries</h1>
+          <h1><strong class="percentage"></strong> of countries</h1>
           <h2>are not doing enough to stop online</h2>
           <h2>violence against women</h2>
         </footer>
       </section>
     </article>
-    <article>
+    <article id="tab3">
       <header>
-        <h1>60%</h1>
+        <h1><strong class="percentage"></strong></h1>
         <h2>empowerment</h2>
       </header>
       <footer>
         <i class="fa fa-trophy fa-3x"></i>
       </footer>
       <section class="extra">
-        <div id="infographic-circles" class="infographic-circles extra-container-padding">
+        <div id="infographic-circles" class="infographic-circles extra-container-padding notranslate">
           <div class="model">
-            <svg width="40" height="40">
+            <svg width="40" height="40" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events" version="1.1" baseProfile="full">
               <defs>
-            		<filter id="innerShadow" x0="-50%" y0="-50%" width="200%" height="200%">
-            			<feGaussianBlur in="SourceAlpha" stdDeviation="3" result="blur"></feGaussianBlur>
-            			<feOffset dy="2" dx="3"></feOffset>
-            			<feComposite in2="SourceAlpha" operator="arithmetic" k2="-1" k3="1" result="shadowDiff"></feComposite>
-
-                       <feFlood flood-color="#0F5460" flood-opacity="0.75"></feFlood>
-            		   <feComposite in2="shadowDiff" operator="in"></feComposite>
-            		   <feComposite in2="SourceGraphic" operator="over" result="firstfilter"></feComposite>
-
-
-                      <feGaussianBlur in="firstfilter" stdDeviation="3" result="blur2"></feGaussianBlur>
-            			<feOffset dy="-2" dx="-3"></feOffset>
-            			<feComposite in2="firstfilter" operator="arithmetic" k2="-1" k3="1" result="shadowDiff"></feComposite>
-
-                       <feFlood flood-color="#0F5460" flood-opacity="0.75"></feFlood>
-            			<feComposite in2="shadowDiff" operator="in"></feComposite>
-            			<feComposite in2="firstfilter" operator="over"></feComposite>
-            		</filter>
             	</defs>
-              <circle cx="50%" cy="50%" r="50%" fill="#01839A" filter="url(#innerShadow)"/>
+              <circle cx="50%" cy="50%" r="50%" fill="#00758A" />
               <circle cx="50%" cy="50%" r="50%" fill="#FACC2E" class="circle" />
             </svg>
             <p class="country"></p>
           </div>
         </div>
         <footer>
-          <h1><strong>60%</strong> of countries</h1>
+          <h1><strong class="percentage"></strong> of countries</h1>
           <h2>do not have effective laws and practices to</h2>
           <h2>protect the privacy of online communications</h2>
         </footer>
       </section>
     </article>
-    <article>
+    <article id="tab4">
       <header>
-        <h1>43%</h1>
+        <h1><strong class="percentage"></strong></h1>
         <h2>net neutrality</h2>
       </header>
       <footer>
@@ -118,7 +89,7 @@
       <section class="extra">
         <div id="map" class="extra-container"></div>
         <footer>
-          <h1><strong>43%</strong> of countries</h1>
+          <h1><strong class="percentage"></strong> of countries</h1>
           <h2>do not have effective laws and practices to</h2>
           <h2>protect the privacy of online communications</h2>
         </footer>

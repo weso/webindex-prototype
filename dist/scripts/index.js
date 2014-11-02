@@ -88,22 +88,27 @@
 
   for (i = _k = 0, _ref = accordionTabs.length - 1; 0 <= _ref ? _k <= _ref : _k >= _ref; i = 0 <= _ref ? ++_k : --_k) {
     tab = accordionTabs[i];
-    tab.closedPosition = tab.style.right;
+    tab.closedPosition = tab.position = i === accordionTabs.length - 1 ? 0 : 100 - (i + 1) * 10;
     tab.openedPosition = (accordionTabs.length - 1 - i) * 10;
     tab.opened = i === accordionTabs.length - 1;
+    tab.touchable = !tab.opened;
+    tab.touched = false;
     tab.tabs = accordionTabs;
     tab.index = i;
     tab.close = function() {
-      this.style.right = this.closedPosition;
-      return this.opened = false;
+      this.style.right = this.closedPosition + "%";
+      this.opened = false;
+      return this.position = this.closedPosition;
     };
     tab.closeWithIncrement = function(increment) {
       this.style.right = increment + "%";
-      return this.opened = false;
+      this.opened = false;
+      return this.position = increment;
     };
     tab.open = function() {
       this.style.right = this.openedPosition + "%";
-      return this.opened = true;
+      this.opened = true;
+      return this.position = this.openedPosition;
     };
     tab.onclick = function() {
       var increment, position, tabs, _l, _ref1;
@@ -134,6 +139,22 @@
         return accordionCallbacks[this.index].call();
       }
     };
+    tab.onmouseenter = function() {
+      var position;
+      if (!this.touchable || this.touched || this.opened) {
+        return;
+      }
+      this.touched = true;
+      position = this.position - 2;
+      return this.style.right = position + "%";
+    };
+    tab.onmouseout = function() {
+      if (!this.touched) {
+        return;
+      }
+      this.touched = false;
+      return this.style.right = this.position + "%";
+    };
   }
 
   interval = setInterval(function() {
@@ -147,13 +168,13 @@
     return _results;
   }, 40);
 
-  indicator1 = "INDEX";
+  indicator1 = "P7";
 
-  indicator2 = "INDEX";
+  indicator2 = "S3";
 
-  indicator3 = "INDEX";
+  indicator3 = "S12";
 
-  indicator4 = "INDEX";
+  indicator4 = "P9";
 
   host = this.settings.server.url;
 
@@ -245,7 +266,8 @@
       zoom: false,
       backgroundColour: "transparent",
       landColour: "#FC6A74",
-      colourRange: ["#E98990", "#C20310"]
+      colourRange: ["#E98990", "#C20310"],
+      onCountryClick: function(info) {}
     });
     paths = document.querySelectorAll("#map .land-group");
     _results = [];

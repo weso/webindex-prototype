@@ -1,7 +1,7 @@
 /* SIDEBAR TAGS */
 
 ul.about-tags {
-  @for $i from 1 to 5 {
+  @for $i from 1 to 8 {
     li:nth-child(#{$i}) a {
       background-color: nth($about-colours, $i);
     }
@@ -16,11 +16,38 @@ ul.about-tags {
 /* ARTICLES */
 
 section.about-articles {
-  ul.tags a {
-    color: #0f0f0f;
+  ul.images {
+    padding: 0;
+    overflow: hidden;
+    margin-bottom: 2em;
+
+    li {
+      float: left;
+      width: 33%;
+      text-align: center;
+
+      div {
+        line-height: 15em;
+      }
+
+      img {
+        width: 90%;
+        height: auto;
+        vertical-align:middle;
+      }
+    }
   }
 
-  @for $i from 1 to 5 {
+  ul.tags {
+    margin-bottom: 0.5em;
+
+    a {
+      color: #0f0f0f;
+      font-family: Raleway, sans-serif;
+    }
+  }
+
+  @for $i from 1 to 8 {
     article:nth-of-type(#{$i}) {
       .chapter {
         background-color: nth($about-colours, $i);

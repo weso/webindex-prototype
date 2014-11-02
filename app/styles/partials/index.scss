@@ -68,6 +68,7 @@ div.accordion {
     overflow: hidden;
     transition-property: right;
     transition-duration: 0.5s;
+    cursor: pointer;
 
     section.extra {
       position: relative;
