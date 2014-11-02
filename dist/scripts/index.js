@@ -1,5 +1,5 @@
 (function() {
-  var accordionCallbacks, accordionTabs, button, buttons, count, empowermentCallback, genderTabCallback, host, i, illustrations, indicator1, indicator2, indicator3, indicator4, interval, neutralityTabCallback, renderEmpowermentTab, renderGenderTab, renderNeutralityTab, renderPrivacyTab, renderTable, setPercentage, tab, url, _accordionTabs, _i, _j, _k, _len, _len1, _ref;
+  var accordionCallbacks, accordionTabs, button, buttons, count, empowermentCallback, genderTabCallback, host, i, illustrations, indicator1, indicator2, indicator3, indicator4, interval, neutralityTabCallback, renderEmpowermentTab, renderGenderTab, renderNeutralityTab, renderPrivacyTab, renderTable, setPercentage, tab, url, _accordion, _accordionTabs, _i, _j, _k, _len, _len1, _ref;
 
   illustrations = document.querySelectorAll(".illustrations img");
 
@@ -77,6 +77,8 @@
 
   _accordionTabs = document.querySelectorAll(".accordion article");
 
+  _accordion = document.querySelector(".accordion");
+
   accordionTabs = [];
 
   accordionCallbacks = [neutralityTabCallback, empowermentCallback, genderTabCallback, null];
@@ -88,33 +90,59 @@
 
   for (i = _k = 0, _ref = accordionTabs.length - 1; 0 <= _ref ? _k <= _ref : _k >= _ref; i = 0 <= _ref ? ++_k : --_k) {
     tab = accordionTabs[i];
-    tab.closedPosition = tab.position = i === accordionTabs.length - 1 ? 0 : 100 - (i + 1) * 10;
+    tab.closedPosition = i === accordionTabs.length - 1 ? 0 : 100 - (i + 1) * 10;
     tab.openedPosition = (accordionTabs.length - 1 - i) * 10;
-    tab.opened = i === accordionTabs.length - 1;
-    tab.touchable = !tab.opened;
     tab.touched = false;
     tab.tabs = accordionTabs;
     tab.index = i;
+    tab.position = void 0;
+    tab.opened = void 0;
+    tab.touchable = void 0;
     tab.close = function() {
-      this.style.right = this.closedPosition + "%";
+      this.setPosition(this.closedPosition + "%");
       this.opened = false;
       return this.position = this.closedPosition;
     };
     tab.closeWithIncrement = function(increment) {
-      this.style.right = increment + "%";
+      this.setPosition(increment + "%");
       this.opened = false;
       return this.position = increment;
     };
     tab.open = function() {
-      this.style.right = this.openedPosition + "%";
+      this.setPosition(this.openedPosition + "%");
       this.opened = true;
       return this.position = this.openedPosition;
     };
+    tab.isMobile = function() {
+      return this.offsetWidth === _accordion.offsetWidth;
+    };
+    tab.setPosition = function(value) {
+      if (this.isMobile()) {
+        return this.style.bottom = value;
+      } else {
+        return this.style.right = value;
+      }
+    };
+    tab.setInitialPosition = function() {
+      if (this.position === void 0) {
+        if (this.isMobile()) {
+          this.opened = this.index === 0;
+          this.position = this.openedPosition;
+          return this.touchable = this.index !== accordionTabs.length - 1;
+        } else {
+          this.opened = this.index === accordionTabs.length - 1;
+          this.position = this.opened ? this.openedPosition : this.closedPosition;
+          return this.touchable = !this.opened;
+        }
+      }
+    };
     tab.onclick = function() {
       var increment, position, tabs, _l, _ref1;
+      this.setInitialPosition();
       if (this.opened) {
         return;
       }
+      this.isMobile();
       if (!this.openedTimes) {
         this.openedTimes = 0;
       }
@@ -141,19 +169,21 @@
     };
     tab.onmouseenter = function() {
       var position;
+      this.setInitialPosition();
       if (!this.touchable || this.touched || this.opened) {
         return;
       }
       this.touched = true;
       position = this.position - 2;
-      return this.style.right = position + "%";
+      return this.setPosition(position + "%");
     };
     tab.onmouseout = function() {
+      this.setInitialPosition();
       if (!this.touched) {
         return;
       }
       this.touched = false;
-      return this.style.right = this.position + "%";
+      return this.setPosition(this.position + "%");
     };
   }
 

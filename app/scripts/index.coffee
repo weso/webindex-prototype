@@ -49,6 +49,7 @@ empowermentCallback = ->
         increment(circle, inc, inc * 30)
 
 _accordionTabs = document.querySelectorAll(".accordion article")
+_accordion = document.querySelector(".accordion")
 accordionTabs = []
 accordionCallbacks = [neutralityTabCallback, empowermentCallback, genderTabCallback, null]
 
@@ -58,32 +59,66 @@ for tab in _accordionTabs
 
 for i in [0..accordionTabs.length - 1]
   tab = accordionTabs[i]
-  tab.closedPosition = tab.position = if i == accordionTabs.length - 1 then 0 else 100 - (i + 1) * 10  #tab.style.right
+  tab.closedPosition = if i == accordionTabs.length - 1 then 0 else 100 - (i + 1) * 10
   tab.openedPosition = (accordionTabs.length - 1 - i) * 10
-  tab.opened = i == accordionTabs.length - 1
-  tab.touchable = !tab.opened
   tab.touched = false
   tab.tabs = accordionTabs
   tab.index = i
+  tab.position = undefined
+  tab.opened = undefined
+  tab.touchable = undefined
 
   tab.close = ->
-    this.style.right = this.closedPosition + "%"
+    this.setPosition(this.closedPosition + "%")
     this.opened = false
     this.position = this.closedPosition
 
   tab.closeWithIncrement = (increment) ->
-    this.style.right = increment + "%"
+    this.setPosition(increment + "%")
     this.opened = false
     this.position = increment
 
   tab.open = ->
-    this.style.right = this.openedPosition + "%"
+    this.setPosition(this.openedPosition + "%")
     this.opened = true
     this.position = this.openedPosition
 
+  tab.isMobile = ->
+    this.offsetWidth == _accordion.offsetWidth
+
+  #if tab.isMobile()
+  #  tab.opened = i == 0
+  #else
+  #  tab.opened = i == accordionTabs.length - 1
+
+  #tab.touchable = !tab.opened
+  #tab.position = if tab.opened then tab.openedPosition else tab.closedPosition
+
+  tab.setPosition = (value) ->
+    if (this.isMobile())
+      this.style.bottom = value
+    else
+      this.style.right = value
+
+  # Cannot be known at launch
+  tab.setInitialPosition = ->
+    if this.position == undefined
+      if this.isMobile()
+        this.opened = this.index == 0
+        this.position = this.openedPosition # Inverted (first opened)
+        this.touchable = this.index != accordionTabs.length - 1
+      else
+        this.opened = this.index == accordionTabs.length - 1
+        this.position = if this.opened then this.openedPosition else this.closedPosition
+        this.touchable = !this.opened
+
   tab.onclick = ->
+    this.setInitialPosition()
+
     if this.opened
       return
+
+    this.isMobile()
 
     if !this.openedTimes
       this.openedTimes = 0
@@ -119,21 +154,25 @@ for i in [0..accordionTabs.length - 1]
       accordionCallbacks[this.index].call()
 
   tab.onmouseenter = ->
+    this.setInitialPosition()
+
     if !this.touchable || this.touched || this.opened
       return
 
     this.touched = true
 
     position = this.position - 2
-    this.style.right = position + "%"
+    this.setPosition(position + "%")
 
   tab.onmouseout = ->
+    this.setInitialPosition()
+
     if !this.touched
       return
 
     this.touched = false
 
-    this.style.right = this.position + "%"
+    this.setPosition(this.position + "%")
 
 # Animate numbers
 interval = setInterval( ->

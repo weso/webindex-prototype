@@ -52,30 +52,53 @@ div.illustrations {
 
 div.accordion {
   overflow: hidden;
-  height: 32em;
+
+  height: 35em;
+
+  @media (min-width: 64em) {
+    height: 32em;
+  }
+
   font-family: 'Raleway', sans-serif;
   position: relative;
   background-color: nth($home-accordion-colours, 1);
 
   article {
-    height: 32em;
     background-color: #ccc;
-    width: 70%;
+
+    width: 100%;
+    height: 70%;
+
+    @media (min-width: 64em) {
+      width: 70%;
+      height: 100%;
+      top: 0;
+    }
+
     float: left;
     position: absolute;
-    top: 0;
     right: 0;
     overflow: hidden;
-    transition-property: right;
+    transition-property: right, bottom;
     transition-duration: 0.5s;
     cursor: pointer;
 
     section.extra {
-      position: relative;
+      position: absolute;
+      width: 100%;
+      height: 90%;
+      top: 0;
+      left: 0;
       text-align: left;
-      width: 85.7%; /* 90% of 70% is 85.7% */
-      height: 100%;
-      float: left;
+
+      @media (min-width: 64em) {
+        position: relative;
+        top: auto;
+        left: auto;
+        width: 85.7%; /* 90% of 70% is 85.7% */
+        height: 100%;
+        float: left;
+      }
 
       .visor {
         display: none;
@@ -171,27 +194,95 @@ div.accordion {
       }
     }
 
-    header {
-      width: 14.3%; /* 10% of 70% is 14.3% */
-      float: right;
-      padding-left: 1em;
-    }
-
-    > footer {
-      text-align: center;
+    aside {
       position: absolute;
-      right: 0;
+      width: 100%;
+      height: 10%;
       bottom: 0;
-      width: 14.3%; /* 10% of 70% is 14.3% */
-      padding-bottom: 1.5em;
+      z-index: 100;
+
+      @media (min-width: 64em) {
+        position: relative;
+        width: 14.3%; /* 10% of 70% is 14.3% */
+        height: 100%;
+        float: right;
+        bottom: auto;
+        padding-left: 1em;
+        z-index: auto;
+      }
+
+      header {
+        width: 50%;
+        float: left;
+
+        h1 {
+          float: left;
+          padding-left: 0.5em;
+        }
+
+        h2 {
+          float: left;
+          padding-top: 0.4em;
+          margin-left: 0.8em;
+        }
+
+        @media (min-width: 64em) {
+          width: 100%;
+          float: none;
+
+          h1 {
+            float: none;
+            padding-left: 0;
+          }
+
+          h2: {
+            float: none;
+            padding-top: 0;
+            margin-left: 0;
+          }
+        }
+      }
+
+      > footer {
+        text-align: center;
+        position: relative;
+        width: 15%;
+        float: right;
+
+        padding-bottom: 1.5em;
+
+        i {
+          font-size: 1.5em;
+        }
+
+        @media (min-width: 64em) {
+          width: 100%;
+          position: absolute;
+          right: 0;
+          bottom: 0;
+          float: none;
+
+          i {
+            font-size: 3em;
+          }
+        }
+      }
     }
 
     h1 {
       font-family: "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif;
-      font-size: 2.3em;
+      font-size: 1.8em;
       font-weight: 500;
       margin-bottom: 0;
       color: white;
+      padding-left: 0.3em;
+    }
+
+    @media (min-width: 60em) {
+      h1 {
+        font-size: 2.3em;
+        padding-left: 0;
+      }
     }
 
     @media (min-width: 80em) {
@@ -208,8 +299,14 @@ div.accordion {
 
     h2 {
       text-align: left;
-      font-size: 0.7em;
+      font-size: 1em;
       padding-left: 0.2em;
+    }
+
+    @media (min-width: 60em) {
+      h2 {
+        font-size: 0.7em;
+      }
     }
 
     @media (min-width: 80em) {
@@ -222,8 +319,17 @@ div.accordion {
   @for $i from 1 to 5 {
     article:nth-child(#{$i}) {
       background-color: nth($home-accordion-colours, $i);
-      box-shadow: 0.5em 0 0.2em -0.1em darken(nth($home-accordion-colours, if($i == 1, 1, $i - 1)), 10%);
-      right: if($i == 1, 0, 70% + ($i - 2) * 10%);
+      box-shadow: 0 0.5em 0.2em -0.1em darken(nth($home-accordion-colours, if($i == 1, 1, $i - 1)), 10%);
+
+      // Small screen: vertically placed
+      bottom: ($i - 1) * 10%;
+
+      @media (min-width: 64em) {
+        // Big screen: horizontally placed
+        box-shadow: 0.5em 0 0.2em -0.1em darken(nth($home-accordion-colours, if($i == 1, 1, $i - 1)), 10%);
+        bottom: auto;
+        right: if($i == 1, 0, 70% + ($i - 2) * 10%);
+      }
 
       $i-colour: if($i == 1 or $i == 4, 25%, 14%);
 
@@ -518,6 +624,13 @@ div.follow-box {
     background-color: nth($grid-item-colors, 6);
     padding: 2em 1em 1em 1em;
     margin-bottom: 1em;
+    height: 19em;
+
+    p {
+      margin-top: 1em;
+      margin-bottom: 1em;
+      min-height: 4em;
+    }
   }
 
   div.links {
