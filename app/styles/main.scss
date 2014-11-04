@@ -39,6 +39,7 @@ body {
 
 .container {
   @include outer-container;
+  max-width: 80em;
   height: 100%;
   overflow: hidden;
 }
@@ -77,4 +78,9 @@ h2 {
 
 a:hover {
   text-decoration: underline;
+}
+
+ol {
+  list-style: decimal !important;
+  list-style-position: inside !important;
 }

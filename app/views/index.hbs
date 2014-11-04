@@ -1,11 +1,19 @@
 <main class="content">
   <input type="hidden" id="path" value="{{path}}" />
+  <input type="hidden" id="home-header-0-indicator" value="{{data.home-header.0.indicator}}" />
+  <input type="hidden" id="home-header-0-tendency" value="{{data.home-header.0.tendency}}" />
+  <input type="hidden" id="home-header-1-indicator" value="{{data.home-header.1.indicator}}" />
+  <input type="hidden" id="home-header-1-tendency" value="{{data.home-header.1.tendency}}" />
+  <input type="hidden" id="home-header-2-indicator" value="{{data.home-header.2.indicator}}" />
+  <input type="hidden" id="home-header-2-tendency" value="{{data.home-header.2.tendency}}" />
+  <input type="hidden" id="home-header-3-indicator" value="{{data.home-header.3.indicator}}" />
+  <input type="hidden" id="home-header-3-tendency" value="{{data.home-header.3.tendency}}" />
   <div class="accordion">
     <article id="tab1">
       <aside>
         <header>
           <h1><strong class="percentage"></strong></h1>
-          <h2>privacy & surveillance</h2>
+          <h2>{{#labels}}{{home_tab_1}}{{/labels}}</h2>
         </header>
         <footer>
           <i class="fa fa-unlock-alt fa"></i>
@@ -13,7 +21,7 @@
       </aside>
       <section class="extra">
         <div class="extra-container-padding">
-          <svg id="world" width="280" height="280" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events" version="1.1" baseProfile="full">
+          <svg id="world" width="18em" height="18em" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events" version="1.1" baseProfile="full">
             <defs>
               <pattern id="world-colour" patternUnits="userSpaceOnUse" width="100%" height="100%">
                   <image xlink:href="{{path}}/images/accordion/world.png" x="0" y="0" width="100%" height="100%" />
@@ -28,9 +36,9 @@
           </svg>
         </div>
         <footer>
-          <h1><strong class="percentage"></strong> of countries</h1>
-          <h2>do not have effective laws and practices to</h2>
-          <h2>protect the privacy of online communications</h2>
+          <h1><strong class="percentage"></strong> {{#labels}}{{home_of_countries}}{{/labels}}</h1>
+          <h2>{{#labels}}{{home_tab_1_caption_1}}{{/labels}}</h2>
+          <h2>{{#labels}}{{home_tab_1_caption_2}}{{/labels}}</h2>
         </footer>
       </section>
     </article>
@@ -38,7 +46,7 @@
       <aside>
         <header>
           <h1><strong class="percentage"></strong></h1>
-          <h2>gender</h2>
+          <h2>{{#labels}}{{home_tab_2}}{{/labels}}</h2>
         </header>
         <footer>
           <i class="fa fa-female"></i>
@@ -49,9 +57,9 @@
           <img class="infographic-icon" alt="" src="{{path}}/images/accordion/woman.svg" />
         </div>
         <footer>
-          <h1><strong class="percentage"></strong> of countries</h1>
-          <h2>are not doing enough to stop online</h2>
-          <h2>violence against women</h2>
+          <h1><strong class="percentage"></strong> {{#labels}}{{home_of_countries}}{{/labels}}</h1>
+          <h2>{{#labels}}{{home_tab_2_caption_1}}{{/labels}}</h2>
+          <h2>{{#labels}}{{home_tab_2_caption_2}}{{/labels}}</h2>
         </footer>
       </section>
     </article>
@@ -59,7 +67,7 @@
       <aside>
         <header>
           <h1><strong class="percentage"></strong></h1>
-          <h2>empowerment</h2>
+          <h2>{{#labels}}{{home_tab_3}}{{/labels}}</h2>
         </header>
         <footer>
           <i class="fa fa-trophy fa"></i>
@@ -78,9 +86,9 @@
           </div>
         </div>
         <footer>
-          <h1><strong class="percentage"></strong> of countries</h1>
-          <h2>do not have effective laws and practices to</h2>
-          <h2>protect the privacy of online communications</h2>
+          <h1><strong class="percentage"></strong> {{#labels}}{{home_of_countries}}{{/labels}}</h1>
+          <h2>{{#labels}}{{home_tab_3_caption_1}}{{/labels}}</h2>
+          <h2>{{#labels}}{{home_tab_3_caption_2}}{{/labels}}</h2>
         </footer>
       </section>
     </article>
@@ -88,7 +96,7 @@
       <aside>
         <header>
           <h1><strong class="percentage"></strong></h1>
-          <h2>net neutrality</h2>
+          <h2>{{#labels}}{{home_tab_4}}{{/labels}}</h2>
         </header>
         <footer>
           <i class="fa fa-university"></i>
@@ -97,9 +105,9 @@
       <section class="extra">
         <div id="map" class="extra-container"></div>
         <footer>
-          <h1><strong class="percentage"></strong> of countries</h1>
-          <h2>do not have effective laws and practices to</h2>
-          <h2>protect the privacy of online communications</h2>
+          <h1><strong class="percentage"></strong> {{#labels}}{{home_of_countries}}{{/labels}}</h1>
+          <h2>{{#labels}}{{home_tab_4_caption_1}}{{/labels}}</h2>
+          <h2>{{#labels}}{{home_tab_4_caption_2}}{{/labels}}</h2>
         </footer>
       </section>
     </article>
@@ -123,14 +131,41 @@
         <h1>{{#labels}}{{home_data_box}}{{/labels}}</h1>
       </a>
       <div class="grid-item grid-item-full illustrations">
-        <section class="illustration-buttons">
+        <article>
+          <header>
+            <h1><strong>{{#labels}}{{home_illustration_1_title}}{{/labels}}</strong></h1>
+            <h2><strong>{{#labels}}{{home_illustration_1_subtitle}}{{/labels}}</strong></h2>
+            <ol>
+              <li>Denmark</li>
+              <li>Finland</li>
+              <li>Norway</li>
+              <li>United Kingdom</li>
+              <li>Sweden</li>
+            </ol>
+          </header>
+          <img src="{{path}}/images/illustrations/illustration1.png" />
+        </article>
+        <article>
+          <header>
+            <h1>{{#labels}}{{home_illustration_2_title}}{{/labels}}</h1>
+            <h2><strong id="gender-percentage">66%</strong> {{#labels}}{{home_of_countries}}{{/labels}}</h2>
+            <p>{{#labels}}{{home_illustration_2_text}}{{/labels}}</p>
+          </header>
+          <img src="{{path}}/images/illustrations/illustration2.png" />
+        </article>
+        <article>
+          <header>
+            <h1>{{#labels}}{{home_illustration_3_title}}{{/labels}}</h1>
+            <h2><strong id="privacy-percentage">68%</strong> {{#labels}}{{home_of_countries}}{{/labels}}</h2>
+            <p>{{#labels}}{{home_illustration_3_text}}{{/labels}}</p>
+          </header>
+          <img src="{{path}}/images/illustrations/illustration3.png" />
+        </article>
+        <aside class="illustration-buttons">
           <a href="javascript:void(0);" class="circle selected">1</a>
           <a href="javascript:void(0);" class="circle">2</a>
           <a href="javascript:void(0);" class="circle">3</a>
-        </section>
-        <img src="{{path}}/images/illustrations/illustration1.png" />
-        <img src="{{path}}/images/illustrations/illustration2.png" />
-        <img src="{{path}}/images/illustrations/illustration3.png" />
+        </aside>
       </div>
       <div class="grid-item grid-item-big grid-item-taller">
         <h1>{{#labels}}{{home_top_five}}{{/labels}}</h1>
@@ -146,6 +181,19 @@
             </tr>
           </thead>
           <tbody>
+            {{#data.model.values}}
+              <tr class="country-row">
+                <td>
+                  <img class="flag" alt="" src="{{img}}" />
+                  <p class="country-name">{{name}}</p>
+                </td>
+                <td data-title="Rank">{{rank}}</td>
+                <td data-title="Universal Access">{{UNIVERSAL_ACCESS}}</td>
+                <td data-title="Relevant Content">{{RELEVANT_CONTENT_AND_USE}}</td>
+                <td data-title="Freedom And Openness">{{FREEDOM_AND_OPENNESS}}</td>
+                <td data-title="Empowerment">{{EMPOWERMENT}}</td>
+              </tr>
+            {{/data.model.values}}
           </tbody>
         </table>
         <p class="text-right">

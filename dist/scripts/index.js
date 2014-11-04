@@ -1,7 +1,7 @@
 (function() {
-  var accordionCallbacks, accordionTabs, button, buttons, count, empowermentCallback, genderTabCallback, host, i, illustrations, indicator1, indicator2, indicator3, indicator4, interval, neutralityTabCallback, renderEmpowermentTab, renderGenderTab, renderNeutralityTab, renderPrivacyTab, renderTable, setPercentage, tab, url, _accordion, _accordionTabs, _i, _j, _k, _len, _len1, _ref;
+  var accordionCallbacks, accordionTabs, button, buttons, count, empowermentCallback, genderTabCallback, host, illustrations, indicator1, indicator2, indicator3, indicator4, interval, loadAccordionTabs, loadTabsData, neutralityTabCallback, privacyCallback, renderEmpowermentTab, renderGenderTab, renderNeutralityTab, renderPrivacyTab, resize, setPercentage, tab, url, _accordion, _accordionTabs, _i, _j, _len, _len1;
 
-  illustrations = document.querySelectorAll(".illustrations img");
+  illustrations = document.querySelectorAll(".illustrations article");
 
   buttons = document.querySelectorAll(".illustration-buttons a");
 
@@ -75,122 +75,175 @@
     return _results;
   };
 
+  privacyCallback = function() {
+    var angle, cx, cy, increaseAngle, maxAngle, percentage, pie, radius, svg, total, width, x1, y1, _j, _results;
+    svg = document.getElementById("world");
+    pie = document.getElementById("world-pie");
+    percentage = pie.getAttribute("percentage");
+    percentage = parseInt(percentage);
+    width = svg.width.baseVal.value;
+    cx = width / 2;
+    cy = width / 2;
+    radius = width / 2;
+    x1 = width / 2;
+    y1 = 0;
+    total = 100;
+    maxAngle = Math.abs(percentage / total * Math.PI * 2);
+    _results = [];
+    for (angle = _j = 0; _j <= maxAngle; angle = _j += 0.05) {
+      increaseAngle = function(angle, time) {
+        return setTimeout(function() {
+          var big, d, x2, y2;
+          x2 = cx + radius * Math.sin(angle);
+          y2 = cy - radius * Math.cos(angle);
+          big = percentage >= 50 ? 1 : 0;
+          d = "M " + cx + "," + cy + " L " + x1 + "," + y1 + " A " + radius + "," + radius + " 0 " + big + " 1 " + x2 + "," + y2 + " Z";
+          return pie.setAttribute("d", d);
+        }, time);
+      };
+      _results.push(increaseAngle(angle, angle * 150));
+    }
+    return _results;
+  };
+
   _accordionTabs = document.querySelectorAll(".accordion article");
 
   _accordion = document.querySelector(".accordion");
 
   accordionTabs = [];
 
-  accordionCallbacks = [neutralityTabCallback, empowermentCallback, genderTabCallback, null];
+  accordionCallbacks = [neutralityTabCallback, empowermentCallback, genderTabCallback, privacyCallback];
+
+  this.tabsData = null;
 
   for (_j = 0, _len1 = _accordionTabs.length; _j < _len1; _j++) {
     tab = _accordionTabs[_j];
     accordionTabs.unshift(tab);
   }
 
-  for (i = _k = 0, _ref = accordionTabs.length - 1; 0 <= _ref ? _k <= _ref : _k >= _ref; i = 0 <= _ref ? ++_k : --_k) {
-    tab = accordionTabs[i];
-    tab.closedPosition = i === accordionTabs.length - 1 ? 0 : 100 - (i + 1) * 10;
-    tab.openedPosition = (accordionTabs.length - 1 - i) * 10;
-    tab.touched = false;
-    tab.tabs = accordionTabs;
-    tab.index = i;
-    tab.position = void 0;
-    tab.opened = void 0;
-    tab.touchable = void 0;
-    tab.close = function() {
-      this.setPosition(this.closedPosition + "%");
-      this.opened = false;
-      return this.position = this.closedPosition;
-    };
-    tab.closeWithIncrement = function(increment) {
-      this.setPosition(increment + "%");
-      this.opened = false;
-      return this.position = increment;
-    };
-    tab.open = function() {
-      this.setPosition(this.openedPosition + "%");
-      this.opened = true;
-      return this.position = this.openedPosition;
-    };
-    tab.isMobile = function() {
-      return this.offsetWidth === _accordion.offsetWidth;
-    };
-    tab.setPosition = function(value) {
-      if (this.isMobile()) {
-        return this.style.bottom = value;
-      } else {
-        return this.style.right = value;
-      }
-    };
-    tab.setInitialPosition = function() {
-      if (this.position === void 0) {
+  loadAccordionTabs = function() {
+    var i, _k, _ref, _results;
+    _results = [];
+    for (i = _k = 0, _ref = accordionTabs.length - 1; 0 <= _ref ? _k <= _ref : _k >= _ref; i = 0 <= _ref ? ++_k : --_k) {
+      tab = accordionTabs[i];
+      tab.closedPosition = i === accordionTabs.length - 1 ? 0 : 100 - (i + 1) * 10;
+      tab.openedPosition = (accordionTabs.length - 1 - i) * 10;
+      tab.touched = false;
+      tab.tabs = accordionTabs;
+      tab.index = i;
+      tab.position = void 0;
+      tab.opened = void 0;
+      tab.touchable = void 0;
+      tab.close = function() {
+        this.setPosition(this.closedPosition + "%");
+        this.opened = false;
+        return this.position = this.closedPosition;
+      };
+      tab.closeWithIncrement = function(increment) {
+        this.setPosition(increment + "%");
+        this.opened = false;
+        return this.position = increment;
+      };
+      tab.open = function() {
+        this.setPosition(this.openedPosition + "%");
+        this.opened = true;
+        return this.position = this.openedPosition;
+      };
+      tab.isMobile = function() {
+        return this.offsetWidth === _accordion.offsetWidth;
+      };
+      tab.setPosition = function(value) {
         if (this.isMobile()) {
-          this.opened = this.index === 0;
-          this.position = this.openedPosition;
-          return this.touchable = this.index !== accordionTabs.length - 1;
+          return this.style.bottom = value;
         } else {
-          this.opened = this.index === accordionTabs.length - 1;
-          this.position = this.opened ? this.openedPosition : this.closedPosition;
-          return this.touchable = !this.opened;
+          return this.style.right = value;
         }
-      }
-    };
-    tab.onclick = function() {
-      var increment, position, tabs, _l, _ref1;
-      this.setInitialPosition();
-      if (this.opened) {
-        return;
-      }
-      this.isMobile();
-      if (!this.openedTimes) {
-        this.openedTimes = 0;
-      }
-      this.openedTimes = this.openedTimes + 1;
-      tabs = this.tabs;
-      position = tabs.indexOf(this);
-      for (i = _l = 0, _ref1 = position - 1; 0 <= _ref1 ? _l <= _ref1 : _l >= _ref1; i = 0 <= _ref1 ? ++_l : --_l) {
-        if (i >= 0) {
-          tabs[i].close();
+      };
+      tab.setInitialPosition = function() {
+        if (this.position === void 0) {
+          if (this.isMobile()) {
+            this.opened = this.index === 0;
+            this.position = this.openedPosition;
+            return this.touchable = this.index !== accordionTabs.length - 1;
+          } else {
+            this.opened = this.index === accordionTabs.length - 1;
+            this.position = this.opened ? this.openedPosition : this.closedPosition;
+            return this.touchable = !this.opened;
+          }
         }
-      }
-      this.open();
-      increment = this.openedPosition;
-      count = 1;
-      i = position + 1;
-      while (i < tabs.length) {
-        tabs[i].closeWithIncrement(increment - count * 10);
-        count++;
-        i++;
-      }
-      if (this.openedTimes === 1 && accordionCallbacks[this.index]) {
-        return accordionCallbacks[this.index].call();
-      }
-    };
-    tab.onmouseenter = function() {
-      var position;
-      this.setInitialPosition();
-      if (!this.touchable || this.touched || this.opened) {
-        return;
-      }
-      this.touched = true;
-      position = this.position - 2;
-      return this.setPosition(position + "%");
-    };
-    tab.onmouseout = function() {
-      this.setInitialPosition();
-      if (!this.touched) {
-        return;
-      }
-      this.touched = false;
-      return this.setPosition(this.position + "%");
-    };
+      };
+      tab.onclick = function() {
+        var increment, position, tabs, _l, _ref1;
+        this.setInitialPosition();
+        if (this.opened) {
+          return;
+        }
+        this.isMobile();
+        if (!this.openedTimes) {
+          this.openedTimes = 0;
+        }
+        this.openedTimes = this.openedTimes + 1;
+        tabs = this.tabs;
+        position = tabs.indexOf(this);
+        for (i = _l = 0, _ref1 = position - 1; 0 <= _ref1 ? _l <= _ref1 : _l >= _ref1; i = 0 <= _ref1 ? ++_l : --_l) {
+          if (i >= 0) {
+            tabs[i].close();
+          }
+        }
+        this.open();
+        increment = this.openedPosition;
+        count = 1;
+        i = position + 1;
+        while (i < tabs.length) {
+          tabs[i].closeWithIncrement(increment - count * 10);
+          count++;
+          i++;
+        }
+        if (this.openedTimes === 1 && accordionCallbacks[this.index]) {
+          return accordionCallbacks[this.index].call();
+        }
+      };
+      tab.onmouseenter = function() {
+        var position;
+        this.setInitialPosition();
+        if (!this.touchable || this.touched || this.opened) {
+          return;
+        }
+        this.touched = true;
+        position = this.position - 2;
+        return this.setPosition(position + "%");
+      };
+      _results.push(tab.onmouseout = function() {
+        this.setInitialPosition();
+        if (!this.touched) {
+          return;
+        }
+        this.touched = false;
+        return this.setPosition(this.position + "%");
+      });
+    }
+    return _results;
+  };
+
+  loadAccordionTabs();
+
+  resize = function() {
+    loadAccordionTabs();
+    if (this.tabsData) {
+      return loadTabsData(this.tabsData);
+    }
+  };
+
+  if (window.attachEvent) {
+    window.attachEvent("onresize", resize);
+  } else {
+    window.addEventListener("resize", resize, false);
   }
 
   interval = setInterval(function() {
-    var number1, number2, _l, _results;
+    var i, number1, number2, _k, _results;
     _results = [];
-    for (i = _l = 0; _l <= 4; i = ++_l) {
+    for (i = _k = 0; _k <= 4; i = ++_k) {
       number1 = Math.floor(Math.random() * 10);
       number2 = Math.floor(Math.random() * 10);
       _results.push(setPercentage("#tab" + i, "" + number1 + number2));
@@ -198,13 +251,13 @@
     return _results;
   }, 40);
 
-  indicator1 = "P7";
+  indicator1 = document.getElementById("home-header-3-indicator").value;
 
-  indicator2 = "S3";
+  indicator2 = document.getElementById("home-header-2-indicator").value;
 
-  indicator3 = "S12";
+  indicator3 = document.getElementById("home-header-1-indicator").value;
 
-  indicator4 = "P9";
+  indicator4 = document.getElementById("home-header-0-indicator").value;
 
   host = this.settings.server.url;
 
@@ -218,73 +271,37 @@
   }
 
   this.getDataCallback = function(data) {
+    this.tabsData = data;
+    return loadTabsData(data);
+  };
+
+  loadTabsData = function(data) {
     clearInterval(interval);
-    renderTable(data.rankings);
     renderNeutralityTab(data.observations1, data.percentage1);
     renderEmpowermentTab(data.observations2, data.percentage2);
     renderGenderTab(data.percentage3);
-    return renderPrivacyTab(data.percentage4);
-  };
-
-  renderTable = function(data) {
-    var area, country, empowerment, flag, freedom_openness, index, p, path, rank, relevant_content, tableBody, td, tr, universal_access, value, values, _l, _len2, _ref1;
-    tableBody = document.querySelector("table.ranking tbody");
-    values = data.values ? data.values : [];
-    path = (_ref1 = document.getElementById("path")) != null ? _ref1.value : void 0;
-    count = 0;
-    for (_l = 0, _len2 = values.length; _l < _len2; _l++) {
-      value = values[_l];
-      count++;
-      if (count > 5) {
-        break;
+    renderPrivacyTab(data.percentage4);
+    return setTimeout(function() {
+      var world;
+      if (accordionTabs[0].isMobile()) {
+        neutralityTabCallback.call();
+        world = document.getElementById("world");
+        world.setAttribute("width", "10em");
+        return world.setAttribute("height", "10em");
+      } else {
+        return privacyCallback.call();
       }
-      country = value["name"];
-      area = value["area"];
-      rank = value["rank"];
-      index = value["index"];
-      empowerment = value["EMPOWERMENT"];
-      universal_access = value["UNIVERSAL_ACCESS"];
-      freedom_openness = value["FREEDOM_&_OPENNESS"];
-      relevant_content = value["RELEVANT_CONTENT_&_USE"];
-      tr = document.createElement("tr");
-      tableBody.appendChild(tr);
-      td = document.createElement("td");
-      tr.appendChild(td);
-      flag = document.createElement("img");
-      flag.className = "flag";
-      flag.src = "" + path + "/images/flags/" + area + ".png";
-      td.appendChild(flag);
-      p = document.createElement("p");
-      p.className = "country-name";
-      p.innerHTML = country;
-      td.appendChild(p);
-      td = document.createElement("td");
-      td.setAttribute("data-title", "Rank");
-      td.innerHTML = rank;
-      tr.appendChild(td);
-      td = document.createElement("td");
-      td.setAttribute("data-title", "Universal Access");
-      tr.appendChild(td);
-      td.innerHTML = universal_access.toFixed(2);
-      td = document.createElement("td");
-      td.setAttribute("data-title", "Relevant Content");
-      tr.appendChild(td);
-      td.innerHTML = relevant_content.toFixed(2);
-      td = document.createElement("td");
-      td.setAttribute("data-title", "Freedom And Openness");
-      tr.appendChild(td);
-      td.innerHTML = freedom_openness.toFixed(2);
-      td = document.createElement("td");
-      td.setAttribute("data-title", "Empowerment");
-      tr.appendChild(td);
-      td.innerHTML = empowerment.toFixed(2);
-    }
-    return wesCountry.table.sort.apply();
+    }, 100);
   };
 
   renderNeutralityTab = function(countries, percentage) {
-    var path, paths, _l, _len2, _results;
+    var path, paths, tendency, _k, _len2, _results;
+    tendency = document.getElementById("home-header-0-tendency").value;
+    if (parseInt(tendency) === -1) {
+      percentage = 100 - percentage;
+    }
     setPercentage("#tab1", percentage);
+    document.getElementById("map").innerHTML = "";
     wesCountry.maps.createMap({
       container: '#map',
       "borderWidth": 0,
@@ -301,15 +318,19 @@
     });
     paths = document.querySelectorAll("#map .land-group");
     _results = [];
-    for (_l = 0, _len2 = paths.length; _l < _len2; _l++) {
-      path = paths[_l];
+    for (_k = 0, _len2 = paths.length; _k < _len2; _k++) {
+      path = paths[_k];
       _results.push(path.style.opacity = 0.3);
     }
     return _results;
   };
 
   renderEmpowermentTab = function(observations, percentage) {
-    var circle, circleSize, container, newCircle, observation, r, size, sorter, svg, value, valueCircle, _l, _len2, _ref1, _results;
+    var circle, circleSize, circles, container, newCircle, observation, r, sorter, svg, tendency, valueCircle, _k, _l, _len2, _len3, _ref, _results;
+    tendency = document.getElementById("home-header-1-tendency").value;
+    if (parseInt(tendency) === -1) {
+      percentage = 100 - percentage;
+    }
     setPercentage("#tab2", percentage);
     sorter = function(a, b) {
       var a_area, b_area;
@@ -327,8 +348,13 @@
     circle = document.querySelector(".infographic-circles .model");
     container = document.getElementById("infographic-circles");
     circleSize = container.offsetWidth * 0.8 / 24;
+    circles = document.querySelector(".infographic-circles .circle");
+    for (_k = 0, _len2 = circles.length; _k < _len2; _k++) {
+      circle = circles[_k];
+      container.removeChild(circle);
+    }
     _results = [];
-    for (_l = 0, _len2 = observations.length; _l < _len2; _l++) {
+    for (_l = 0, _len3 = observations.length; _l < _len3; _l++) {
       observation = observations[_l];
       newCircle = circle.cloneNode(true);
       newCircle.setAttribute("class", "circle");
@@ -337,20 +363,28 @@
       svg.setAttribute("height", circleSize);
       container.appendChild(newCircle);
       valueCircle = newCircle.querySelector(".circle");
-      size = valueCircle.getBoundingClientRect().width;
-      value = observation.values[0];
-      r = size * value / 100;
+      r = observation.value * 10;
+      r = r / 2;
       valueCircle.setAttribute("data-r", "" + r);
       valueCircle.setAttribute("r", "0");
-      _results.push((_ref1 = newCircle.querySelector(".country")) != null ? _ref1.innerHTML = observation.area : void 0);
+      _results.push((_ref = newCircle.querySelector(".country")) != null ? _ref.innerHTML = observation.area : void 0);
     }
     return _results;
   };
 
   renderGenderTab = function(percentage) {
-    var container, element, icon, iconSrc, img, p, row, _l, _results;
+    var container, element, icon, iconSrc, img, p, ps, row, tendency, _k, _l, _len2, _results;
+    tendency = document.getElementById("home-header-2-tendency").value;
+    if (parseInt(tendency) === -1) {
+      percentage = 100 - percentage;
+    }
     setPercentage("#tab3", percentage);
     container = document.querySelector(".infographic-percentage");
+    ps = document.querySelectorAll(".infographic-percentage p");
+    for (_k = 0, _len2 = ps.length; _k < _len2; _k++) {
+      p = ps[_k];
+      container.removeChild(p);
+    }
     icon = document.querySelector(".infographic-icon");
     iconSrc = icon.src;
     count = 1;
@@ -377,42 +411,22 @@
   };
 
   renderPrivacyTab = function(percentage) {
-    var angle, cx, cy, increaseAngle, maxAngle, pie, radius, svg, total, width, x1, y1, _l, _results;
-    setPercentage("#tab4", percentage);
-    percentage = 100 - percentage;
-    svg = document.getElementById("world");
-    pie = document.getElementById("world-pie");
-    width = svg.width.baseVal.value;
-    cx = width / 2;
-    cy = width / 2;
-    radius = width / 2;
-    x1 = width / 2;
-    y1 = 0;
-    total = 100;
-    maxAngle = Math.abs(percentage / total * Math.PI * 2);
-    _results = [];
-    for (angle = _l = 0; _l <= maxAngle; angle = _l += 0.05) {
-      increaseAngle = function(angle, time) {
-        return setTimeout(function() {
-          var big, d, x2, y2;
-          x2 = cx + radius * Math.sin(angle);
-          y2 = cy - radius * Math.cos(angle);
-          big = percentage >= 50 ? 1 : 0;
-          d = "M " + cx + "," + cy + " L " + x1 + "," + y1 + " A " + radius + "," + radius + " 0 " + big + " 1 " + x2 + "," + y2 + " Z";
-          return pie.setAttribute("d", d);
-        }, time);
-      };
-      _results.push(increaseAngle(angle, angle * 150));
+    var pie, tendency;
+    tendency = document.getElementById("home-header-3-tendency").value;
+    if (parseInt(tendency) === -1) {
+      percentage = 100 - percentage;
     }
-    return _results;
+    setPercentage("#tab4", percentage);
+    pie = document.getElementById("world-pie");
+    return pie.setAttribute("percentage", percentage);
   };
 
   setPercentage = function(article, percentage) {
-    var label, labels, _l, _len2, _results;
+    var label, labels, _k, _len2, _results;
     labels = document.querySelectorAll("" + article + " strong.percentage");
     _results = [];
-    for (_l = 0, _len2 = labels.length; _l < _len2; _l++) {
-      label = labels[_l];
+    for (_k = 0, _len2 = labels.length; _k < _len2; _k++) {
+      label = labels[_k];
       _results.push(label.innerHTML = "" + percentage + "%");
     }
     return _results;
