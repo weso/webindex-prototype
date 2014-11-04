@@ -5,20 +5,21 @@
 
 .viz-ui {
   float: left;
-  margin: 0 8px 30px;
-  padding: 20px 5px;
+  margin: 0 8px 15px;
+  padding: 0 10px;
   display: inline-block;
-  height: 80px;
+  height: 60px;
   background: #FEFEFE;
   border-bottom-left-radius: 12px;
   border-bottom-right-radius: 12px;
+  overflow: hidden;
 }
 
 .viz-ui button {
   display: inline-block;
-  padding: 6px 12px;
+  padding: 4px 4px;
   margin-bottom: 0;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 400;
   line-height: 1.42857143;
   text-align: center;
@@ -61,8 +62,9 @@
 }
 
 .viz-overlay-tip {
-  padding: 10px 5px 10px;
-  height: 80px;
+  float: left;
+  padding: 0px 10px 5px;
+  height: 60px;
   display: none;
   background: #fefefe;
   border-bottom-left-radius: 12px;
@@ -73,7 +75,7 @@
 .viz-overlay-tip hr {
   height: 0;
   padding: 0;
-  margin: 4px 0;
+  margin: 0;
 }
 
 .viz-overlay-tip table {
@@ -85,40 +87,12 @@
 
 .viz-overlay-tip table td {
   border-bottom: none;
-  padding: 4px 10px 0;
+  padding: 2px 10px;
   font-weight: 400;
-  font-size: 12px;
-  line-height: 18px;
+  font-size: 13px;
+  line-height: 16px;
 }
 
 .viz-overlay-tip table td:first-child {
-  padding: 4px 12px 0 0;
+  padding: 2px 12px 0 0;
 }
-
-.viz-overlay-tip table td:last-child {
-  font-weight: 300;
-}
-
-@media (min-width: 480px) {
-  .viz-overlay-tip {
-    display: inline-block;
-  }
-}
-
-@media (min-width: 768px) {
-  .viz-ui {
-    margin: 0 5% 30px;
-    padding: 20px;
-    height: 100px;
-  }
-  .viz-overlay-tip {
-    padding: 10px 20px 10px;
-    height: 100px;
-  }
-  .viz-overlay-tip table td {
-    padding: 4px 12px 0;
-    font-size: 14px;
-    line-height: 20px;
-  }
-}
-

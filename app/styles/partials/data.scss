@@ -49,8 +49,12 @@
 
 div.select-box {
   margin: 0.5em 0 !important;
-  padding: 0.5em;
+  padding: 0;
   background-color: nth($data-select-colours, 1);
+
+  > div {
+    padding: 0.5em 0.5em 0.8em 0.5em;
+  }
 
   h2 {
     margin-bottom: 0.5em;
@@ -65,6 +69,11 @@ div.select-box {
     color: white;
     text-align: center;
     border-radius: 50%;
+  }
+
+  img {
+    width: 100%;
+    margin: 0 0 -0.4em 0;
   }
 }
 
@@ -93,18 +102,8 @@ div.select-box.third-box {
   }
 }
 
-div.down-arrow {
-  text-align: center;
-  margin: 0.3em 0 !important;
-
-  i {
-    line-height: 0.5em;
-    color: $data-select-arrow-colour;
-  }
-}
-
 div.first-box {
-  margin-top: 1.7em !important;
+  margin-top: 2.4em !important;
 }
 
 /* TIMELINE */
@@ -167,6 +166,18 @@ div.timeline {
 .table-box {
   background-color: $data-table-background-color;
   margin-top: 1em;
+
+  header {
+    border-color: white;
+
+    h2 {
+      color: white;
+    }
+  }
+
+  .view-more a {
+    color: white;
+  }
 }
 
 div.middle-section {
@@ -183,6 +194,7 @@ div.middle-section {
     color: white;
     padding: 0.8em 0.5em 0.3em 0.5em;
     text-align: center;
+    height: 10em;
 
     p {
       margin: 0.5em 0 0 0;
@@ -193,7 +205,20 @@ div.middle-section {
       font-family: "Roboto" sans-serif;
       font-weight: 300;
       margin: 0 0 0.2em 0;
+      display: table-cell;
+      vertical-align: middle;
+      width: 10%;
+      height: 2em;
     }
+
+    .higher-lower {
+      font-size: 2em;
+      height: 3em;
+    }
+  }
+
+  div.box-mini:first-child, div.box-mini:nth-child(2) {
+    cursor: pointer;
   }
 
   @for $i from 1 to 5 {
@@ -313,7 +338,7 @@ nav.tabs {
     }
 
     li.selected span.circle {
-      background-color: darken($data-table-background-color, 40%);
+      background-color: darken($data-map-background-color, 40%);
     }
   }
 
@@ -334,9 +359,12 @@ nav.tabs {
 
 table.full-ranking {
   table-layout: auto;
+  color: black;
 
   th {
     text-align: center;
+    font-weight: normal;
+    border-bottom-color: darken($data-table-background-color, 20%);
   }
 
   img {
@@ -348,17 +376,49 @@ table.full-ranking {
     cursor: pointer;
   }
 
-  tr:hover {
-    background-color: #bbb;
+  .circle {
+    width: 2em;
+    height: 2em;
+    background-color: darken($data-table-background-color, 10%);
+    color: white;
+    padding-top: 0.2em;
+    border-radius: 50%;
+    text-align: center;
+    margin: 0 auto;
   }
 
-  tr.hidden {
+  > tbody {
+    background-color: lighten($data-table-background-color, 10%);
+    border-top: 0.3em solid $data-table-background-color;
+    border-bottom: 0.6em solid $data-table-background-color;
+
+    th {
+      font-size: 0.7em;
+      border-bottom-color: darken($data-table-background-color, 20%);
+    }
+
+    tbody {
+      text-align: center;
+    }
+  }
+
+  > tbody:hover {
+    background-color: darken($data-table-background-color, 20%);
+    color: white;
+  }
+
+  tr.tr-view-more {
+    background-color: transparent;
+  }
+
+  tbody.hidden {
     display: none;
   }
 
   td {
     padding-left: 0.4em;
     padding-right: 0.4em;
+    border: none;
   }
 
   td[data-title="Country"] {

@@ -131,18 +131,45 @@
         <h1>{{#labels}}{{home_data_box}}{{/labels}}</h1>
       </a>
       <div class="grid-item grid-item-full illustrations">
-        <section class="illustration-buttons">
+        <article>
+          <header>
+            <h1>{{#labels}}{{home_illustration_1_title}}{{/labels}}</h1>
+            <h2><strong>{{#labels}}{{home_illustration_1_subtitle}}{{/labels}}</strong></h2>
+            <ol>
+              <li>Denmark</li>
+              <li>Finland</li>
+              <li>Norway</li>
+              <li>United Kingdom</li>
+              <li>Sweden</li>
+            </ol>
+          </header>
+          <img src="{{path}}/images/illustrations/illustration1.png" />
+        </article>
+        <article>
+          <header>
+            <h1>{{#labels}}{{home_illustration_2_title}}{{/labels}}</h1>
+            <h2><strong id="gender-percentage">66%</strong> {{#labels}}{{home_of_countries}}{{/labels}}</h2>
+            <p>{{#labels}}{{home_illustration_2_text}}{{/labels}}</p>
+          </header>
+          <img src="{{path}}/images/illustrations/illustration2.png" />
+        </article>
+        <article>
+          <header>
+            <h1>{{#labels}}{{home_illustration_3_title}}{{/labels}}</h1>
+            <h2><strong id="privacy-percentage">68%</strong> {{#labels}}{{home_of_countries}}{{/labels}}</h2>
+            <p>{{#labels}}{{home_illustration_3_text}}{{/labels}}</p>
+          </header>
+          <img src="{{path}}/images/illustrations/illustration3.png" />
+        </article>
+        <aside class="illustration-buttons">
           <a href="javascript:void(0);" class="circle selected">1</a>
           <a href="javascript:void(0);" class="circle">2</a>
           <a href="javascript:void(0);" class="circle">3</a>
-        </section>
-        <img src="{{path}}/images/illustrations/illustration1.png" />
-        <img src="{{path}}/images/illustrations/illustration2.png" />
-        <img src="{{path}}/images/illustrations/illustration3.png" />
+        </aside>
       </div>
       <div class="grid-item grid-item-big grid-item-taller">
         <h1>{{#labels}}{{home_top_five}}{{/labels}}</h1>
-        <table class="ranking sortable">
+        <table class="ranking">
           <thead>
             <tr class="sorter" role="row">
               <th data-sort-type="text"><a class="empty" data-type="sorter"></a>Country</th>
@@ -157,7 +184,7 @@
             {{#data.model.values}}
               <tr class="country-row">
                 <td>
-                  <img class="flag" alt="" src="{{../path}}/images/flags/{{area}}.png" />
+                  <img class="flag" alt="" src="{{img}}" />
                   <p class="country-name">{{name}}</p>
                 </td>
                 <td data-title="Rank">{{rank}}</td>
@@ -170,7 +197,7 @@
           </tbody>
         </table>
         <p class="text-right">
-          <a href="{{host}}/data" class="read-more">{{#labels}}{{home_view_full_list}}{{/labels}} <span>&#187;</span></a>
+          <a href="{{host}}/data#ranking" class="read-more">{{#labels}}{{home_view_full_list}}{{/labels}} <span>&#187;</span></a>
         </p>
       </div>
       <div class="grid-item grid-item-taller follow-box">

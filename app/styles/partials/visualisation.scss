@@ -1,0 +1,62 @@
+div.visualisation {
+  position: relative;
+
+  .esc {
+    width: 100%;
+    text-align: center;
+    position: absolute;
+    left: 0;
+    top: 50%;
+    font-size: 1.5em;
+    font-style: italic;
+    display: none;
+  }
+
+  div.expand {
+    position: absolute;
+    top: 2em;
+    right: 1em;
+    font-size: 1.2em;
+    width: 1.6em;
+    height: 1.6em;
+    padding-top: 0.1em;
+    background-color: #fff;
+    color: #336699;
+    border-radius: 50%;
+    text-align: center;
+
+    a {
+      text-decoration: none;
+    }
+  }
+}
+
+div.maximised {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+
+  .esc {
+    display: block;
+    transition-property: opacity;
+    transition-duration: 1.5s;
+  }
+
+  div.expand {
+    top: 1em;
+  }
+
+  iframe {
+    height: 100%;
+    margin: 0;
+  }
+}
+
+body.noscroll {
+  position: fixed !important;
+  overflow-y: scroll !important;
+  width: 100% !important;
+}

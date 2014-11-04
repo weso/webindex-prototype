@@ -223,7 +223,7 @@ renderCharts = (data) ->
   mapContainer = "#map"
   barContainer = "#country-bars"
   lineContainer = "#lines"
-  rankingContainer = "#ranking"
+  rankingContainer = "#ranking-chart"
 
   mapView = "#map-view"
   countryView = "#country-view"
@@ -567,13 +567,13 @@ renderMap = ->
 
 renderTable = (data) ->
   observations = data.observations
-  byCountry = data.byCountry
-  years = data.years
 
-  table = document.querySelector("#data-table tbody")
+  table = document.querySelector("#ranking")
   path = document.getElementById("path")?.value
 
-  table.innerHTML = ""
+  tbodies = document.querySelectorAll("#ranking > tbody")
+  for tbody in tbodies
+    table.removeChild tbody
 
   count = 0
 
@@ -584,21 +584,25 @@ renderTable = (data) ->
     rank = if observation.ranked then observation.ranked else count
     value = if observation.values && observation.values.length > 0 then observation.values[0] else observation.value
     previousValue = observation.previous_value
+    extraInfo = observation.extra
 
     if previousValue
       tendency = previousValue.tendency
 
-    tr = document.createElement "tr"
-    table.appendChild tr
+    tbody = document.createElement "tbody"
+    table.appendChild tbody
 
-    tr.code = code
-    tr.onclick = ->
+    tr = document.createElement "tr"
+    tbody.appendChild tr
+
+    tbody.code = code
+    tbody.onclick = ->
       code = this.code
       global.options.countrySelector.select(code)
       global.options.countrySelector.refresh()
 
     if count > global.maxTableRows
-      tr.className = "to-hide"
+      tbody.className = "to-hide"
 
     td = document.createElement "td"
     td.setAttribute("data-title", "Country")
@@ -617,21 +621,117 @@ renderTable = (data) ->
     td.setAttribute("data-title", "Rank")
     tr.appendChild td
 
-    td.innerHTML = rank
+    wrapper = document.createElement "div"
+    wrapper.className = "circle"
+    td.appendChild wrapper
+
+    wrapper.innerHTML = rank
 
     td = document.createElement "td"
     td.setAttribute("data-title", "Value")
     tr.appendChild td
 
-    td.innerHTML = value.toFixed(2)
+    value = value.toFixed(2)
+    td.innerHTML = "Value: #{value}"
 
-  if count > global.maxTableRows
-    rows = table.querySelectorAll(".to-hide")
+    # Extra info
 
-    for row in rows
-      row.className = "hidden"
+    globalRank = extraInfo.rank
+    universalAccess = extraInfo["UNIVERSAL_ACCESS"].toFixed(2)
+    freedomOpenness = extraInfo["FREEDOM_AND_OPENNESS"].toFixed(2)
+    relevantContent = extraInfo["RELEVANT_CONTENT_AND_USE"].toFixed(2)
+    empowerment = extraInfo["EMPOWERMENT"].toFixed(2)
 
     tr = document.createElement "tr"
+    tbody.appendChild tr
+
+    td = document.createElement "td"
+    td.setAttribute("colspan", "3")
+    tr.appendChild td
+
+    extraTable = document.createElement "table"
+    extraTable.className = "extra-table"
+    td.appendChild extraTable
+
+    # header
+
+    extraTheader = document.createElement "thead"
+    extraTable.appendChild extraTheader
+
+    tr = document.createElement "tr"
+    extraTheader.appendChild tr
+
+    th = document.createElement "th"
+    th.setAttribute("data-title", "Web Index Rank")
+    tr.appendChild th
+    th.innerHTML = "Web Index Rank"
+
+    th = document.createElement "th"
+    th.setAttribute("data-title", "Universal Access")
+    tr.appendChild th
+    th.innerHTML = "Universal Access"
+
+    th = document.createElement "th"
+    th.setAttribute("data-title", "Relevant Content")
+    tr.appendChild th
+    th.innerHTML = "Relevant Content"
+
+    th = document.createElement "th"
+    th.setAttribute("data-title", "Freedom And Openness")
+    tr.appendChild th
+    th.innerHTML = "Freedom And Openness"
+
+    th = document.createElement "th"
+    th.setAttribute("data-title", "Empowerment")
+    tr.appendChild th
+    th.innerHTML = "Empowerment"
+
+    # body
+
+    extraTbody = document.createElement "tbody"
+    extraTable.appendChild extraTbody
+
+    tr = document.createElement "tr"
+    extraTbody.appendChild tr
+
+    td = document.createElement "td"
+    td.setAttribute("data-title", "Web Index Rank")
+    tr.appendChild td
+
+    td.innerHTML = globalRank
+
+    td = document.createElement "td"
+    td.setAttribute("data-title", "Universal Access")
+    tr.appendChild td
+
+    td.innerHTML = universalAccess
+
+    td = document.createElement "td"
+    td.setAttribute("data-title", "Relevant Content")
+    tr.appendChild td
+
+    td.innerHTML = relevantContent
+
+    td = document.createElement "td"
+    td.setAttribute("data-title", "Freedom And Openness")
+    tr.appendChild td
+
+    td.innerHTML = freedomOpenness
+
+    td = document.createElement "td"
+    td.setAttribute("data-title", "Empowerment")
+    tr.appendChild td
+
+    td.innerHTML = empowerment
+
+  if count > global.maxTableRows
+    tbodies = table.querySelectorAll(".to-hide")
+
+    for tbody in tbodies
+      tbody.className = "hidden"
+
+    tr = document.createElement "tr"
+    tr.className = "tr-view-more"
     table.appendChild tr
 
     td = document.createElement "td"
@@ -656,54 +756,38 @@ renderTable = (data) ->
 
       this.innerHTML = text
 
-      rows = this.table.querySelectorAll("tr.#{className}")
+      rows = this.table.querySelectorAll("tbody.#{className}")
 
       for row in rows
         row.className = newClassName
 
-renderTendencyChart = (container, serie, years) ->
-  if !serie then return
-
-  options = {
-    container: container,
-    chartType: "line",
-    margins: [0, 0, 0, 0],
-    groupMargin: 0,
-    yAxis: {
-      title: "",
-      "font-colour": "transparent",
-      tickColour: "none"
-    },
-    xAxis: {
-      title: "",
-      "font-colour": "transparent"
-      values: years
-    },
-    series: [ serie ],
-    valueOnItem: {
-      show: false
-    },
-    vertex: {
-      show: false
-    },
-    legend: {
-      show: false
-    },
-    serieColours: ["#333"]
-  }
-
-  wesCountry.charts.chart options
-
 renderBoxes = (data) ->
   mean = data.mean
   median = data.median
-  higher = data.higher.area
-  lower = data.lower.area
+  higher = data.higher["short_name"]
+  lower = data.lower["short_name"]
+
+  higherArea = data.higher.area
+  lowerArea = data.lower.area
 
   document.getElementById("mean")?.innerHTML = mean.toFixed(2);
   document.getElementById("median")?.innerHTML = median.toFixed(2);
-  document.getElementById("higher")?.innerHTML = higher
-  document.getElementById("lower")?.innerHTML = lower
+
+  higherContainer = document.getElementById("higher")
+  if higherContainer
+    higherContainer.innerHTML = higher
+
+    higherContainer.onclick = ->
+      global.options.countrySelector.select(higherArea)
+      global.options.countrySelector.refresh()
+
+  lowerContainer = document.getElementById("lower")
+  if lowerContainer
+    lowerContainer.innerHTML = lower
+
+    lowerContainer.onclick = ->
+      global.options.countrySelector.select(lowerArea)
+      global.options.countrySelector.refresh()
 
 # Script load
 

@@ -6,7 +6,9 @@
     itu_pop: 'http://desolate-caverns-3750.herokuapp.com/json/ITU_pop.json',
     primary: 'http://desolate-caverns-3750.herokuapp.com/json/primary.json',
     net_neutrality: 'http://desolate-caverns-3750.herokuapp.com/json/net_neutrality.json',
-    flags: 'http://desolate-caverns-3750.herokuapp.com/json/flags_local.json'
+    flags: 'http://desolate-caverns-3750.herokuapp.com/json/flags_local.json',
+    economic_regional: 'http://desolate-caverns-3750.herokuapp.com/json/economic_regional.json',
+    labels: 'bin/labels.json'
   };
 
   // Uses queue.js to load json async
@@ -16,9 +18,16 @@
     for (var prop in urls) {
       q.defer(d3.json, urls[prop]);
     }
-    q.await(function(error, itu, primary, neutrality, flags) {
+    q.await(function(error, itu, primary, neutrality, flags, economic_regional, labels) {
       // if (error) { console.log(error); }
-      fn({itu: itu, primary: primary, neutrality: neutrality, flags: flags});
+      fn({
+        itu: itu,
+        primary: primary,
+        neutrality: neutrality,
+        flags: flags,
+        economic_regional: economic_regional,
+        labels: labels
+      });
     });
   };
 
@@ -63,8 +72,8 @@
   window.Utility.comma = comma;
 
   function prettyN(n) {
-    return n > 1000000000 ? (Math.round(n / 100000000) / 10) + '-billion' :
-      n > 1000000 ? (Math.round(n / 100000) / 10) + '-million' :
+    return n > 1000000000 ? (Math.round(n / 100000000) / 10) + ' billion' :
+      n > 1000000 ? (Math.round(n / 100000) / 10) + ' million' :
       comma(Math.round(n));
   }
   window.Utility.prettyN = prettyN;
@@ -118,13 +127,18 @@ $(document).on('ready', function() {
   // surveillance chart wrapper
   var Censorship = function(args) {
     var primary = args.primary, itu = args.itu,
+      totalItu = 0,
       data = {};
 
     // keep the variables we need
     for (var key in primary) {
+
+      var users = itu[key].Population * itu[key].ITU / 100;
+      totalItu += users;
+
       data[key] = {
         pop: itu[key].Population,
-        itu: itu[key].Population * itu[key].ITU / 100,
+        itu: users,
         name: key,
         censorship: 10 - primary[key]['P4'],
         surveillance: 10 - primary[key]['P9']
@@ -132,11 +146,14 @@ $(document).on('ready', function() {
     }
 
     this.itu = $('#sv-affected-itu');
-    this.pop = $('#sv-affected-pop');
+    this.countries = $('#sv-affected-countries');
 
     this.data = data;
     // to hold the slider values
     this.metrics = {};
+    this.metricName = '';
+
+    this.$tooltip = $('#sv-overlay-tip');
     return this;
   }
 
@@ -146,29 +163,10 @@ $(document).on('ready', function() {
     var width = this.$el.width(),
       height = this.$el.height();
 
-    var tooltip = d3.tip()
-      .attr('class', 'viz-tip sv-viz-tip')
-      .attr('id', 'sv-tooltip')
-      .html(function(d) {
-        if (!d.country) {
-          return ['<h5>', d.id, '</h5><hr /><h6>No data available</h6>'].join('');
-        }
-        var affected = d.stat ? 'Directly affected' : 'Not directly affected';
-        return ['<h5>', d.id, '</h5><h6>', Utility.prettyN(d.country.itu),
-                ' internet users</h6><h6 class="sv-affected-', d.stat, '">',
-                affected, '</h6><hr /><table><tbody><tr><td>', d.country.censorship,
-                '</td><td>Degree of government censorship</td></tr><tr><td>', d.country.surveillance,
-                '</td><td>Degree of vulnerability to government surveillance</td></tr><tr><td>',
-                '</tbody</table>',
-        ].join('');
-      });
-
-
     var svg = this.svg = d3.select('#' + this.id).append('svg:svg')
       .attr('class', 'sv-mapbox')
       .attr('width', width)
-      .attr('height', height)
-      .call(tooltip);
+      .attr('height', height);
 
     var mercator = this.projection = d3.geo.mercator()
       .scale((width + 1) / 2 / Math.PI)
@@ -177,6 +175,7 @@ $(document).on('ready', function() {
 
     var path = this.path = d3.geo.path().projection(mercator);
 
+    var $tooltip = this.$tooltip;
     var allCountries = this.allCountries = svg.append('g')
       .attr('class', 'sv-boundary-layer')
       .style('stroke-linejoin', 'round')
@@ -185,8 +184,12 @@ $(document).on('ready', function() {
     .enter().append('path')
       .attr('class', 'sv-boundary')
       .attr('d', path)
-      .on('mouseover', tooltip.show)
-      .on('mouseout', tooltip.hide);
+      .on('mouseover', function(d) {
+          $tooltip.html(toolTipHTML(d)).show();
+      })
+      .on('mouseout', function(d) {
+        $tooltip.hide();
+      });
 
     var data = this.data;
     this.dataCountries = allCountries.filter(function(d) {
@@ -195,6 +198,24 @@ $(document).on('ready', function() {
     });
 
     this.fill();
+    // show the affected label after there's something there
+    $('.sv-affected-labels').fadeIn(400);
+
+    var that = this;
+    function toolTipHTML(d) {
+      if (!d.country) {
+        return ['<h3>', d.id, '</h3><hr /><h4>' + that.labels['sv_tooltip_legend_na'] + ' </h4>'].join('');
+      }
+
+      var affected = d.stat ? that.labels['sv_tooltip_legend_true'] : that.labels['sv_tooltip_legend_false'] ;
+      return ['<h3>', d.id, '</h3><h4>', Utility.prettyN(d.country.itu),
+              ' internet users</h4><h4 class="sv-affected-', d.stat, '">',
+              affected, '</h4><hr /><table><tbody><tr><td>', d.country.censorship,
+              '</td><td>'+ that.labels['sv_tooltip_degree_censorship'] + '</td></tr><tr><td>', d.country.surveillance,
+              '</td><td>' + that.labels['sv_tooltip_degree_surveillance'] + '</td></tr><tr><td>',
+              '</tbody</table>',
+      ].join('');
+    }
   };
 
   Censorship.prototype.onDrag = function(val, name) {
@@ -202,32 +223,28 @@ $(document).on('ready', function() {
     this.fill();
   };
 
-  Censorship.prototype.disableMetric = function(name) {
-    delete this.metrics[name];
-    this.fill();
-  };
-
   Censorship.prototype.fill = function() {
-    var metrics = this.metrics,
-      itu = 0;
-      //pop = 0;
+    var metric = this.metricName,
+      val = this.metrics[metric],
+      itu = 0, countries = 0;
+
     this.dataCountries.transition()
       .duration(200)
       .style('fill', function(d) {
         // all metrics are less than, or under, the filters
-        if (_.every(metrics, function(v, m) { return d.country[m] < v; })) {
+        if (d.country[metric] < val) {
           d.stat = false;
           return '#909090';
         } else {
           d.stat = true;
-          //pop += d.country.pop;
           itu += d.country.itu;
+          countries += 1;
           return '#222';
         }
       });
 
     this.itu.text(Utility.prettyN(itu));
-    //this.pop.text(Utility.prettyN(pop));
+    this.countries.text(countries);
   };
 
   Censorship.prototype.resize = function(args) {
@@ -247,7 +264,7 @@ $(document).on('ready', function() {
 
     var $el = $('#' + options.id),
       $slider = $el.find('.slider'),
-      $label = $el.find('.sv-filter-indicator'),
+      //$label = $el.find('.sv-filter-indicator'),
       $toggle = $el.find('.disable-toggle'),
       active = true;
 
@@ -257,11 +274,11 @@ $(document).on('ready', function() {
       range: options.range
     });
 
-    $label.text(options.start + '/10');
+    //$label.text(options.start + '/10');
 
     $slider.on('slide', function() {
       var val = Math.round($slider.val());
-      $label.text(val + '/10');
+      //$label.text(val + '/10');
       options.dragFn(val, options.name);
     });
 
@@ -283,42 +300,94 @@ $(document).on('ready', function() {
   // called from base.js when the proper id exists on the page
   var init = function (args, settings) {
 
+    var labels = args.labels;
+
     // create a new instance of the surveillance chart
     var surveillance = new Censorship(args);
     surveillance.id = settings.id
     surveillance.$el = settings.$el;
+    surveillance.labels = labels;
 
     // binding
     var resize = surveillance.resize.bind(surveillance),
-      remove = surveillance.disableMetric.bind(surveillance),
       drag = surveillance.onDrag.bind(surveillance);
 
     // listen for page resize
     Utility.resize.addDispatch('censorship', surveillance.resize, surveillance);
 
     // data for initial slider position
-    var sliders = [
-      {id: 'censorship-slider', start: 2, name: 'censorship'},
-      {id: 'surveillance-slider', start: 3, name: 'surveillance'},
-    ];
+    var sliders = {
+      censorship: {id: 'censorship-slider', start: 2, name: 'censorship', key: 'P4'},
+      surveillance: {id: 'surveillance-slider', start: 4, name: 'surveillance', key: 'P9'}
+    };
 
     // init sliders
     _.each(sliders, function(slider) {
+      var extent = d3.extent(_.values(args.primary), function(d) {
+        return d[slider.key];
+      });
       slider.UI = new SliderUI({
         id: slider.id,
         start: slider.start,
         name: slider.name,
         range: {
-          min: 0,
-          max: 10
+          min: 10 - extent[1] + 1,
+          max: 10 - extent[0]
         },
         dragFn: Utility.debounce(drag, 400, false),
-        stopFn: remove
+        stopFn: function() { return; }
       });
+      slider.$el = $('#' + slider.id);
 
-      // tell the map our initial slider values
+      //Text
+      $('#' + slider.id + '> h3').html(labels['sv_degree_' + slider.name]);
+
+      // register the initial values
       surveillance.metrics[slider.name] = slider.start;
     });
+
+    // default metric
+    surveillance.metricName = 'censorship';
+
+    var $toggles = $('#sv-type-toggle');
+    if ($toggles.length) {
+      $toggles.on('click', 'button', function() {
+        var $target = $(this);
+        if ($target.hasClass('selected')) { return false; }
+
+        $toggles.find('.selected').removeClass('selected');
+        $target.addClass('selected');
+
+        var selected = sliders[$target.attr('data-type')];
+        surveillance.metricName = selected.name;
+        _.each(sliders, function(slider) {
+          if (slider.name === selected.name) {
+            slider.$el.fadeIn(200);
+          } else {
+            slider.$el.hide();
+          }
+        });
+        surveillance.fill();
+      });
+    }
+
+    // fill labels for UI
+    var labelMap = {
+      'sv-legend-true': 'sv_legend_true',
+      'sv-legend-false': 'sv_legend_false',
+      'sv-legend-na': 'sv_legend_na',
+      'sv-censorship-slider-low': 'sv_censorship_slider_low',
+      'sv-censorship-slider-high': 'sv_censorship_slider_high',
+      'sv-surveillance-slider-low': 'sv_surveillance_slider_low',
+      'sv-surveillance-slider-high': 'sv_surveillance_slider_high',
+      'sv-main-tally-number': 'sv_main_tally_number',
+      'sv-main-country-number': 'sv_main_country_number'
+    }
+    _(labelMap).each(function(labelKey, selector) {
+      if (labels[labelKey]) {
+        $('#' + selector).html(labels[labelKey]); 
+      }
+    })
 
     // query topojson, then draw chart
     d3.json('bin/wi_name_countries.topojson', function(topo) {
@@ -332,27 +401,6 @@ $(document).on('ready', function() {
 })();
 
 (function() {
-
-  var regionTranslation = {
-    1: 'Latin America & Caribbean',
-    2: 'Sub-Saharan Africa',
-    3: 'Europe & Central Asia',
-    4: 'Middle East & North Africa',
-    5: 'East Asia & Pacific',
-    6: 'Antarctica',
-    7: 'South Asia',
-    8: 'North America',
-  };
-
-  var econTranslation = {
-    1: 'Most Developed Economy',
-    2: 'Developed, Non-G7 Economy',
-    3: 'Emerging Economy (Upper)',
-    4: 'Emerging Economy (Middle)',
-    5: 'Emerging Economy (Lower)',
-    6: 'Developing Economy',
-    7: 'Least Developed Economy',
-  };
 
   var GenderViz = function() {
     return this;
@@ -378,9 +426,7 @@ $(document).on('ready', function() {
       .domain([0, data.length])
       .range([0, height]);
 
-    var fontSize = this.fontSize = d3.scale.quantize()
-      .domain([0, height])
-      .range([23, 19, 17, 15, 14, 13.5, 13, 13.5, 12, 11.5, 11, 10.5, 10, 9, 8, 7]);
+    var fontSize = this.fontSize = calculateFontScale(height);
 
     var fill = this.fill = d3.scale.quantize()
       .domain([0, height])
@@ -402,9 +448,9 @@ $(document).on('ready', function() {
       .attr('y2', height + margin[2] + margin[0] - topLabelHeight);
 
     var xLabels = [
-      {text: ['Better at supporting', 'victims'], x: max/2},
-      {text: ['Equal at', 'support and prosecution'], x: 0},
-      {text: ['Better at prosecuting', 'perpetrators'], x: -max/2}
+      {text: [this.labels["gn_xaxis_supports_1"], this.labels["gn_xaxis_supports_2"]], x: max/2},
+      {text: [this.labels["gn_xaxis_equal_1"], this.labels["gn_xaxis_equal_2"]], x: 0},
+      {text: [this.labels["gn_xaxis_prosecutes_1"], this.labels["gn_xaxis_prosecutes_2"]], x: -max/2}
     ];
 
     this.xLabels = svg.selectAll('.gn-viz-label')
@@ -435,9 +481,9 @@ $(document).on('ready', function() {
     var median = (ranked.length - 1) / 2,
       yLabelStart = 115,
       yLabels = [
-        {text: 'Best score', y: 0},
-        {text: 'Median score', y: median},
-        {text: 'Worst score', y: ranked.length - 1}
+        {text: this.labels["gn_yaxis_best"], y: 0},
+        {text: this.labels["gn_yaxis_median"], y: median},
+        {text: this.labels["gn_yaxis_worst"], y: ranked.length - 1}
       ];
 
     var yLabelPaths = this.yLabelPaths = g.selectAll('.y-label')
@@ -510,11 +556,12 @@ $(document).on('ready', function() {
 
     }
 
+    var that = this;
     function toolTipHTML(d) {
-      return ['<label>', d.name, '</label><hr /><table><tbody><tr><td>', regionTranslation[d.region],
-        '</td><td>Supports victims: ', d.support, '<span class="gn-score-', d.scores.support,
-        '"> (', d.scores.support, ')</span></td></tr><tr><td>', econTranslation[d.econ],
-        '</td><td>Prosecutes perpetrators: ', d.action, '<span class="gn-score-', d.scores.action,
+      return ['<label>', d.name, '</label><hr /><table><tbody><tr><td>', that.labels['region_translation_' + d.region],
+        '</td><td>' + that.labels['gn_tooltip_supports']+': ', d.support, '<span class="gn-score-', d.scores.support,
+        '"> (', d.scores.support, ')</span></td></tr><tr><td>', that.labels['econ_translation_' + d.econ],
+        '</td><td>' + that.labels['gn_tooltip_prosecutes'] + ': ', d.action, '<span class="gn-score-', d.scores.action,
         '"> (', d.scores.action, ')</span></td></tr></tbody</table>',
       ].join('');
     }
@@ -592,60 +639,81 @@ $(document).on('ready', function() {
   };
 
   function init(args, viz) {
+    var labels = args.labels;
+    var econ_region = args.economic_regional;
 
-    // file that contains economic levels and regions
-    d3.json('bin/economic_regional.json', function(resp) {
-
-      // create new data file containing what we need
-      var data = _.map(args.primary, function(d, name) {
-        var support = d['S11'], action = d['S12'];
-        return {
-          support: support,
-          action: action,
-          overall: (support + action) / 2,
-          scores: {
-            support: singleIndicatorScore(support),
-            action: singleIndicatorScore(action),
-            overall: singleIndicatorScore((support + action)/2)
-          },
-          diff: support - action,
-          name: name,
-          econ: resp[name].econ,
-          region: resp[name].region
-        };
-      });
-
-      // init gender viz
-      var gender = new GenderViz();
-      gender.$tooltip = $('#gn-overlay-tip');
-      gender.draw(data, viz);
-
-      var $toggles = $('#gn-ui-container');
-      if ($toggles.length) {
-        $toggles.on('click', 'button', function() {
-          var $target = $(this);
-          if ($target.hasClass('selected')) { return false; }
-
-          $toggles.find('.selected').removeClass('selected');
-          $target.addClass('selected');
-
-          gender.attribute = $target.attr('data-type');
-        });
-      }
-
-      // listen for page resize
-      Utility.resize.addDispatch('gender', gender.resize, gender);
-
-
+    // create new data file containing what we need
+    var data = _.map(args.primary, function(d, name) {
+      var support = d['S11'], action = d['S12'];
+      return {
+        support: support,
+        action: action,
+        overall: (support + action) / 2,
+        scores: {
+          support: singleIndicatorScore(support, labels),
+          action: singleIndicatorScore(action, labels),
+          overall: singleIndicatorScore((support + action)/2, labels)
+        },
+        diff: support - action,
+        name: name,
+        econ: econ_region[name].econ,
+        region: econ_region[name].region
+      };
     });
+
+    // init gender viz
+    var gender = new GenderViz();
+    gender.labels = args.labels;
+    gender.$tooltip = $('#gn-overlay-tip');
+    gender.draw(data, viz);
+
+    var $toggles = $('#gn-ui-container');
+    if ($toggles.length) {
+      $toggles.on('click', 'button', function() {
+        var $target = $(this);
+        if ($target.hasClass('selected')) { return false; }
+
+        $toggles.find('.selected').removeClass('selected');
+        $target.addClass('selected');
+
+        gender.attribute = $target.attr('data-type');
+      });
+    }
+
+    // fill labels for UI
+    var labelMap = {
+      'gn-main-action': 'gn_nn_main_action',
+      'gn-toggle-region': 'gn_nn_toggle_region',
+      'gn-toggle-econ': 'gn_nn_toggle_econ'
+    }
+    _(labelMap).each(function(labelKey, selector) {
+      if (labels[labelKey]) {
+        $('#' + selector).html(labels[labelKey]); 
+      }
+    })
+
+    // listen for page resize
+    Utility.resize.addDispatch('gender', gender.resize, gender);
   }
 
-  function singleIndicatorScore(score) {
-    return score <= 3 ? 'low' : score <= 7 ? 'medium' : 'high';
+  function singleIndicatorScore(score, labels) {
+    return score <= 3 ? labels['gn_tooltip_low'] : score <= 7 ? labels['gn_tooltip_medium'] : labels['gn_tooltip_high'];
   }
 
-  function doubleIndicatorScore(score) {
-      return score <= 6 ? 'low' : score <= 13 ? 'medium' : 'high';
+  function doubleIndicatorScore(score, labels) {
+      return score <= 6 ? labels['gn_tooltip_low'] : score <= 13 ? labels['gn_tooltip_medium'] : labels['gn_tooltip_high'];
+  }
+
+  function calculateFontScale(height) {
+    var fontSize = this.fontSize = d3.scale.quantize()
+      .domain([0, height]);
+    // adjust fontsize smaller if height is very small
+    if (height <= 450) {
+      fontSize.range([15, 14, 13.5, 13, 13.5, 12, 11.5, 11, 10.5, 10, 9, 8, 7, 6, 5, 4]);
+    } else {
+      fontSize.range([23, 19, 17, 15, 14, 13.5, 13, 13.5, 12, 11.5, 11, 10.5, 10, 9, 8, 7]);
+    }
+    return fontSize;
   }
 
   window.GenderViz = init;
@@ -656,18 +724,12 @@ $(document).on('ready', function() {
 (function() {
   "use strict";
 
-  var labels = {
-    discrimination: 'Evidence of discrimination',
-    no_discrimination: 'No evidence of discrimination',
-    law: 'Has effective law and regulations',
-    no_law: 'No effective law and regulations'
-  }
-
   var Neutrality = function(args, viz) {
     this.dataset = []
+    this.labels = args.labels;
 
     var economic_regional = _(args.economic_regional).map(function(countryVal, country) {
-      return {country: country, region: countryVal.region, econ: country.econ}
+      return {country: country, region: countryVal.region, econ: parseInt(countryVal.econ)}
     })
 
     var totalPop = 0;
@@ -684,7 +746,8 @@ $(document).on('ready', function() {
           score: args.neutrality[country]['Score'],
           pop: args.itu[country]['Population'] * args.itu[country]['ITU']/totalPop,
           id: args.flags[country]['ID'],
-          region: args.economic_regional[country]['region']
+          region: args.economic_regional[country]['region'],
+          econ: args.economic_regional[country]['econ']
         });
       }
     }
@@ -704,29 +767,30 @@ $(document).on('ready', function() {
             .attr('class', 'nn-rect')
             .attr('data-name', function(d) { return d.country})
 
+
     var ne = this.svg.append('text').attr('class', 'nn-text-ne nn-text')
     ne.append('tspan').text('●').attr('class', 'nn-pos-dot')
-    ne.append('tspan').attr('x', 10).attr('dy', 0).attr('dx', -20).text(labels.no_discrimination)
+    ne.append('tspan').attr('x', 10).attr('dy', 0).attr('dx', -20).text(this.labels['nn_axis_no_discrimination'])
     ne.append('tspan').text('●').attr('dy', '20').attr('class', 'nn-pos-dot')
-    ne.append('tspan').attr('x', 0).attr('dy', '20').attr('dx', -20).text(labels.law);
+    ne.append('tspan').attr('x', 0).attr('dy', '20').attr('dx', -20).text(this.labels['nn_axis_law']);
 
     var nw = this.svg.append('text').attr('class', 'nn-text-nw nn-text')
     nw.append('tspan').text('●').attr('class', 'nn-neg-dot')
-    nw.append('tspan').attr('x', 0).attr('dy', 0).attr('dx', 20).text(labels.discrimination)
+    nw.append('tspan').attr('x', 0).attr('dy', 0).attr('dx', 20).text(this.labels['nn_axis_discrimination'])
     nw.append('tspan').text('●').attr('dy', '20').attr('class', 'nn-pos-dot')
-    nw.append('tspan').attr('x', 0).attr('dy', '20').attr('dx', 20).text(labels.law);
+    nw.append('tspan').attr('x', 0).attr('dy', '20').attr('dx', 20).text(this.labels['nn_axis_law']);
 
     var sw = this.svg.append('text').attr('class', 'nn-text-sw nn-text')
     sw.append('tspan').text('●').attr('class', 'nn-neg-dot')
-    sw.append('tspan').attr('x', 0).attr('dy', 0).attr('dx', 20).text(labels.discrimination)
+    sw.append('tspan').attr('x', 0).attr('dy', 0).attr('dx', 20).text(this.labels['nn_axis_discrimination'])
     sw.append('tspan').text('●').attr('dy', '20').attr('class', 'nn-neg-dot')
-    sw.append('tspan').attr('x', 0).attr('dy', 20).attr('dx', 20).text(labels.no_law)
+    sw.append('tspan').attr('x', 0).attr('dy', 20).attr('dx', 20).text(this.labels['nn_axis_no_law'])
 
     var se = this.svg.append('text').attr('class', 'nn-text-se nn-text')
     se.append('tspan').text('●').attr('class', 'nn-pos-dot')
-    se.append('tspan').attr('x', 0).attr('dy', 0).attr('dx', -20).text(labels.no_discrimination)
+    se.append('tspan').attr('x', 0).attr('dy', 0).attr('dx', -20).text(this.labels['nn_axis_no_discrimination'])
     se.append('tspan').text('●').attr('dy', '20').attr('class', 'nn-neg-dot')
-    se.append('tspan').attr('x', 0).attr('dy', 20).attr('dx', -20).text(labels.no_law)
+    se.append('tspan').attr('x', 0).attr('dy', 20).attr('dx', -20).text(this.labels['nn_axis_no_law'])
 
     // ********************
     // APPEND AXES
@@ -769,6 +833,10 @@ $(document).on('ready', function() {
       return country.region
     })
 
+    this.groupByEcon = _(economic_regional).groupBy(function(country) {
+      return country.econ
+    })
+
     function MaybeLen(arg) { return ((arg)?arg.length:0) }
     this.maxSetSize = Math.max(
       MaybeLen(this.groupBy[1][-1]),
@@ -781,7 +849,7 @@ $(document).on('ready', function() {
     // INSERT FLAGS INTO SVG
     // *********************
 
-    var FLAG_DOMAIN = 'bin/flags/';
+    var FLAG_DOMAIN = 'bin/square-flags/';
     var FLAG_EXTENSION = '.png';
     this.svg.append('defs');
     var defs = this.svg.select('defs');
@@ -798,10 +866,10 @@ $(document).on('ready', function() {
         })
         .append('image')
         .attr({
-          x: -0.5,
-          y: -0.5,
-          width: 2,
-          height: 2
+          x: 0,
+          y: 0,
+          width: 1,
+          height: 1
         })
         .attr('xlink:href', FLAG_DOMAIN + val.Flag_Name + FLAG_EXTENSION)
     })
@@ -967,15 +1035,25 @@ $(document).on('ready', function() {
         country: d.country,
         score: d.score,
         discriminationText: discriminationText,
-        lawText: lawText
+        lawText: lawText,
+        label: that.labels['nn_tooltip_score'],
+        region: that.labels['region_translation_' + d.region],
+        econ: that.labels['econ_translation_' + d.econ]
       })).show();
 
       that.svg.selectAll('.nn-rect').attr('class','nn-rect nn-rect-hover')
       d3.select(this).attr('class', 'nn-rect nn-rect-not-hover');
 
-      _(that.groupByRegion[d.region]).pluck('country').forEach(function(countryName) {
-        d3.select('[data-name="'+ countryName+ '"]').attr('class', 'nn-rect nn-rect-not-hover')
-      })
+      if (that.attribute === 'region') {
+        _(that.groupByRegion[d.region]).pluck('country').forEach(function(countryName) {
+          d3.select('[data-name="'+ countryName+ '"]').attr('class', 'nn-rect nn-rect-not-hover')
+        })        
+      } else {
+        _(that.groupByEcon[d.econ]).pluck('country').forEach(function(countryName) {
+          d3.select('[data-name="'+ countryName+ '"]').attr('class', 'nn-rect nn-rect-not-hover')
+        })   
+      }
+
 
     })
     .on('mouseout', function(d) {
@@ -990,13 +1068,39 @@ $(document).on('ready', function() {
   }
 
   function init(args, viz) {
-    d3.json('bin/economic_regional.json', function(resp) {
-      args.economic_regional = resp
-      var neutrality = new Neutrality(args, viz);
-      neutrality.$el = viz.$el;
-      Utility.resize.addDispatch('neutrality', neutrality.resize, neutrality);
-      neutrality.draw();
+    var labels = args.labels;
+
+    var neutrality = new Neutrality(args, viz);
+    neutrality.$el = viz.$el;
+
+    var $toggles = $('#nn-ui-container');
+    if ($toggles.length) {
+      $toggles.on('click', 'button', function() {
+        var $target = $(this);
+        if ($target.hasClass('selected')) { return false; }
+
+        $toggles.find('.selected').removeClass('selected');
+        $target.addClass('selected');
+
+        neutrality.attribute = $target.attr('data-type');
+      });
+    }
+    neutrality.attribute = 'region'
+
+    // fill labels for UI
+    var labelMap = {
+      'nn-main-action': 'gn_nn_main_action',
+      'nn-toggle-region': 'gn_nn_toggle_region',
+      'nn-toggle-econ': 'gn_nn_toggle_econ'
+    }
+    _(labelMap).each(function(labelKey, selector) {
+      if (labels[labelKey]) {
+        $('#' + selector).html(labels[labelKey]); 
+      }
     })
+
+    Utility.resize.addDispatch('neutrality', neutrality.resize, neutrality);
+    neutrality.draw();
 
   }
 

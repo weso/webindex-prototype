@@ -1,18 +1,12 @@
 (function() {
   "use strict";
 
-  var labels = {
-    discrimination: 'Evidence of discrimination',
-    no_discrimination: 'No evidence of discrimination',
-    law: 'Has effective law and regulations',
-    no_law: 'No effective law and regulations'
-  }
-
   var Neutrality = function(args, viz) {
     this.dataset = []
+    this.labels = args.labels;
 
     var economic_regional = _(args.economic_regional).map(function(countryVal, country) {
-      return {country: country, region: countryVal.region, econ: country.econ}
+      return {country: country, region: countryVal.region, econ: parseInt(countryVal.econ)}
     })
 
     var totalPop = 0;
@@ -29,7 +23,8 @@
           score: args.neutrality[country]['Score'],
           pop: args.itu[country]['Population'] * args.itu[country]['ITU']/totalPop,
           id: args.flags[country]['ID'],
-          region: args.economic_regional[country]['region']
+          region: args.economic_regional[country]['region'],
+          econ: args.economic_regional[country]['econ']
         });
       }
     }
@@ -49,29 +44,30 @@
             .attr('class', 'nn-rect')
             .attr('data-name', function(d) { return d.country})
 
+
     var ne = this.svg.append('text').attr('class', 'nn-text-ne nn-text')
     ne.append('tspan').text('●').attr('class', 'nn-pos-dot')
-    ne.append('tspan').attr('x', 10).attr('dy', 0).attr('dx', -20).text(labels.no_discrimination)
+    ne.append('tspan').attr('x', 10).attr('dy', 0).attr('dx', -20).text(this.labels['nn_axis_no_discrimination'])
     ne.append('tspan').text('●').attr('dy', '20').attr('class', 'nn-pos-dot')
-    ne.append('tspan').attr('x', 0).attr('dy', '20').attr('dx', -20).text(labels.law);
+    ne.append('tspan').attr('x', 0).attr('dy', '20').attr('dx', -20).text(this.labels['nn_axis_law']);
 
     var nw = this.svg.append('text').attr('class', 'nn-text-nw nn-text')
     nw.append('tspan').text('●').attr('class', 'nn-neg-dot')
-    nw.append('tspan').attr('x', 0).attr('dy', 0).attr('dx', 20).text(labels.discrimination)
+    nw.append('tspan').attr('x', 0).attr('dy', 0).attr('dx', 20).text(this.labels['nn_axis_discrimination'])
     nw.append('tspan').text('●').attr('dy', '20').attr('class', 'nn-pos-dot')
-    nw.append('tspan').attr('x', 0).attr('dy', '20').attr('dx', 20).text(labels.law);
+    nw.append('tspan').attr('x', 0).attr('dy', '20').attr('dx', 20).text(this.labels['nn_axis_law']);
 
     var sw = this.svg.append('text').attr('class', 'nn-text-sw nn-text')
     sw.append('tspan').text('●').attr('class', 'nn-neg-dot')
-    sw.append('tspan').attr('x', 0).attr('dy', 0).attr('dx', 20).text(labels.discrimination)
+    sw.append('tspan').attr('x', 0).attr('dy', 0).attr('dx', 20).text(this.labels['nn_axis_discrimination'])
     sw.append('tspan').text('●').attr('dy', '20').attr('class', 'nn-neg-dot')
-    sw.append('tspan').attr('x', 0).attr('dy', 20).attr('dx', 20).text(labels.no_law)
+    sw.append('tspan').attr('x', 0).attr('dy', 20).attr('dx', 20).text(this.labels['nn_axis_no_law'])
 
     var se = this.svg.append('text').attr('class', 'nn-text-se nn-text')
     se.append('tspan').text('●').attr('class', 'nn-pos-dot')
-    se.append('tspan').attr('x', 0).attr('dy', 0).attr('dx', -20).text(labels.no_discrimination)
+    se.append('tspan').attr('x', 0).attr('dy', 0).attr('dx', -20).text(this.labels['nn_axis_no_discrimination'])
     se.append('tspan').text('●').attr('dy', '20').attr('class', 'nn-neg-dot')
-    se.append('tspan').attr('x', 0).attr('dy', 20).attr('dx', -20).text(labels.no_law)
+    se.append('tspan').attr('x', 0).attr('dy', 20).attr('dx', -20).text(this.labels['nn_axis_no_law'])
 
     // ********************
     // APPEND AXES
@@ -114,6 +110,10 @@
       return country.region
     })
 
+    this.groupByEcon = _(economic_regional).groupBy(function(country) {
+      return country.econ
+    })
+
     function MaybeLen(arg) { return ((arg)?arg.length:0) }
     this.maxSetSize = Math.max(
       MaybeLen(this.groupBy[1][-1]),
@@ -126,7 +126,7 @@
     // INSERT FLAGS INTO SVG
     // *********************
 
-    var FLAG_DOMAIN = 'bin/flags/';
+    var FLAG_DOMAIN = 'bin/square-flags/';
     var FLAG_EXTENSION = '.png';
     this.svg.append('defs');
     var defs = this.svg.select('defs');
@@ -143,10 +143,10 @@
         })
         .append('image')
         .attr({
-          x: -0.5,
-          y: -0.5,
-          width: 2,
-          height: 2
+          x: 0,
+          y: 0,
+          width: 1,
+          height: 1
         })
         .attr('xlink:href', FLAG_DOMAIN + val.Flag_Name + FLAG_EXTENSION)
     })
@@ -312,15 +312,25 @@
         country: d.country,
         score: d.score,
         discriminationText: discriminationText,
-        lawText: lawText
+        lawText: lawText,
+        label: that.labels['nn_tooltip_score'],
+        region: that.labels['region_translation_' + d.region],
+        econ: that.labels['econ_translation_' + d.econ]
       })).show();
 
       that.svg.selectAll('.nn-rect').attr('class','nn-rect nn-rect-hover')
       d3.select(this).attr('class', 'nn-rect nn-rect-not-hover');
 
-      _(that.groupByRegion[d.region]).pluck('country').forEach(function(countryName) {
-        d3.select('[data-name="'+ countryName+ '"]').attr('class', 'nn-rect nn-rect-not-hover')
-      })
+      if (that.attribute === 'region') {
+        _(that.groupByRegion[d.region]).pluck('country').forEach(function(countryName) {
+          d3.select('[data-name="'+ countryName+ '"]').attr('class', 'nn-rect nn-rect-not-hover')
+        })        
+      } else {
+        _(that.groupByEcon[d.econ]).pluck('country').forEach(function(countryName) {
+          d3.select('[data-name="'+ countryName+ '"]').attr('class', 'nn-rect nn-rect-not-hover')
+        })   
+      }
+
 
     })
     .on('mouseout', function(d) {
@@ -335,13 +345,39 @@
   }
 
   function init(args, viz) {
-    d3.json('bin/economic_regional.json', function(resp) {
-      args.economic_regional = resp
-      var neutrality = new Neutrality(args, viz);
-      neutrality.$el = viz.$el;
-      Utility.resize.addDispatch('neutrality', neutrality.resize, neutrality);
-      neutrality.draw();
+    var labels = args.labels;
+
+    var neutrality = new Neutrality(args, viz);
+    neutrality.$el = viz.$el;
+
+    var $toggles = $('#nn-ui-container');
+    if ($toggles.length) {
+      $toggles.on('click', 'button', function() {
+        var $target = $(this);
+        if ($target.hasClass('selected')) { return false; }
+
+        $toggles.find('.selected').removeClass('selected');
+        $target.addClass('selected');
+
+        neutrality.attribute = $target.attr('data-type');
+      });
+    }
+    neutrality.attribute = 'region'
+
+    // fill labels for UI
+    var labelMap = {
+      'nn-main-action': 'gn_nn_main_action',
+      'nn-toggle-region': 'gn_nn_toggle_region',
+      'nn-toggle-econ': 'gn_nn_toggle_econ'
+    }
+    _(labelMap).each(function(labelKey, selector) {
+      if (labels[labelKey]) {
+        $('#' + selector).html(labels[labelKey]); 
+      }
     })
+
+    Utility.resize.addDispatch('neutrality', neutrality.resize, neutrality);
+    neutrality.draw();
 
   }
 

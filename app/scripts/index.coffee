@@ -356,7 +356,7 @@ renderGenderTab = (percentage) ->
     percentage = 100 - percentage
 
   setPercentage("#tab3", percentage)
-  document.getElementById("gender-percentage")?.innerHTML? = "#{percentage}%"
+  document.getElementById("gender-percentage")?.innerHTML?= "#{percentage}%"
 
   container = document.querySelector(".infographic-percentage")
 
@@ -392,7 +392,7 @@ renderPrivacyTab = (percentage) ->
     percentage = 100 - percentage
 
   setPercentage("#tab4", percentage)
-  document.getElementById("privacy-percentage")?.innerHTML? = "#{percentage}%"
+  document.getElementById("privacy-percentage")?.innerHTML?= "#{percentage}%"
 
   pie = document.getElementById("world-pie")
   pie.setAttribute("percentage", percentage)

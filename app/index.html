@@ -10,7 +10,7 @@
     <script>
       this.mode = "debug";
 
-      var view = window.location.hash ? window.location.hash.substring(1) : 'index';
+      var view = window.location.hash ? window.location.hash.substring(1) : 'data';
 
       loadPartials(['by', 'head', 'header', 'header', 'footer'], function() {
         loadTemplate(view, jsonData);
