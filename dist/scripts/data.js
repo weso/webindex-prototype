@@ -525,7 +525,8 @@
       margins: [8, 1, 0, 2.5],
       yAxis: {
         margin: 2,
-        title: ""
+        title: "",
+        tickColour: "none"
       },
       valueOnItem: {
         show: false
