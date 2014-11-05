@@ -295,7 +295,7 @@ div.country-box {
 /* MAP */
 
 div.map {
-  height: 30em;
+  min-height: 32em;
   clear: both;
 
   .buttons {
@@ -304,6 +304,34 @@ div.map {
 
   .visor {
     background-color: transparent;
+  }
+
+  .wrapper {
+    height: 27em;
+  }
+
+  .legend {
+    height: 5em;
+    padding: 0 2.5em;
+
+    ul {
+      overflow: hidden;
+
+      li {
+        float: left;
+        width: 33.33%;
+        padding: 0.2em 0;
+      }
+    }
+
+    .circle {
+      width: 1em;
+      height: 1em;
+      border-radius: 50%;
+      float: left;
+      margin-top: 0.2em;
+      margin-right: 0.5em;
+    }
   }
 }
 

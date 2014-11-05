@@ -219,6 +219,31 @@ updateInfo = () ->
 
   getObservations(indicator, countries, year)
 
+renderContinentLegend = (data, options, container, getContinents, getContinentColour) ->
+  continents = getContinents(options)
+
+  ul = document.createElement "ul"
+  container.appendChild ul
+
+  for continent in continents
+    code = continent.code
+    colour = getContinentColour(options, continent)
+    name = data.continents[code]
+
+    li = document.createElement "li"
+    ul.appendChild li
+
+    circle = document.createElement "div"
+    circle.className = "circle"
+    circle.style.backgroundColor = colour
+    li.appendChild circle
+
+    span = document.createElement "span"
+    span.className = "continent"
+    li.appendChild span
+
+    span.innerHTML = name
+
 renderCharts = (data) ->
   mapContainer = "#map"
   barContainer = "#country-bars"
@@ -243,12 +268,66 @@ renderCharts = (data) ->
 
     # Ranking
 
-    document.querySelector(rankingContainer)?.innerHTML = ""
+    rankingContainerDiv = document.querySelector(rankingContainer)
+    rankingContainerDiv?.innerHTML = ""
+
+    rankingLegend = document.createElement "div"
+    rankingLegend.className = "legend"
+    rankingContainerDiv?.appendChild rankingLegend
+
+    rankingWrapper = document.createElement "div"
+    rankingWrapper.className = "wrapper"
+    rankingContainerDiv?.appendChild rankingWrapper
+
+    getContinentColour = (options, element, index) ->
+      pos = 0
+
+      switch element.continent
+        when "ECS"
+          pos = 0
+        when "NAC"
+          pos = 5
+        when "LCN"
+          pos = 1
+        when "AFR"
+          pos = 2
+        when "SAS"
+          pos = 3
+        when "EAS"
+          pos = 6
+        when "MEA"
+          pos = 4
+
+      return options.serieColours[pos]
+
+    getLegendElements = (options) ->
+      elements = []
+      series = options.series
+      length = series.length
+
+      for serie in series
+        continent = serie.continent
+
+        if elements.indexOf(continent) == -1
+          elements.push(continent)
+
+      elements = elements.sort()
+
+      length = elements.length
+      range = [0..length - 1]
+
+      for i in range
+        elements[i] = {
+          code: elements[i],
+          continent: elements[i]
+        }
+
+      return elements
 
     options = {
       maxRankingRows: 10,
-      margins: [4, 12, 1, 0],
-      container: rankingContainer,
+      margins: [4, 0, 1, 0],
+      container: rankingWrapper,
       chartType: "ranking",
       rankingElementShape: "square",
       rankingDirection: "HigherToLower",
@@ -276,10 +355,9 @@ renderCharts = (data) ->
         "font-size": "12px"
       },
       legend: {
-        "font-family": "'Kite One', sans-serif",
-        "font-size": "14px"
+        show: false
       },
-      serieColours: ["#0489B1", "#088A68", "#21610B", "#DBA901", "#084B8A"],
+      serieColours: ["#0489B1", "#088A68", "#FF8000", "#DBA901", "#642EFE", "#795227", "#FA5858"],
       valueOnItem: {
         "font-family": "Helvetica",
         "font-colour": "#fff",
@@ -290,49 +368,8 @@ renderCharts = (data) ->
       series: data.secondVisualisation,
       getName: (serie) ->
         serie.code
-      getElementColour: (options, element, index) ->
-        pos = 0
-
-        switch element.continent
-          when "ECS"
-            pos = 0
-          when "NAC"
-            pos = 1
-          when "LCN"
-            pos = 1
-          when "AFR"
-            pos = 2
-          when "SAS"
-            pos = 3
-          when "EAS"
-            pos = 3
-          when "MEA"
-            pos = 4
-
-        return options.serieColours[pos]
-      getLegendElements: (options) ->
-        elements = []
-        series = options.series
-        length = series.length
-
-        for serie in series
-          continent = serie.continent
-
-          if elements.indexOf(continent) == -1
-            elements.push(continent)
-
-        elements = elements.sort()
-
-        length = elements.length
-        range = [0..length - 1]
-
-        for i in range
-          elements[i] = {
-            code: elements[i],
-            continent: elements[i]
-          }
-
-        return elements
+      getElementColour: getContinentColour
+      getLegendElements: getLegendElements
       events: {
         onclick: (info) ->
           code = info["data-code"]
@@ -341,7 +378,11 @@ renderCharts = (data) ->
       }
     }
 
+    # Chart
     wesCountry.charts.chart options
+
+    # Legend
+    renderContinentLegend(data, options, rankingLegend, getLegendElements, getContinentColour)
   else
     # Hide map view
     document.querySelector(mapView)?.style.display = 'none'
