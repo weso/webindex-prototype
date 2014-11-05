@@ -29,6 +29,26 @@ div.visualisation {
       text-decoration: none;
     }
   }
+
+  section.copy {
+    background-color: white;
+
+    p {
+      margin: 0;
+      font-size: 0.8em;
+      color: #444;
+    }
+
+    textarea {
+      margin: 0 0 1em 0;
+      height: 2.5em;
+      border: 1px solid #B7C8D9;
+      font-size: 1em;
+      font-weight: 300;
+      color: #555;
+      background-color: #fff;
+    }
+  }
 }
 
 div.maximised {

@@ -1,8 +1,8 @@
 visualisations = document.querySelectorAll(".visualisation")
 expands = document.querySelectorAll(".visualisation .expand")
 
-maximiseVisualisation = ->
-  maximise(this)
+#maximiseVisualisation = ->
+#  maximise(this)
 
 maximiseVisualisationClick = (element) ->
   maximise(this.parentNode)
@@ -52,13 +52,14 @@ minimise = (element) ->
   anchor = element.getAttribute("data-anchor")
 
   if anchor
+    document.location.hash = ""
     document.location.hash = anchor
 
-for visualisation in visualisations
-  if visualisation.attachEvent
-    visualisation.attachEvent("ondblclick", maximiseVisualisation)
-  else
-    visualisation.addEventListener("dblclick", maximiseVisualisation, false)
+#for visualisation in visualisations
+#  if visualisation.attachEvent
+#    visualisation.attachEvent("ondblclick", maximiseVisualisation)
+#  else
+#    visualisation.addEventListener("dblclick", maximiseVisualisation, false)
 
 for expand in expands
   expand.onclick = maximiseVisualisationClick
