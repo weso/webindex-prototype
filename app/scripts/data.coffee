@@ -219,6 +219,9 @@ updateInfo = () ->
 
   getObservations(indicator, countries, year)
 
+  document.getElementById("indicator")?.innerHTML = indicator.replace("_", " ")
+  document.getElementById("year")?.innerHTML = year
+
 renderContinentLegend = (data, options, container, getContinents, getContinentColour) ->
   continents = getContinents(options)
 
@@ -573,8 +576,8 @@ renderMap = ->
   map = wesCountry.maps.createMap({
     container: mapContainer,
     borderWidth: 1.5,
-    landColour: "#D7D7C2",
-    borderColour: "#E7E9D9",
+    landColour: "#dcdcdc",
+    borderColour: "#fff",
     backgroundColour: "none",
     countries: global.observations,
     #width: view.offsetWidth,

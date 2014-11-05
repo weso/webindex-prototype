@@ -79,20 +79,22 @@ $contact-colours: #a9ca47,
 
 /* DATA */
 
-$data-map-background-color: #E7E9D9;
-$data-table-background-color: #E7E9D9;
+$data-map-background-color: #fff;
+$data-table-background-color: #fff;
 $data-selector-colours: #a9ca47,
                         #4CA4A4;
 
-$data-mini-background-colours:  #005475,
+$data-mini-background-colours:  #f93845,
+                                #0096af,
+                                #005475,
                                 #92c550,
                                 #919279,
                                 #5C5D45;
 $data-up-arrow: #0096af;
 $data-down-arrow: #f93845;
-$data-select-colours:   #47caaa,
-                        #a9ca47,
-                        #CED53C;
+$data-select-colours:   #f93845,
+                  #0096af,
+                  #89ba00;
 $data-select-arrow-colour: #4CA4A4;
 
 /* ERROR */

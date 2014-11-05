@@ -221,7 +221,7 @@
   };
 
   updateInfo = function() {
-    var countries, indicator, year;
+    var countries, indicator, year, _ref, _ref1;
     year = global.selections.year;
     countries = global.selections.countries;
     indicator = global.selections.indicator;
@@ -231,7 +231,11 @@
     if (!year || !countries || !indicator) {
       return;
     }
-    return getObservations(indicator, countries, year);
+    getObservations(indicator, countries, year);
+    if ((_ref = document.getElementById("indicator")) != null) {
+      _ref.innerHTML = indicator.replace("_", " ");
+    }
+    return (_ref1 = document.getElementById("year")) != null ? _ref1.innerHTML = year : void 0;
   };
 
   renderContinentLegend = function(data, options, container, getContinents, getContinentColour) {
@@ -585,8 +589,8 @@
     return map = wesCountry.maps.createMap({
       container: mapContainer,
       borderWidth: 1.5,
-      landColour: "#D7D7C2",
-      borderColour: "#E7E9D9",
+      landColour: "#dcdcdc",
+      borderColour: "#fff",
       backgroundColour: "none",
       countries: global.observations,
       colourRange: ["#E5E066", "#83C04C", "#1B7A65", "#1B4E5A", "#005475"],
