@@ -572,8 +572,8 @@ renderMap = ->
   map = wesCountry.maps.createMap({
     container: mapContainer,
     borderWidth: 1.5,
-    landColour: "#E4E5D8",
-    borderColour: "#E4E5D8",
+    landColour: "#D7D7C2",
+    borderColour: "#E7E9D9",
     backgroundColour: "none",
     countries: global.observations,
     #width: view.offsetWidth,

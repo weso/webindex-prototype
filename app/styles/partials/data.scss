@@ -295,7 +295,7 @@ div.country-box {
 /* MAP */
 
 div.map {
-  min-height: 32em;
+  height: 32em;
   clear: both;
 
   .buttons {
@@ -366,7 +366,7 @@ nav.tabs {
     }
 
     li.selected span.circle {
-      background-color: darken($data-map-background-color, 40%);
+      background-color: darken($data-map-background-color, 50%);
     }
   }
 

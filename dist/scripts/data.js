@@ -584,8 +584,8 @@
     return map = wesCountry.maps.createMap({
       container: mapContainer,
       borderWidth: 1.5,
-      landColour: "#E4E5D8",
-      borderColour: "#E4E5D8",
+      landColour: "#D7D7C2",
+      borderColour: "#E7E9D9",
       backgroundColour: "none",
       countries: global.observations,
       colourRange: ["#E5E066", "#83C04C", "#1B7A65", "#1B4E5A", "#005475"],
