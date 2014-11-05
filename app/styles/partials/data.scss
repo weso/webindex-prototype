@@ -163,15 +163,15 @@ div.timeline {
   margin-top: 1em;
 
   header {
-    border-color: white;
+    border-color: #222;
 
     h2 {
-      color: white;
+      color: #222;
     }
   }
 
   .view-more a {
-    color: white;
+
   }
 }
 
@@ -361,7 +361,7 @@ nav.tabs {
     }
 
     li.selected span.circle {
-      background-color: darken($data-map-background-color, 50%);
+      background-color: #666;
     }
   }
 
@@ -402,7 +402,7 @@ table.full-ranking {
   .circle {
     width: 2em;
     height: 2em;
-    background-color: darken($data-table-background-color, 10%);
+    background-color: #666;
     color: white;
     padding-top: 0.2em;
     border-radius: 50%;
@@ -410,14 +410,16 @@ table.full-ranking {
     margin: 0 auto;
   }
 
+  > thead {
+    display: none;
+  }
+
   > tbody {
-    background-color: lighten($data-table-background-color, 10%);
-    border-top: 0.3em solid $data-table-background-color;
-    border-bottom: 0.6em solid $data-table-background-color;
+    border-bottom: 0.1em solid #666;
 
     th {
       font-size: 0.7em;
-      border-bottom-color: darken($data-table-background-color, 20%);
+      border-bottom-color: darken($data-table-background-color, 30%);
     }
 
     tbody {
@@ -427,7 +429,6 @@ table.full-ranking {
 
   > tbody:hover {
     background-color: darken($data-table-background-color, 20%);
-    color: white;
   }
 
   tr.tr-view-more {
