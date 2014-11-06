@@ -500,14 +500,13 @@ renderCharts = (data) ->
 
   barContainer = "#bars"
   document.querySelector(barContainer)?.innerHTML = ""
-
   options = {
     container: barContainer,
     chartType: "bar",
     legend: {
       show: false
     },
-    margins: [8, 0, 0, 0],
+    margins: [8, 0, 20, 0],
     yAxis: {
       margin: 0,
       title: "",
@@ -515,7 +514,7 @@ renderCharts = (data) ->
       "font-colour": "none"
     },
     valueOnItem: {
-      show: false
+      show: true
     },
     xAxis: {
       values: [],
@@ -550,6 +549,8 @@ renderCharts = (data) ->
       onmouseover: (info) ->
         chartTooltip(info, global)
     }
+    getName: (element) ->
+      element.code
   }
 
   wesCountry.charts.chart options

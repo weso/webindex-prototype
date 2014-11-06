@@ -527,7 +527,7 @@
       legend: {
         show: false
       },
-      margins: [8, 0, 0, 0],
+      margins: [8, 0, 20, 0],
       yAxis: {
         margin: 0,
         title: "",
@@ -535,7 +535,7 @@
         "font-colour": "none"
       },
       valueOnItem: {
-        show: false
+        show: true
       },
       xAxis: {
         values: [],
@@ -566,6 +566,9 @@
         onmouseover: function(info) {
           return chartTooltip(info, global);
         }
+      },
+      getName: function(element) {
+        return element.code;
       }
     };
     wesCountry.charts.chart(options);

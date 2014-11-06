@@ -532,7 +532,26 @@ div.map {
 /* BARS */
 
 div.bars {
-  height: 8.5em;
+  height: 10em;
+
+  text.item-name {
+    writing-mode: tb;
+    glyph-orientation-vertical: 0;
+    text-anchor: start !important;
+    color: #666 !important;
+  }
+
+  text.item-name:nth-child(3n+1) {
+    fill: #333 !important;
+  }
+
+  text.item-name:nth-child(3n) {
+    fill: #777 !important;
+  }
+
+  text.item-name:nth-child(3n-1) {
+    fill: #006a7c !important;
+  }
 }
 
 /* TABS */
