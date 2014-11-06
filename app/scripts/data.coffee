@@ -7,6 +7,7 @@ global.selections = {
   year: null
 }
 global.maxTableRows = 7
+global.continents = {}
 
 ################################################################################
 #                                 INIT SELECTORS
@@ -202,6 +203,7 @@ getObservations = (indicator, countries, year) ->
   if !data.success then return
 
   observations = data.data
+  global.continents = data.data.continents
   renderCharts(observations)
   renderTable(observations)
   renderBoxes(observations)
@@ -447,11 +449,7 @@ renderCharts = (data) ->
           global.options.countrySelector.select(code)
           global.options.countrySelector.refresh()
         onmouseover: (info) ->
-          country = info["data-area_name"]
-          value = info["data-values"]
-          ranked = info["data-ranked"]
-          text = "#{country}: #{value} ##{ranked}"
-          wesCountry.charts.showTooltip(text, info.event)
+          chartTooltip(info, global)
       }
       getName: (serie) ->
         serie["short_name"]
@@ -489,9 +487,11 @@ renderCharts = (data) ->
           code = info["data-code"]
           global.options.countrySelector.select(code)
           global.options.countrySelector.refresh()
+        onmouseover: (info) ->
+          chartTooltip(info, global)
       },
       getName: (serie) ->
-        serie.area_name
+        serie["short_name"] || serie["area_name"]
     }
 
     wesCountry.charts.chart options
@@ -499,7 +499,6 @@ renderCharts = (data) ->
   # Bar chart
 
   barContainer = "#bars"
-
   document.querySelector(barContainer)?.innerHTML = ""
 
   options = {
@@ -549,12 +548,7 @@ renderCharts = (data) ->
         global.options.countrySelector.select(code)
         global.options.countrySelector.refresh()
       onmouseover: (info) ->
-        country = info["data-area_name"]
-        value = info["data-values"]
-        ranked = info["data-ranked"]
-
-        text = "#{country}: #{value} ##{ranked}"
-        wesCountry.charts.showTooltip(text, info.event)
+        chartTooltip(info, global)
     }
   }
 
@@ -594,21 +588,45 @@ renderMap = ->
       if (visor)
         visor.innerHTML = '';
 
-        name = document.createElement('span')
-        name.innerHTML = info.name
-        name.className = 'name'
-        visor.appendChild(name)
+        code = info["data-code"]
 
-        value = document.createElement('span')
+        if !code then return
+
+        value = document.createElement('div')
         value.innerHTML = info.value
         value.className = 'value'
         visor.appendChild(value)
 
-        ranked = document.createElement('span')
-        rankedValue = if info["data-ranked"] then "#" + info["data-ranked"] else ""
+        country = document.createElement('div')
+        country.className = 'country'
+        visor.appendChild(country)
+
+        ranked = document.createElement('div')
+        rankedValue = if info["data-ranked"] then info["data-ranked"] else ""
         ranked.innerHTML = rankedValue
-        ranked.className = 'value'
-        visor.appendChild(ranked)
+        ranked.className = 'ranking'
+        country.appendChild(ranked)
+
+        flag = document.createElement "flag"
+        flag.className = "flag"
+        country.appendChild(flag)
+
+        img = document.createElement "img"
+        path = document.getElementById("path").value
+        img.src = "#{path}/images/flags/#{code}.png"
+        flag.appendChild(img)
+
+        name = document.createElement "p"
+        name.className = "name"
+        name.innerHTML = info["data-short_name"]
+        country.appendChild name
+
+        name = document.createElement "p"
+        name.className = "continent"
+        continent = info["data-continent"]
+        if continent then continent = global.continents[continent]
+        name.innerHTML = continent
+        country.appendChild name
   })
 
 renderTable = (data) ->
@@ -626,11 +644,17 @@ renderTable = (data) ->
   for observation in observations
     count++
     code = observation.code
-    name = observation.area_name
+    name = observation.short_name
     rank = if observation.ranked then observation.ranked else count
     value = if observation.values && observation.values.length > 0 then observation.values[0] else observation.value
     previousValue = observation.previous_value
     extraInfo = observation.extra
+
+    continent = ""
+
+    if observation.continent
+      continent = observation.continent
+      continent = global.continents[continent]
 
     if previousValue
       tendency = previousValue.tendency
@@ -672,11 +696,17 @@ renderTable = (data) ->
     td.appendChild span
 
     td = document.createElement "td"
+    td.setAttribute("data-title", "Continent")
+    tr.appendChild td
+
+    td.innerHTML = continent
+
+    td = document.createElement "td"
     td.setAttribute("data-title", "Value")
     tr.appendChild td
 
     value = value.toFixed(2)
-    td.innerHTML = "Value: #{value}"
+    td.innerHTML = "<div><p>value</p> #{value}</div>"
 
     # Extra info
 
@@ -964,3 +994,30 @@ for collapsable in collapsables
     containerClass = container.className
     container.className = if this.collapsed then containerClass + " collapsed"  else containerClass.replace(" collapsed", "")
     this.className = if this.collapsed then "button fa fa-toggle-off" else "button fa fa-toggle-on"
+
+################################################################################
+#                               CHART TOOLTIP
+################################################################################
+
+chartTooltip = (info, global) ->
+  path = document.getElementById('path').value
+
+  value = info["data-values"]
+  ranked = info["data-ranked"]
+  code = info["data-area"]
+  name = info["data-area_name"]
+  time = info["data-year"]
+
+  continent = ""
+
+  if info["data-continent"]
+    continent = info["data-continent"]
+    continent = global.continents[continent]
+
+  flagSrc = "#{path}/images/flags/#{code}.png"
+
+  tooltipHeader = String.format('<div class="tooltip-header"><img src="{0}" /><div class="title"><p class="countryName">{1}</p><p class="continentName">{2}</p></div></div>', flagSrc, name, continent)
+  tooltipBody = String.format('<div class="tooltip-body"><p class="ranking">{0}</p><p class="time">{1}</p><p class="value">{2}</p></div>', ranked, time, value)
+  text = String.format("{0}{1}", tooltipHeader, if ranked && time then tooltipBody else "")
+
+  wesCountry.charts.showTooltip(text, info.event)

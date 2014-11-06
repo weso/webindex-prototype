@@ -1,5 +1,5 @@
 (function() {
-  var button, chartSelectors, checkSelectorDataReady, collapsable, collapsableSection, collapsables, getCountries, getIndicators, getObservations, getSelectorData, getYears, global, li, msie6, renderBoxes, renderCharts, renderContinentLegend, renderMap, renderTable, selectBar, setBoxesInitialPosition, setBoxesPosition, setIndicatorOptions, setPageStateful, top, updateInfo, _i, _j, _len, _len1;
+  var button, chartSelectors, chartTooltip, checkSelectorDataReady, collapsable, collapsableSection, collapsables, getCountries, getIndicators, getObservations, getSelectorData, getYears, global, li, msie6, renderBoxes, renderCharts, renderContinentLegend, renderMap, renderTable, selectBar, setBoxesInitialPosition, setBoxesPosition, setIndicatorOptions, setPageStateful, top, updateInfo, _i, _j, _len, _len1;
 
   global = this;
 
@@ -14,6 +14,8 @@
   };
 
   global.maxTableRows = 7;
+
+  global.continents = {};
 
   setPageStateful = function() {
     return wesCountry.stateful.start({
@@ -215,6 +217,7 @@
       return;
     }
     observations = data.data;
+    global.continents = data.data.continents;
     renderCharts(observations);
     renderTable(observations);
     return renderBoxes(observations);
@@ -464,12 +467,7 @@
             return global.options.countrySelector.refresh();
           },
           onmouseover: function(info) {
-            var country, ranked, text, value;
-            country = info["data-area_name"];
-            value = info["data-values"];
-            ranked = info["data-ranked"];
-            text = "" + country + ": " + value + " #" + ranked;
-            return wesCountry.charts.showTooltip(text, info.event);
+            return chartTooltip(info, global);
           }
         },
         getName: function(serie) {
@@ -508,10 +506,13 @@
             code = info["data-code"];
             global.options.countrySelector.select(code);
             return global.options.countrySelector.refresh();
+          },
+          onmouseover: function(info) {
+            return chartTooltip(info, global);
           }
         },
         getName: function(serie) {
-          return serie.area_name;
+          return serie["short_name"] || serie["area_name"];
         }
       };
       wesCountry.charts.chart(options);
@@ -563,12 +564,7 @@
           return global.options.countrySelector.refresh();
         },
         onmouseover: function(info) {
-          var country, ranked, text, value;
-          country = info["data-area_name"];
-          value = info["data-values"];
-          ranked = info["data-ranked"];
-          text = "" + country + ": " + value + " #" + ranked;
-          return wesCountry.charts.showTooltip(text, info.event);
+          return chartTooltip(info, global);
         }
       }
     };
@@ -609,29 +605,51 @@
         }
       },
       onCountryOver: function(info, visor) {
-        var name, ranked, rankedValue, value;
+        var code, continent, country, flag, img, name, path, ranked, rankedValue, value;
         if (visor) {
           visor.innerHTML = '';
-          name = document.createElement('span');
-          name.innerHTML = info.name;
-          name.className = 'name';
-          visor.appendChild(name);
-          value = document.createElement('span');
+          code = info["data-code"];
+          if (!code) {
+            return;
+          }
+          value = document.createElement('div');
           value.innerHTML = info.value;
           value.className = 'value';
           visor.appendChild(value);
-          ranked = document.createElement('span');
-          rankedValue = info["data-ranked"] ? "#" + info["data-ranked"] : "";
+          country = document.createElement('div');
+          country.className = 'country';
+          visor.appendChild(country);
+          ranked = document.createElement('div');
+          rankedValue = info["data-ranked"] ? info["data-ranked"] : "";
           ranked.innerHTML = rankedValue;
-          ranked.className = 'value';
-          return visor.appendChild(ranked);
+          ranked.className = 'ranking';
+          country.appendChild(ranked);
+          flag = document.createElement("flag");
+          flag.className = "flag";
+          country.appendChild(flag);
+          img = document.createElement("img");
+          path = document.getElementById("path").value;
+          img.src = "" + path + "/images/flags/" + code + ".png";
+          flag.appendChild(img);
+          name = document.createElement("p");
+          name.className = "name";
+          name.innerHTML = info["data-short_name"];
+          country.appendChild(name);
+          name = document.createElement("p");
+          name.className = "continent";
+          continent = info["data-continent"];
+          if (continent) {
+            continent = global.continents[continent];
+          }
+          name.innerHTML = continent;
+          return country.appendChild(name);
         }
       }
     });
   };
 
   renderTable = function(data) {
-    var a, code, count, empowerment, extraInfo, extraTable, extraTbody, extraTheader, freedomOpenness, globalRank, img, name, observation, observations, path, previousValue, rank, relevantContent, span, table, tbodies, tbody, td, tendency, th, tr, universalAccess, value, _i, _j, _k, _len, _len1, _len2, _ref;
+    var a, code, continent, count, empowerment, extraInfo, extraTable, extraTbody, extraTheader, freedomOpenness, globalRank, img, name, observation, observations, path, previousValue, rank, relevantContent, span, table, tbodies, tbody, td, tendency, th, tr, universalAccess, value, _i, _j, _k, _len, _len1, _len2, _ref;
     observations = data.observations;
     table = document.querySelector("#ranking");
     path = (_ref = document.getElementById("path")) != null ? _ref.value : void 0;
@@ -645,11 +663,16 @@
       observation = observations[_j];
       count++;
       code = observation.code;
-      name = observation.area_name;
+      name = observation.short_name;
       rank = observation.ranked ? observation.ranked : count;
       value = observation.values && observation.values.length > 0 ? observation.values[0] : observation.value;
       previousValue = observation.previous_value;
       extraInfo = observation.extra;
+      continent = "";
+      if (observation.continent) {
+        continent = observation.continent;
+        continent = global.continents[continent];
+      }
       if (previousValue) {
         tendency = previousValue.tendency;
       }
@@ -683,10 +706,14 @@
       span.innerHTML = name;
       td.appendChild(span);
       td = document.createElement("td");
+      td.setAttribute("data-title", "Continent");
+      tr.appendChild(td);
+      td.innerHTML = continent;
+      td = document.createElement("td");
       td.setAttribute("data-title", "Value");
       tr.appendChild(td);
       value = value.toFixed(2);
-      td.innerHTML = "Value: " + value;
+      td.innerHTML = "<div><p>value</p> " + value + "</div>";
       globalRank = extraInfo.rank;
       universalAccess = extraInfo["UNIVERSAL_ACCESS"].toFixed(2);
       freedomOpenness = extraInfo["FREEDOM_AND_OPENNESS"].toFixed(2);
@@ -941,5 +968,25 @@
       return this.className = this.collapsed ? "button fa fa-toggle-off" : "button fa fa-toggle-on";
     };
   }
+
+  chartTooltip = function(info, global) {
+    var code, continent, flagSrc, name, path, ranked, text, time, tooltipBody, tooltipHeader, value;
+    path = document.getElementById('path').value;
+    value = info["data-values"];
+    ranked = info["data-ranked"];
+    code = info["data-area"];
+    name = info["data-area_name"];
+    time = info["data-year"];
+    continent = "";
+    if (info["data-continent"]) {
+      continent = info["data-continent"];
+      continent = global.continents[continent];
+    }
+    flagSrc = "" + path + "/images/flags/" + code + ".png";
+    tooltipHeader = String.format('<div class="tooltip-header"><img src="{0}" /><div class="title"><p class="countryName">{1}</p><p class="continentName">{2}</p></div></div>', flagSrc, name, continent);
+    tooltipBody = String.format('<div class="tooltip-body"><p class="ranking">{0}</p><p class="time">{1}</p><p class="value">{2}</p></div>', ranked, time, value);
+    text = String.format("{0}{1}", tooltipHeader, ranked && time ? tooltipBody : "");
+    return wesCountry.charts.showTooltip(text, info.event);
+  };
 
 }).call(this);

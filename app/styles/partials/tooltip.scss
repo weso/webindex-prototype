@@ -1,0 +1,71 @@
+.wesCountry-tooltip {
+	padding-top: 0.3em;
+	padding-bottom: 0.5em;
+  font-family: "Roboto" sans-serif;
+}
+
+.wesCountry-tooltip img {
+	float: left;
+	width: 2.5em;
+	height: 2.5em;
+	margin-top: 0.3em;
+	margin-right: 1em;
+  border: 0.1em solid #ccc;
+}
+
+.wesCountry-tooltip .tooltip-header {
+	overflow: auto;
+	padding-bottom: 0.5em;
+	border-bottom: 0.1em solid #aaa;
+	margin-bottom: 0.5em;
+}
+
+.wesCountry-tooltip .tooltip-header .title {
+	padding: 0 2.8em;
+}
+
+.wesCountry-tooltip .tooltip-header .title .countryName {
+	font-weight: 600;
+	white-space: nowrap;
+}
+
+.wesCountry-tooltip .tooltip-header .title .continentName {
+	color: #555;
+	text-transform: uppercase;
+	white-space: nowrap;
+}
+
+.wesCountry-tooltip p {
+	margin: 0;
+	text-align: center;
+}
+
+.wesCountry-tooltip .tooltip-body {
+	min-width: 18em;
+}
+
+.wesCountry-tooltip p.time {
+	float: right;
+	padding: 0.7em 0.2em;
+  min-width: 2.8em;
+	background-color: #ccc;
+	color: #111;
+	font-size: 0.95em;
+  border-radius: 50%;
+}
+
+.wesCountry-tooltip p.ranking {
+	float: left;
+	text-align: center;
+	min-width: 2.8em;
+	padding: 0.7em 0.2em;
+	background-color: #333;
+	color: #fff;
+	font-size: 0.95em;
+  border-radius: 50%;
+}
+
+.wesCountry-tooltip p.value {
+	font-size: 1.2em;
+	padding-top: 0.4em;
+}

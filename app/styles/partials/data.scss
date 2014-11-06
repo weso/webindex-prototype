@@ -412,6 +412,52 @@ div.map {
 
   .visor {
     background-color: transparent;
+    padding: 0 1em;
+    min-height: 2.5em;
+
+    .value {
+      float: right;
+      height: 100%;
+      margin-top: 0.5em;
+    }
+
+    .country {
+      overflow: hidden;
+      height: 100%;
+
+      .ranking {
+        float: left;
+        margin-right: 1em;
+        margin-top: 0.5em;
+        height: 100%;
+      }
+
+      .flag {
+        float: left;
+        margin-right: 1em;
+        height: 100%;
+
+        img {
+          border: 0.1em solid #ccc;
+          border-radius: 50%;
+          margin-top: 0.65em;
+        }
+      }
+
+      p {
+        margin: 0;
+        text-align: center;
+      }
+
+      p.name {
+
+      }
+
+      p.continent {
+        font-size: 0.7em;
+        color: #555;
+      }
+    }
   }
 
   .wrapper {
@@ -557,7 +603,7 @@ table.full-ranking {
       text-align: center;
     }
   }
-  
+
   > tbody:hover {
     background-color: darken($data-table-background-color, 20%);
 
@@ -581,28 +627,34 @@ table.full-ranking {
   }
 
   td[data-title="Country"] {
-    width: 55%;
+    width: 45%;
   }
 
-  td[data-title="Rank"] {
+  td[data-title="Continent"] {
     text-align: center;
-    width: 15%;
+    width: 25%;
+    color: #555;
+    font-size: 0.9em;
   }
 
   td[data-title="Value"] {
     text-align: right;
     width: 15%;
 
-    i {
-      margin-left: 1em;
-    }
+    div {
+      background-color: #ccc;
+      text-align: center;
+      width: 5em;
+      height: 5em;
+      padding-top: 0.5em;
+      border-radius: 50%;
+      color: #000;
 
-    i.red {
-      color: $data-down-arrow;
-    }
-
-    i.green {
-      color: $data-up-arrow;
+      p {
+        margin: 0 0 0.5em 0;
+        font-size: 0.8em;
+        color: #333;
+      }
     }
   }
 
