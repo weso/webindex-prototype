@@ -651,6 +651,14 @@ renderTable = (data) ->
       tbody.className = "to-hide"
 
     td = document.createElement "td"
+    td.setAttribute("data-title", "Rank")
+    td.setAttribute("rowspan", "2")
+    td.className = "big-number"
+    tr.appendChild td
+
+    td.innerHTML = rank
+
+    td = document.createElement "td"
     td.setAttribute("data-title", "Country")
     tr.appendChild td
 
@@ -662,16 +670,6 @@ renderTable = (data) ->
     span = document.createElement "span"
     span.innerHTML = name
     td.appendChild span
-
-    td = document.createElement "td"
-    td.setAttribute("data-title", "Rank")
-    tr.appendChild td
-
-    wrapper = document.createElement "div"
-    wrapper.className = "circle"
-    td.appendChild wrapper
-
-    wrapper.innerHTML = rank
 
     td = document.createElement "td"
     td.setAttribute("data-title", "Value")

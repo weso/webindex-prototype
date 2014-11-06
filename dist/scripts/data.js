@@ -631,7 +631,7 @@
   };
 
   renderTable = function(data) {
-    var a, code, count, empowerment, extraInfo, extraTable, extraTbody, extraTheader, freedomOpenness, globalRank, img, name, observation, observations, path, previousValue, rank, relevantContent, span, table, tbodies, tbody, td, tendency, th, tr, universalAccess, value, wrapper, _i, _j, _k, _len, _len1, _len2, _ref;
+    var a, code, count, empowerment, extraInfo, extraTable, extraTbody, extraTheader, freedomOpenness, globalRank, img, name, observation, observations, path, previousValue, rank, relevantContent, span, table, tbodies, tbody, td, tendency, th, tr, universalAccess, value, _i, _j, _k, _len, _len1, _len2, _ref;
     observations = data.observations;
     table = document.querySelector("#ranking");
     path = (_ref = document.getElementById("path")) != null ? _ref.value : void 0;
@@ -667,6 +667,12 @@
         tbody.className = "to-hide";
       }
       td = document.createElement("td");
+      td.setAttribute("data-title", "Rank");
+      td.setAttribute("rowspan", "2");
+      td.className = "big-number";
+      tr.appendChild(td);
+      td.innerHTML = rank;
+      td = document.createElement("td");
       td.setAttribute("data-title", "Country");
       tr.appendChild(td);
       img = document.createElement("img");
@@ -676,13 +682,6 @@
       span = document.createElement("span");
       span.innerHTML = name;
       td.appendChild(span);
-      td = document.createElement("td");
-      td.setAttribute("data-title", "Rank");
-      tr.appendChild(td);
-      wrapper = document.createElement("div");
-      wrapper.className = "circle";
-      td.appendChild(wrapper);
-      wrapper.innerHTML = rank;
       td = document.createElement("td");
       td.setAttribute("data-title", "Value");
       tr.appendChild(td);

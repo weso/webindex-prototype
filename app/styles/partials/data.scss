@@ -499,6 +499,7 @@ nav.tabs {
 table.full-ranking {
   table-layout: auto;
   color: black;
+  font-family: 'Varela Round', sans-serif;
 
   th {
     text-align: center;
@@ -513,6 +514,16 @@ table.full-ranking {
 
   img.flag {
     border: 0.1em solid #ccc;
+  }
+
+  td.big-number {
+    font-size: 10em;
+    line-height: 1em;
+    padding: 0;
+    color: #ccc;
+    text-align: right !important;
+    padding-right: 0.2em;
+    min-width: 1.5em;
   }
 
   tr {
@@ -546,13 +557,13 @@ table.full-ranking {
       text-align: center;
     }
   }
-
-  tbody:nth-child(odd) {
-    background-color: #F1F8FA;
-  }
-
+  
   > tbody:hover {
     background-color: darken($data-table-background-color, 20%);
+
+    .big-number {
+      color: darken($data-table-background-color, 30%);
+    }
   }
 
   .tbody-view-more {
