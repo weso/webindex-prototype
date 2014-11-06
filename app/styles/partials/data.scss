@@ -1,3 +1,59 @@
+.data-right-content {
+  min-height: 60em;
+}
+
+/* COLLAPSABLE */
+
+.collapsable {
+  background-color: white;
+  border-left: 1px solid #ccc;
+  border-right: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+  box-shadow: 0 0.4em 0.2em -0.2em #777;
+  padding: 0 0 0.5em 0;
+  position: relative;
+  overflow-y: hidden;
+
+  section {
+    padding: 0 0.5em;
+  }
+
+  header.collapsable-header {
+    font-size: 1.2em;
+    color: #888;
+    border: none !important;
+    margin: 0 0 0.2em 0 !important;
+    overflow: hidden;
+    padding: 0 0.5em;
+
+    h2 {
+      float: left;
+      text-align: left;
+      font-size: 1em;
+      margin: 0 !important;
+    }
+
+    .button {
+      float: right;
+      color: #64A5BF;
+      cursor: pointer;
+    }
+  }
+}
+
+.collapsable.collapsed {
+  .button {
+    color: #888 !important;
+  }
+
+  section {
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    z-index: -1;
+  }
+}
+
 /* SIGNATURE */
 
 .signature {
@@ -12,19 +68,21 @@
   .help {
       float: right;
       text-align: center;
-      color: #01A9DB;
+      color: #64A5BF;
       cursor: pointer;
       font-size: 0.8em;
   }
 
   h1 {
-    margin-bottom: 0 !important;
+    margin-bottom: 1em !important;
+    font-size: 2em;
   }
 
-  h2 {
+  section > h2 {
     text-align: left;
-    margin: 0 !important;
-    font-size: 1.2em;
+    margin: 0 0 1em 0 !important;
+    font-size: 1.1em;
+    padding: 0 0.3em !important;
   }
 
   .downloads {
@@ -56,13 +114,34 @@
 
 }
 
+.select-bar.fixed {
+  top: 1em !important;
+  height: 100%;
+  overflow-y: hidden;
+
+  div.select-box {
+    position: absolute;
+    width: 100%;
+    transition-property: top;
+    transition-duration: 0.3s;
+  }
+}
+
 div.select-box {
-  margin: 0.5em 0 !important;
+  margin: 0 0 0.2em 0 !important;
   padding: 0;
   background-color: white;
+  border-left: 1px solid #ccc;
+  border-right: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+  box-shadow: 0 0.4em 0.2em -0.2em #777;
 
   > div {
     padding: 0.5em 0.5em 0.8em 0.5em;
+  }
+
+  header {
+    overflow: hidden;
   }
 
   h2 {
@@ -81,14 +160,25 @@ div.select-box {
     border-radius: 50%;
   }
 
-  img {
-    width: 100%;
-    margin: 0 0 -0.4em 0;
+  .bottom {
+    margin: 0;
+    font-size: 1.3em;
+    padding: 0.1em;
+    color: #333;
+    text-align: center;
+    border-bottom: 0.1em solid #888;
   }
 }
 
 
 div.select-box.first-box {
+  z-index: 3;
+
+  .bottom {
+    background-color: nth($data-select-colours, 1);
+    color: darken(nth($data-select-colours, 1), 30%);
+    border-bottom-color: darken(nth($data-select-colours, 1), 20%);
+  }
 
   div.circle-number {
     background-color: nth($data-select-colours, 1);
@@ -96,13 +186,13 @@ div.select-box.first-box {
 }
 
 div.select-box.second-box {
+  z-index: 2;
 
-  border-top: 0.1em solid #aaa;
-  border-bottom: 0.1em solid #aaa;
-  padding-top: 1em;
-  padding-bottom: 1em;
-  margin-top: 1em;
-  margin-bottom: 1em;
+  .bottom {
+    background-color: nth($data-select-colours, 2);
+    color: darken(nth($data-select-colours, 2), 15%);
+    border-bottom-color: darken(nth($data-select-colours, 2), 10%);
+  }
 
   div.circle-number {
     background-color: nth($data-select-colours, 2);
@@ -110,6 +200,14 @@ div.select-box.second-box {
 }
 
 div.select-box.third-box {
+  z-index: 1;
+  margin: 0 !important;
+
+  .bottom {
+    background-color: nth($data-select-colours, 3);
+    color: darken(nth($data-select-colours, 3), 20%);
+    border-bottom-color: darken(nth($data-select-colours, 3), 10%);
+  }
 
   div.circle-number {
     background-color: nth($data-select-colours, 3);
@@ -117,7 +215,7 @@ div.select-box.third-box {
 }
 
 div.first-box {
-  margin-top: 2.4em !important;
+  margin-top: 0 !important;
 }
 
 /* TIMELINE */
@@ -149,27 +247,17 @@ div.timeline {
 /* BOXES */
 
 .data-box {
-  padding: 0.5em;
   background-color: #aaa;
 
   header {
-    border-bottom: 0.15em solid #bbb;
     overflow: hidden;
     margin-bottom: 1em;
-  }
-
-  h2 {
-    @include span-columns(6);
-    font-size: 1.7em;
-    margin-bottom: 0.3em;
-    color: #444;
-    text-align: left;
   }
 }
 
 .map-box {
   background-color: $data-map-background-color;
-  margin-top: 1.2em;
+  margin-top: 0.5em;
 }
 
 .table-box {
@@ -189,8 +277,14 @@ div.timeline {
 }
 
 div.middle-section {
-  @include outer-container;
-  margin-bottom: 2em;
+  margin-bottom: 1.5em;
+  background-color: white;
+
+  section > div:first-child {
+    @include outer-container;
+    margin-bottom: 0.5em;
+    clear: both;
+  }
 
   div {
     padding: 0;
@@ -255,7 +349,7 @@ div.country-box {
   }
 
   .selector ul {
-    font-size: 0.9em;
+    font-size: 0.85em;
 
     a {
       color: #222;
@@ -275,11 +369,16 @@ div.country-box {
       vertical-align: middle;
 
       ul {
-        padding-left: 2em;
+        padding-left: 3em;
+        margin-top: 0.3em;
       }
 
       div.title {
         margin-top: 0;
+      }
+
+      .hidden-plusOrMinus {
+        display: none;
       }
 
       .plusOrMinus {
@@ -354,8 +453,11 @@ div.bars {
 /* TABS */
 
 nav.tabs {
-  @include span-columns(6);
   margin-top: 0.2em;
+  overflow: hidden;
+  width: 50%;
+  min-width: 10em;
+  float: right;
 
   ul {
     overflow: hidden;
@@ -409,6 +511,10 @@ table.full-ranking {
     margin-right: 1em;
   }
 
+  img.flag {
+    border: 0.1em solid #ccc;
+  }
+
   tr {
     cursor: pointer;
   }
@@ -429,7 +535,7 @@ table.full-ranking {
   }
 
   > tbody {
-    border-bottom: 0.1em solid #666;
+    border-bottom: 0.1em solid #ccc;
 
     th {
       font-size: 0.7em;
@@ -441,12 +547,16 @@ table.full-ranking {
     }
   }
 
+  tbody:nth-child(odd) {
+    background-color: #F1F8FA;
+  }
+
   > tbody:hover {
     background-color: darken($data-table-background-color, 20%);
   }
 
-  tr.tr-view-more {
-    background-color: transparent;
+  .tbody-view-more {
+    border: none;
   }
 
   tbody.hidden {

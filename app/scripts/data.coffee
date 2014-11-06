@@ -147,7 +147,7 @@ getCountries = () ->
   if data.success then countries = data.data
 
   countries.unshift({
-    name: "All countries",
+    "short_name": "All countries",
     iso3: "ALL"
   })
 
@@ -157,7 +157,7 @@ getCountries = () ->
     data: countries,
     selectedItems: ["ALL"],
     maxSelectedItems: global.maxTableRows,
-    labelName: "name",
+    labelName: "short_name",
     valueName: "iso3",
     childrenName: "countries",
     autoClose: true,
@@ -508,11 +508,12 @@ renderCharts = (data) ->
     legend: {
       show: false
     },
-    margins: [8, 1, 0, 2.5],
+    margins: [8, 0, 0, 0],
     yAxis: {
-      margin: 2,
+      margin: 0,
       title: "",
-      tickColour: "none"
+      tickColour: "none",
+      "font-colour": "none"
     },
     valueOnItem: {
       show: false
@@ -775,9 +776,12 @@ renderTable = (data) ->
     for tbody in tbodies
       tbody.className = "hidden"
 
+    tbody = document.createElement "tbody"
+    tbody.className = "tbody-view-more"
+    table.appendChild tbody
+
     tr = document.createElement "tr"
-    tr.className = "tr-view-more"
-    table.appendChild tr
+    tbody.appendChild tr
 
     td = document.createElement "td"
     td.colSpan = 4
@@ -876,3 +880,89 @@ for li in chartSelectors
 
     if info && info == "map"
       renderMap()
+
+################################################################################
+#                                FIX LEFT BAR
+################################################################################
+
+msie6 = $.browser is "msie" and $.browser.version < 7
+
+selectBar = $(".select-bar")
+
+top = null
+
+if !msie6
+  $(window).scroll((event) ->
+    firstHeader = document.querySelector(".select-box header")
+    top ?= selectBar.offset().top + firstHeader.offsetHeight
+
+    # What the y position of the scroll is
+    y = $(this).scrollTop()
+
+    # Whether that's below the form
+    if y >= top
+      if !selectBar.collapsed
+        setBoxesInitialPosition()
+        # if so, add the class
+        selectBar.addClass("fixed")
+        setBoxesPosition()
+        selectBar.collapsed = true
+    else
+      # otherwise remove it
+      selectBar.removeClass("fixed")
+      selectBar.collapsed = false
+  )
+
+setBoxesInitialPosition = ->
+  boxes = document.querySelectorAll(".select-box")
+
+  for box in boxes
+    top = box.offsetTop
+    box.style.top = "#{top}px"
+
+setBoxesPosition = ->
+  # Set boxes position
+  boxes = document.querySelectorAll(".select-box")
+
+  previousTop = 0
+
+  for box in boxes
+    headerHeight = box.querySelector("header").offsetHeight
+    top = previousTop - headerHeight
+
+    ###
+    box.collapsedTop = top
+    box.uncollapsedTop = previousTop
+
+    box.onmouseover = ->
+      top = this.uncollapsedTop
+      this.style.top = "#{top}px"
+
+    box.onmouseout = ->
+      top = this.collapsedTop
+      this.style.top = "#{top}px"
+    ###
+    box.style.top = "#{top}px"
+
+    previousTop = top + box.offsetHeight
+
+################################################################################
+#                               COLLAPSABLE BOXES
+################################################################################
+
+collapsables = document.querySelectorAll(".collapsable")
+
+for collapsable in collapsables
+  button = collapsable.querySelector(".button")
+  collapsableSection = collapsable.querySelector("section")
+
+  button.collapsed = false
+  button.container = collapsable
+
+  button.onclick = ->
+    this.collapsed = !this.collapsed
+
+    container = this.container
+    containerClass = container.className
+    container.className = if this.collapsed then containerClass + " collapsed"  else containerClass.replace(" collapsed", "")
+    this.className = if this.collapsed then "button fa fa-toggle-off" else "button fa fa-toggle-on"

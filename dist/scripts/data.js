@@ -1,5 +1,5 @@
 (function() {
-  var chartSelectors, checkSelectorDataReady, getCountries, getIndicators, getObservations, getSelectorData, getYears, global, li, renderBoxes, renderCharts, renderContinentLegend, renderMap, renderTable, setIndicatorOptions, setPageStateful, updateInfo, _i, _len;
+  var button, chartSelectors, checkSelectorDataReady, collapsable, collapsableSection, collapsables, getCountries, getIndicators, getObservations, getSelectorData, getYears, global, li, msie6, renderBoxes, renderCharts, renderContinentLegend, renderMap, renderTable, selectBar, setBoxesInitialPosition, setBoxesPosition, setIndicatorOptions, setPageStateful, top, updateInfo, _i, _j, _len, _len1;
 
   global = this;
 
@@ -157,14 +157,14 @@
       countries = data.data;
     }
     countries.unshift({
-      name: "All countries",
+      "short_name": "All countries",
       iso3: "ALL"
     });
     global.options.countrySelector = new wesCountry.selector.basic({
       data: countries,
       selectedItems: ["ALL"],
       maxSelectedItems: global.maxTableRows,
-      labelName: "name",
+      labelName: "short_name",
       valueName: "iso3",
       childrenName: "countries",
       autoClose: true,
@@ -526,11 +526,12 @@
       legend: {
         show: false
       },
-      margins: [8, 1, 0, 2.5],
+      margins: [8, 0, 0, 0],
       yAxis: {
-        margin: 2,
+        margin: 0,
         title: "",
-        tickColour: "none"
+        tickColour: "none",
+        "font-colour": "none"
       },
       valueOnItem: {
         show: false
@@ -755,9 +756,11 @@
         tbody = tbodies[_k];
         tbody.className = "hidden";
       }
+      tbody = document.createElement("tbody");
+      tbody.className = "tbody-view-more";
+      table.appendChild(tbody);
       tr = document.createElement("tr");
-      tr.className = "tr-view-more";
-      table.appendChild(tr);
+      tbody.appendChild(tr);
       td = document.createElement("td");
       td.colSpan = 4;
       td.className = "view-more";
@@ -851,6 +854,92 @@
       if (info && info === "map") {
         return renderMap();
       }
+    };
+  }
+
+  msie6 = $.browser === "msie" && $.browser.version < 7;
+
+  selectBar = $(".select-bar");
+
+  top = null;
+
+  if (!msie6) {
+    $(window).scroll(function(event) {
+      var firstHeader, y;
+      firstHeader = document.querySelector(".select-box header");
+      if (top == null) {
+        top = selectBar.offset().top + firstHeader.offsetHeight;
+      }
+      y = $(this).scrollTop();
+      if (y >= top) {
+        if (!selectBar.collapsed) {
+          setBoxesInitialPosition();
+          selectBar.addClass("fixed");
+          setBoxesPosition();
+          return selectBar.collapsed = true;
+        }
+      } else {
+        selectBar.removeClass("fixed");
+        return selectBar.collapsed = false;
+      }
+    });
+  }
+
+  setBoxesInitialPosition = function() {
+    var box, boxes, _j, _len1, _results;
+    boxes = document.querySelectorAll(".select-box");
+    _results = [];
+    for (_j = 0, _len1 = boxes.length; _j < _len1; _j++) {
+      box = boxes[_j];
+      top = box.offsetTop;
+      _results.push(box.style.top = "" + top + "px");
+    }
+    return _results;
+  };
+
+  setBoxesPosition = function() {
+    var box, boxes, headerHeight, previousTop, _j, _len1, _results;
+    boxes = document.querySelectorAll(".select-box");
+    previousTop = 0;
+    _results = [];
+    for (_j = 0, _len1 = boxes.length; _j < _len1; _j++) {
+      box = boxes[_j];
+      headerHeight = box.querySelector("header").offsetHeight;
+      top = previousTop - headerHeight;
+
+      /*
+      box.collapsedTop = top
+      box.uncollapsedTop = previousTop
+      
+      box.onmouseover = ->
+        top = this.uncollapsedTop
+        this.style.top = "#{top}px"
+      
+      box.onmouseout = ->
+        top = this.collapsedTop
+        this.style.top = "#{top}px"
+       */
+      box.style.top = "" + top + "px";
+      _results.push(previousTop = top + box.offsetHeight);
+    }
+    return _results;
+  };
+
+  collapsables = document.querySelectorAll(".collapsable");
+
+  for (_j = 0, _len1 = collapsables.length; _j < _len1; _j++) {
+    collapsable = collapsables[_j];
+    button = collapsable.querySelector(".button");
+    collapsableSection = collapsable.querySelector("section");
+    button.collapsed = false;
+    button.container = collapsable;
+    button.onclick = function() {
+      var container, containerClass;
+      this.collapsed = !this.collapsed;
+      container = this.container;
+      containerClass = container.className;
+      container.className = this.collapsed ? containerClass + " collapsed" : containerClass.replace(" collapsed", "");
+      return this.className = this.collapsed ? "button fa fa-toggle-off" : "button fa fa-toggle-on";
     };
   }
 
