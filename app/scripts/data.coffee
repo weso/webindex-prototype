@@ -38,6 +38,13 @@ setPageStateful = ->
 
           global.selections.indicator = value
           updateInfo()
+
+          # Show republish notification
+          option = selectors["#indicator-select"]?.options?[index]
+          republish = option.getAttribute("data-republish")
+          republish = republish == "true"
+
+          document.getElementById("notifications")?.style?.display = if republish then "none" else "block"
       },
       {
         name: "time",
@@ -93,8 +100,14 @@ getIndicators = () ->
   checkSelectorDataReady()
 
 setIndicatorOptions = (select, element, level) ->
+  republish = if element.republish then element.republish else false
+  type = if element.type then element.type else "Primary"
+
   option = document.createElement("option")
   option.value = element.indicator
+  option.setAttribute("data-republish", republish)
+  option.setAttribute("data-type", type)
+
   space = Array(level * 3).join '&nbsp'
   option.innerHTML = space + element.name
   select.appendChild(option)
@@ -990,7 +1003,10 @@ collapsables = document.querySelectorAll(".collapsable")
 
 for collapsable in collapsables
   button = collapsable.querySelector(".button")
+  if !button then continue
+
   collapsableSection = collapsable.querySelector("section")
+  if ! collapsableSection then continue
 
   button.collapsed = false
   button.container = collapsable
@@ -1036,4 +1052,4 @@ getValue = (value, republish) ->
 
   isNumeric = !isNaN(parseFloat(value)) && isFinite(value)
 
-  if isNumeric then value.toFixed(2) else value
+  if isNumeric then parseFloat(value).toFixed(2) else value

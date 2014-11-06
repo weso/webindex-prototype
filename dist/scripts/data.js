@@ -36,11 +36,16 @@
           name: "indicator",
           selector: "#indicator-select",
           onChange: function(index, value, parameters, selectors) {
+            var option, republish, _ref, _ref1, _ref2, _ref3;
             if (settings.debug) {
               console.log("indicator:onChange index:" + index + " value:" + value);
             }
             global.selections.indicator = value;
-            return updateInfo();
+            updateInfo();
+            option = (_ref = selectors["#indicator-select"]) != null ? (_ref1 = _ref.options) != null ? _ref1[index] : void 0 : void 0;
+            republish = option.getAttribute("data-republish");
+            republish = republish === "true";
+            return (_ref2 = document.getElementById("notifications")) != null ? (_ref3 = _ref2.style) != null ? _ref3.display = republish ? "none" : "block" : void 0 : void 0;
           }
         }, {
           name: "time",
@@ -98,9 +103,13 @@
   };
 
   setIndicatorOptions = function(select, element, level) {
-    var child, option, space, _i, _len, _ref, _results;
+    var child, option, republish, space, type, _i, _len, _ref, _results;
+    republish = element.republish ? element.republish : false;
+    type = element.type ? element.type : "Primary";
     option = document.createElement("option");
     option.value = element.indicator;
+    option.setAttribute("data-republish", republish);
+    option.setAttribute("data-type", type);
     space = Array(level * 3).join('&nbsp');
     option.innerHTML = space + element.name;
     select.appendChild(option);
@@ -966,7 +975,13 @@
   for (_j = 0, _len1 = collapsables.length; _j < _len1; _j++) {
     collapsable = collapsables[_j];
     button = collapsable.querySelector(".button");
+    if (!button) {
+      continue;
+    }
     collapsableSection = collapsable.querySelector("section");
+    if (!collapsableSection) {
+      continue;
+    }
     button.collapsed = false;
     button.container = collapsable;
     button.onclick = function() {
@@ -1008,7 +1023,7 @@
     }
     isNumeric = !isNaN(parseFloat(value)) && isFinite(value);
     if (isNumeric) {
-      return value.toFixed(2);
+      return parseFloat(value).toFixed(2);
     } else {
       return value;
     }

@@ -13,6 +13,7 @@
   padding: 0 0 0.5em 0;
   position: relative;
   overflow-y: hidden;
+  margin-bottom: 1em;
 
   section {
     padding: 0 0.5em;
@@ -51,6 +52,22 @@
     position: absolute;
     bottom: 0;
     z-index: -1;
+  }
+}
+
+.notifications {
+  background-color: $data-notification;
+  padding-top: 0.7em;
+
+  header {
+    i {
+      margin-right: 1em;
+      color: darken($data-notification, 40%);
+    }
+
+    h2 {
+      color: darken($data-notification, 70%);
+    }
   }
 }
 
@@ -262,7 +279,6 @@ div.timeline {
 
 .table-box {
   background-color: $data-table-background-color;
-  margin-top: 1em;
 
   header {
 
@@ -277,7 +293,6 @@ div.timeline {
 }
 
 div.middle-section {
-  margin-bottom: 1.5em;
   background-color: white;
 
   section > div:first-child {
