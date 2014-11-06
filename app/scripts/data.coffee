@@ -380,6 +380,8 @@ renderCharts = (data) ->
           code = info["data-code"]
           global.options.countrySelector.select(code)
           global.options.countrySelector.refresh()
+        onmouseover: (info) ->
+          chartTooltip(info, global)
       }
     }
 

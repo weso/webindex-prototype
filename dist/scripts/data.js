@@ -406,6 +406,9 @@
             code = info["data-code"];
             global.options.countrySelector.select(code);
             return global.options.countrySelector.refresh();
+          },
+          onmouseover: function(info) {
+            return chartTooltip(info, global);
           }
         }
       };
