@@ -565,7 +565,7 @@ renderCharts = (data) ->
     #createMap()
 
 renderMap = ->
-  mapContainer = "#map"
+  mapContainer = "#map > div.chart"
   document.querySelector(mapContainer)?.innerHTML = ""
 
   map = wesCountry.maps.createMap({

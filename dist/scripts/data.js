@@ -579,7 +579,7 @@
 
   renderMap = function() {
     var map, mapContainer, _ref;
-    mapContainer = "#map";
+    mapContainer = "#map > div.chart";
     if ((_ref = document.querySelector(mapContainer)) != null) {
       _ref.innerHTML = "";
     }

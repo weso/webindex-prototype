@@ -403,8 +403,45 @@ div.country-box {
 /* MAP */
 
 div.map {
-  height: 32em;
   clear: both;
+  height: 33em;
+  position: relative;
+
+  > div {
+    height: 32em;
+    clear: both;
+  }
+
+  .colour-legend {
+    width: 20%;
+    height: auto;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    z-index: 0;
+
+    div {
+      height: 0.6em;
+      margin: 0.4em 4% 0 4%;
+      @include linear-gradient(to left, #E5E066, #83C04C, #1B7A65, #1B4E5A, #005475);
+      float: left;
+      width: 52%;
+    }
+
+    span {
+      font-size: 0.9em;
+      display: block;
+      width: 20%;
+    }
+
+    span:first-child {
+      float: left;
+    }
+
+    span:nth-child(2) {
+      float: right;
+    }
+  }
 
   .buttons {
     display: none;
@@ -412,8 +449,10 @@ div.map {
 
   .visor {
     background-color: transparent;
-    padding: 0 1em;
-    min-height: 2.5em;
+    padding: 0 1em 0.5em 1em;
+    min-height: 3.4em;
+    z-index: 1000;
+    bottom: -0.8em;
 
     .value {
       float: right;
