@@ -276,13 +276,13 @@ renderCharts = (data) ->
     rankingContainerDiv = document.querySelector(rankingContainer)
     rankingContainerDiv?.innerHTML = ""
 
-    rankingLegend = document.createElement "div"
-    rankingLegend.className = "legend"
-    rankingContainerDiv?.appendChild rankingLegend
-
     rankingWrapper = document.createElement "div"
     rankingWrapper.className = "wrapper"
     rankingContainerDiv?.appendChild rankingWrapper
+
+    rankingLegend = document.createElement "div"
+    rankingLegend.className = "legend"
+    rankingContainerDiv?.appendChild rankingLegend
 
     getContinentColour = (options, element, index) ->
       pos = 0
@@ -595,8 +595,12 @@ renderMap = ->
 
         if !code then return
 
+        _value = info.value
+        republish = if info["data-republish"] then info["data-republish"] else false
+        _value = getValue(_value, republish)
+
         value = document.createElement('div')
-        value.innerHTML = info.value
+        value.innerHTML = _value
         value.className = 'value'
         visor.appendChild(value)
 
@@ -650,6 +654,8 @@ renderTable = (data) ->
     name = observation.short_name
     rank = if observation.ranked then observation.ranked else count
     value = if observation.values && observation.values.length > 0 then observation.values[0] else observation.value
+    republish = if observation.republish then observation.republish else false
+    value = getValue(value, republish)
     previousValue = observation.previous_value
     extraInfo = observation.extra
 
@@ -708,7 +714,6 @@ renderTable = (data) ->
     td.setAttribute("data-title", "Value")
     tr.appendChild td
 
-    value = value.toFixed(2)
     td.innerHTML = "<div><p>value</p> #{value}</div>"
 
     # Extra info
@@ -1004,8 +1009,9 @@ for collapsable in collapsables
 
 chartTooltip = (info, global) ->
   path = document.getElementById('path').value
-
   value = info["data-values"]
+  republish = if info["data-republish"] then info["data-republish"] == "true" else false
+  value = getValue(value, republish)
   ranked = info["data-ranked"]
   code = info["data-area"]
   name = info["data-area_name"]
@@ -1024,3 +1030,10 @@ chartTooltip = (info, global) ->
   text = String.format("{0}{1}", tooltipHeader, if ranked && time then tooltipBody else "")
 
   wesCountry.charts.showTooltip(text, info.event)
+
+getValue = (value, republish) ->
+  if !republish then return "N/A"
+
+  isNumeric = !isNaN(parseFloat(value)) && isFinite(value)
+
+  if isNumeric then value.toFixed(2) else value

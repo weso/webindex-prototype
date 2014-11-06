@@ -1,5 +1,5 @@
 (function() {
-  var button, chartSelectors, chartTooltip, checkSelectorDataReady, collapsable, collapsableSection, collapsables, getCountries, getIndicators, getObservations, getSelectorData, getYears, global, li, msie6, renderBoxes, renderCharts, renderContinentLegend, renderMap, renderTable, selectBar, setBoxesInitialPosition, setBoxesPosition, setIndicatorOptions, setPageStateful, top, updateInfo, _i, _j, _len, _len1;
+  var button, chartSelectors, chartTooltip, checkSelectorDataReady, collapsable, collapsableSection, collapsables, getCountries, getIndicators, getObservations, getSelectorData, getValue, getYears, global, li, msie6, renderBoxes, renderCharts, renderContinentLegend, renderMap, renderTable, selectBar, setBoxesInitialPosition, setBoxesPosition, setIndicatorOptions, setPageStateful, top, updateInfo, _i, _j, _len, _len1;
 
   global = this;
 
@@ -288,15 +288,15 @@
       if (rankingContainerDiv != null) {
         rankingContainerDiv.innerHTML = "";
       }
-      rankingLegend = document.createElement("div");
-      rankingLegend.className = "legend";
-      if (rankingContainerDiv != null) {
-        rankingContainerDiv.appendChild(rankingLegend);
-      }
       rankingWrapper = document.createElement("div");
       rankingWrapper.className = "wrapper";
       if (rankingContainerDiv != null) {
         rankingContainerDiv.appendChild(rankingWrapper);
+      }
+      rankingLegend = document.createElement("div");
+      rankingLegend.className = "legend";
+      if (rankingContainerDiv != null) {
+        rankingContainerDiv.appendChild(rankingLegend);
       }
       getContinentColour = function(options, element, index) {
         var pos;
@@ -611,15 +611,18 @@
         }
       },
       onCountryOver: function(info, visor) {
-        var code, continent, country, flag, img, name, path, ranked, rankedValue, value;
+        var code, continent, country, flag, img, name, path, ranked, rankedValue, republish, value, _value;
         if (visor) {
           visor.innerHTML = '';
           code = info["data-code"];
           if (!code) {
             return;
           }
+          _value = info.value;
+          republish = info["data-republish"] ? info["data-republish"] : false;
+          _value = getValue(_value, republish);
           value = document.createElement('div');
-          value.innerHTML = info.value;
+          value.innerHTML = _value;
           value.className = 'value';
           visor.appendChild(value);
           country = document.createElement('div');
@@ -655,7 +658,7 @@
   };
 
   renderTable = function(data) {
-    var a, code, continent, count, empowerment, extraInfo, extraTable, extraTbody, extraTheader, freedomOpenness, globalRank, img, name, observation, observations, path, previousValue, rank, relevantContent, span, table, tbodies, tbody, td, tendency, th, tr, universalAccess, value, _i, _j, _k, _len, _len1, _len2, _ref;
+    var a, code, continent, count, empowerment, extraInfo, extraTable, extraTbody, extraTheader, freedomOpenness, globalRank, img, name, observation, observations, path, previousValue, rank, relevantContent, republish, span, table, tbodies, tbody, td, tendency, th, tr, universalAccess, value, _i, _j, _k, _len, _len1, _len2, _ref;
     observations = data.observations;
     table = document.querySelector("#ranking");
     path = (_ref = document.getElementById("path")) != null ? _ref.value : void 0;
@@ -672,6 +675,8 @@
       name = observation.short_name;
       rank = observation.ranked ? observation.ranked : count;
       value = observation.values && observation.values.length > 0 ? observation.values[0] : observation.value;
+      republish = observation.republish ? observation.republish : false;
+      value = getValue(value, republish);
       previousValue = observation.previous_value;
       extraInfo = observation.extra;
       continent = "";
@@ -718,7 +723,6 @@
       td = document.createElement("td");
       td.setAttribute("data-title", "Value");
       tr.appendChild(td);
-      value = value.toFixed(2);
       td.innerHTML = "<div><p>value</p> " + value + "</div>";
       globalRank = extraInfo.rank;
       universalAccess = extraInfo["UNIVERSAL_ACCESS"].toFixed(2);
@@ -976,9 +980,11 @@
   }
 
   chartTooltip = function(info, global) {
-    var code, continent, flagSrc, name, path, ranked, text, time, tooltipBody, tooltipHeader, value;
+    var code, continent, flagSrc, name, path, ranked, republish, text, time, tooltipBody, tooltipHeader, value;
     path = document.getElementById('path').value;
     value = info["data-values"];
+    republish = info["data-republish"] ? info["data-republish"] === "true" : false;
+    value = getValue(value, republish);
     ranked = info["data-ranked"];
     code = info["data-area"];
     name = info["data-area_name"];
@@ -993,6 +999,19 @@
     tooltipBody = String.format('<div class="tooltip-body"><p class="ranking">{0}</p><p class="time">{1}</p><p class="value">{2}</p></div>', ranked, time, value);
     text = String.format("{0}{1}", tooltipHeader, ranked && time ? tooltipBody : "");
     return wesCountry.charts.showTooltip(text, info.event);
+  };
+
+  getValue = function(value, republish) {
+    var isNumeric;
+    if (!republish) {
+      return "N/A";
+    }
+    isNumeric = !isNaN(parseFloat(value)) && isFinite(value);
+    if (isNumeric) {
+      return value.toFixed(2);
+    } else {
+      return value;
+    }
   };
 
 }).call(this);
