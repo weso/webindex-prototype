@@ -236,7 +236,7 @@
     }
     getObservations(indicator, countries, year);
     if ((_ref = document.getElementById("indicator")) != null) {
-      _ref.innerHTML = indicator.replace("_", " ");
+      _ref.innerHTML = indicator.replace(/_/g, " ");
     }
     return (_ref1 = document.getElementById("year")) != null ? _ref1.innerHTML = year : void 0;
   };

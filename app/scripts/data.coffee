@@ -221,7 +221,7 @@ updateInfo = () ->
 
   getObservations(indicator, countries, year)
 
-  document.getElementById("indicator")?.innerHTML = indicator.replace("_", " ")
+  document.getElementById("indicator")?.innerHTML = indicator.replace(/_/g, " ")
   document.getElementById("year")?.innerHTML = year
 
 renderContinentLegend = (data, options, container, getContinents, getContinentColour) ->
