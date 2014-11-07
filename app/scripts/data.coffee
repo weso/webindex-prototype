@@ -3,6 +3,8 @@ global.options = {}
 global.selectorDataReady = {}
 global.selections = {
   indicator: null,
+  indicatorOption: null,
+  indicatorTendency: null,
   countries: null,
   year: null
 }
@@ -36,15 +38,46 @@ setPageStateful = ->
         onChange: (index, value, parameters, selectors) ->
           if settings.debug then console.log "indicator:onChange index:#{index} value:#{value}"
 
+          option = selectors["#indicator-select"]?.options?[index]
+          tendency = option.getAttribute("data-tendency")
+          tendency = tendency == "1"
+
           global.selections.indicator = value
+          global.selections.indicatorOption = option
+          global.selections.indicatorTendency = tendency
+
           updateInfo()
 
           # Show republish notification
-          option = selectors["#indicator-select"]?.options?[index]
+
           republish = option.getAttribute("data-republish")
           republish = republish == "true"
 
           document.getElementById("notifications")?.style?.display = if republish then "none" else "block"
+
+          # Primary indicators don't have historical values
+          type = option.getAttribute("data-type")
+          primary = type.toLowerCase() == "primary"
+
+          document.getElementById("primary-info")?.style?.display = if primary then "block" else "none"
+
+          years = global.options.timeline.getElements()
+
+          for i in [0..years.length - 2]
+            year = years[i]
+
+            if primary
+              global.options.timeline.disable(year)
+            else
+              global.options.timeline.enable(year)
+
+          # Description
+          description = option.getAttribute("data-description")
+          document.getElementById("indicator-description")?.innerHTML = description
+          # Type
+          document.getElementById("indicator-type")?.innerHTML = type
+          # Tendency
+          document.getElementById("indicator-tendency")?.innerHTML = if tendency then document.getElementById("label_ascending")?.value else document.getElementById("label_descending")?.value
       },
       {
         name: "time",
@@ -102,11 +135,15 @@ getIndicators = () ->
 setIndicatorOptions = (select, element, level) ->
   republish = if element.republish then element.republish else false
   type = if element.type then element.type else "Primary"
+  description = if element.description then element.description else ""
+  tendency = if element.tendency then element.tendency else 1
 
   option = document.createElement("option")
   option.value = element.indicator
   option.setAttribute("data-republish", republish)
   option.setAttribute("data-type", type)
+  option.setAttribute("data-description", description)
+  option.setAttribute("data-tendency", tendency)
 
   space = Array(level * 3).join '&nbsp'
   option.innerHTML = space + element.name
@@ -227,6 +264,7 @@ updateInfo = () ->
   year = global.selections.year
   countries = global.selections.countries
   indicator = global.selections.indicator
+  indicatorOption = global.selections.indicatorOption
 
   if settings.debug then console.log "year: #{year} countries: #{countries} indicator: #{indicator}"
 
@@ -234,7 +272,10 @@ updateInfo = () ->
 
   getObservations(indicator, countries, year)
 
-  document.getElementById("indicator")?.innerHTML = indicator.replace(/_/g, " ")
+  if indicatorOption
+    type = indicatorOption.getAttribute("data-type")
+    document.getElementById("indicator")?.innerHTML = type
+
   document.getElementById("year")?.innerHTML = year
 
 renderContinentLegend = (data, options, container, getContinents, getContinentColour) ->
@@ -348,7 +389,7 @@ renderCharts = (data) ->
       container: rankingWrapper,
       chartType: "ranking",
       rankingElementShape: "square",
-      rankingDirection: "HigherToLower",
+      rankingDirection: if global.selections.indicatorTendency then "HigherToLower" else "LowerToHigher",
       sortSeries: true,
       mean: {
         show: true,
@@ -413,6 +454,9 @@ renderCharts = (data) ->
 
     view = document.querySelector(countryView)
 
+    series = data.observations
+    if !global.selections.indicatorTendency then series.reverse()
+
     # Bar
     options = {
       container: barContainer,
@@ -433,7 +477,7 @@ renderCharts = (data) ->
         title: ""
       },
       groupMargin: 0,
-      series: data.observations,
+      series: series,
       mean: {
         show: true
       },
@@ -515,6 +559,10 @@ renderCharts = (data) ->
 
   barContainer = "#bars"
   document.querySelector(barContainer)?.innerHTML = ""
+
+  series = data.bars
+  if !global.selections.indicatorTendency then series.reverse()
+
   options = {
     container: barContainer,
     chartType: "bar",
@@ -536,7 +584,7 @@ renderCharts = (data) ->
       title: ""
     },
     groupMargin: 0,
-    series: data.bars,
+    series: series,
     mean: {
       show: true
     },
@@ -584,6 +632,9 @@ renderMap = ->
   mapContainer = "#map > div.chart"
   document.querySelector(mapContainer)?.innerHTML = ""
 
+  colours = ["#E5E066", "#83C04C", "#1B7A65", "#1B4E5A", "#005475"]
+  if !global.selections.indicatorTendency then colours.reverse()
+
   map = wesCountry.maps.createMap({
     container: mapContainer,
     borderWidth: 1.5,
@@ -593,7 +644,7 @@ renderMap = ->
     countries: global.observations,
     #width: view.offsetWidth,
     #height: view.offsetHeight,
-    colourRange: ["#E5E066", "#83C04C", "#1B7A65", "#1B4E5A", "#005475"],
+    colourRange: colours,
     onCountryClick: (info) ->
       code = info.iso3
       global.options.countrySelector.select(code)
@@ -873,7 +924,7 @@ renderBoxes = (data) ->
 
   higherContainer = document.getElementById("higher")
   if higherContainer
-    higherContainer.innerHTML = higher
+    higherContainer.innerHTML = if global.selections.indicatorTendency then higher else lower
 
     higherContainer.onclick = ->
       global.options.countrySelector.select(higherArea)
@@ -881,11 +932,23 @@ renderBoxes = (data) ->
 
   lowerContainer = document.getElementById("lower")
   if lowerContainer
-    lowerContainer.innerHTML = lower
+    lowerContainer.innerHTML = if global.selections.indicatorTendency then lower else higher
 
     lowerContainer.onclick = ->
       global.options.countrySelector.select(lowerArea)
       global.options.countrySelector.refresh()
+
+  # Map colour legend
+  labelHigher = document.getElementById("label_higher")?.value
+  labelLower = document.getElementById("label_lower")?.value
+
+  higherLegend = document.getElementById("legend-higher")
+  if higherLegend
+    higherLegend.innerHTML = if global.selections.indicatorTendency then labelHigher else labelLower
+
+  lowerLegend = document.getElementById("legend-lower")
+  if lowerLegend
+    lowerLegend.innerHTML = if global.selections.indicatorTendency then labelLower else labelHigher
 
 # Script load
 

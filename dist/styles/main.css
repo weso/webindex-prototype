@@ -938,6 +938,9 @@ div.accordion {
         bottom: 0;
         padding-left: 2em;
         padding-bottom: 1em; }
+        div.accordion article section.extra footer a {
+          color: white;
+          font-size: 0.9em; }
     div.accordion article aside {
       position: absolute;
       width: 100%;
@@ -1494,6 +1497,10 @@ section.report-articles article:nth-of-type(6) h3:before, section.report-article
 section.report-articles article:nth-of-type(6) ul.tags li a {
   background-color: #a9538d; }
 
+/* VISUALISATIONS */
+section.hidden-visualisations {
+  display: none; }
+
 /* SIDEBAR TAGS */
 ul.about-tags li:nth-child(1) a {
   background-color: #f93845; }
@@ -1786,9 +1793,20 @@ div.box-follow {
   box-shadow: 0 0.4em 0.2em -0.2em #777;
   padding: 0 0 0.5em 0;
   position: relative;
-  overflow-y: hidden; }
+  overflow-y: hidden;
+  margin-bottom: 1em; }
   .collapsable section {
     padding: 0 0.5em; }
+  .collapsable section.info label {
+    color: #888;
+    font-weight: 500;
+    text-align: left;
+    font-style: italic; }
+  .collapsable section.info h2 {
+    font-size: 1em;
+    margin-top: 0.2em;
+    text-align: justify !important;
+    padding: 0 !important; }
   .collapsable header.collapsable-header {
     font-size: 1.2em;
     color: #888;
@@ -1813,6 +1831,24 @@ div.box-follow {
   position: absolute;
   bottom: 0;
   z-index: -1; }
+
+.notifications {
+  background-color: #FDEBB1;
+  padding-top: 0.7em; }
+  .notifications header i {
+    margin-right: 1em;
+    color: #dca906; }
+  .notifications header h2 {
+    color: #473702; }
+
+.notifications.info {
+  background-color: #CEECF5;
+  padding-top: 0.7em; }
+  .notifications.info header i {
+    margin-right: 1em;
+    color: #2aa7cd; }
+  .notifications.info header h2 {
+    color: #10404e; }
 
 /* SIGNATURE */
 .signature {
@@ -1932,6 +1968,16 @@ div.timeline div.line a.circle {
   height: 1.5em;
   border: none;
   background-color: #ccc; }
+div.timeline div.line a.circle.disabled {
+  background-color: #eee;
+  background-image: url(../images/cross.png);
+  background-size: cover;
+  border: 1px solid #ccc; }
+div.timeline div.line a.circle.disabled:hover {
+  background-color: #eee !important; }
+div.timeline div.elements .disabled a {
+  text-decoration: none;
+  color: #666; }
 div.timeline div.line:before {
   border: none; }
 div.timeline div.line a.circle:hover, div.timeline div.selected a.circle {
@@ -1945,18 +1991,16 @@ div.timeline div.element a {
   background-color: #aaa; }
   .data-box header {
     overflow: hidden;
-    margin-bottom: 1em; }
+    margin-bottom: 0; }
 
 .map-box {
   background-color: #fff;
   margin-top: 0.5em; }
 
 .table-box {
-  background-color: #fff;
-  margin-top: 1em; }
+  background-color: #fff; }
 
 div.middle-section {
-  margin-bottom: 1.5em;
   background-color: white; }
   div.middle-section section > div:first-child {
     max-width: 68em;
@@ -1998,8 +2042,8 @@ div.middle-section {
       font-size: 1.3em;
       height: 2.5em; }
     div.middle-section div.box-mini .indicator {
-      font-size: 0.9em;
-      height: 4em; }
+      font-size: 1.4em;
+      height: 2.4em; }
   div.middle-section div.box-mini:nth-child(3), div.middle-section div.box-mini:nth-child(4) {
     cursor: pointer; }
   div.middle-section div.box-mini:nth-child(1) {

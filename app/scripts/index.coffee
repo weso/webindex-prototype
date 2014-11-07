@@ -286,8 +286,11 @@ renderNeutralityTab = (countries, percentage) ->
     zoom: false,
     backgroundColour: "transparent",
     landColour: "#FC6A74",
+    hoverColour: "#FC6A74",
     colourRange: ["#E98990", "#C20310"],
     onCountryClick: (info) ->
+    onCountryOver: (info, visor) ->
+      return
   })
 
   paths = document.querySelectorAll("#map .land-group")

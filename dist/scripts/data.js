@@ -9,6 +9,8 @@
 
   global.selections = {
     indicator: null,
+    indicatorOption: null,
+    indicatorTendency: null,
     countries: null,
     year: null
   };
@@ -36,16 +38,48 @@
           name: "indicator",
           selector: "#indicator-select",
           onChange: function(index, value, parameters, selectors) {
-            var option, republish, _ref, _ref1, _ref2, _ref3;
+            var description, i, option, primary, republish, tendency, type, year, years, _i, _ref, _ref1, _ref10, _ref11, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9;
             if (settings.debug) {
               console.log("indicator:onChange index:" + index + " value:" + value);
             }
-            global.selections.indicator = value;
-            updateInfo();
             option = (_ref = selectors["#indicator-select"]) != null ? (_ref1 = _ref.options) != null ? _ref1[index] : void 0 : void 0;
+            tendency = option.getAttribute("data-tendency");
+            tendency = tendency === "1";
+            global.selections.indicator = value;
+            global.selections.indicatorOption = option;
+            global.selections.indicatorTendency = tendency;
+            updateInfo();
             republish = option.getAttribute("data-republish");
             republish = republish === "true";
-            return (_ref2 = document.getElementById("notifications")) != null ? (_ref3 = _ref2.style) != null ? _ref3.display = republish ? "none" : "block" : void 0 : void 0;
+            if ((_ref2 = document.getElementById("notifications")) != null) {
+              if ((_ref3 = _ref2.style) != null) {
+                _ref3.display = republish ? "none" : "block";
+              }
+            }
+            type = option.getAttribute("data-type");
+            primary = type.toLowerCase() === "primary";
+            if ((_ref4 = document.getElementById("primary-info")) != null) {
+              if ((_ref5 = _ref4.style) != null) {
+                _ref5.display = primary ? "block" : "none";
+              }
+            }
+            years = global.options.timeline.getElements();
+            for (i = _i = 0, _ref6 = years.length - 2; 0 <= _ref6 ? _i <= _ref6 : _i >= _ref6; i = 0 <= _ref6 ? ++_i : --_i) {
+              year = years[i];
+              if (primary) {
+                global.options.timeline.disable(year);
+              } else {
+                global.options.timeline.enable(year);
+              }
+            }
+            description = option.getAttribute("data-description");
+            if ((_ref7 = document.getElementById("indicator-description")) != null) {
+              _ref7.innerHTML = description;
+            }
+            if ((_ref8 = document.getElementById("indicator-type")) != null) {
+              _ref8.innerHTML = type;
+            }
+            return (_ref9 = document.getElementById("indicator-tendency")) != null ? _ref9.innerHTML = tendency ? (_ref10 = document.getElementById("label_ascending")) != null ? _ref10.value : void 0 : (_ref11 = document.getElementById("label_descending")) != null ? _ref11.value : void 0 : void 0;
           }
         }, {
           name: "time",
@@ -103,13 +137,17 @@
   };
 
   setIndicatorOptions = function(select, element, level) {
-    var child, option, republish, space, type, _i, _len, _ref, _results;
+    var child, description, option, republish, space, tendency, type, _i, _len, _ref, _results;
     republish = element.republish ? element.republish : false;
     type = element.type ? element.type : "Primary";
+    description = element.description ? element.description : "";
+    tendency = element.tendency ? element.tendency : 1;
     option = document.createElement("option");
     option.value = element.indicator;
     option.setAttribute("data-republish", republish);
     option.setAttribute("data-type", type);
+    option.setAttribute("data-description", description);
+    option.setAttribute("data-tendency", tendency);
     space = Array(level * 3).join('&nbsp');
     option.innerHTML = space + element.name;
     select.appendChild(option);
@@ -233,10 +271,11 @@
   };
 
   updateInfo = function() {
-    var countries, indicator, year, _ref, _ref1;
+    var countries, indicator, indicatorOption, type, year, _ref, _ref1;
     year = global.selections.year;
     countries = global.selections.countries;
     indicator = global.selections.indicator;
+    indicatorOption = global.selections.indicatorOption;
     if (settings.debug) {
       console.log("year: " + year + " countries: " + countries + " indicator: " + indicator);
     }
@@ -244,8 +283,11 @@
       return;
     }
     getObservations(indicator, countries, year);
-    if ((_ref = document.getElementById("indicator")) != null) {
-      _ref.innerHTML = indicator.replace(/_/g, " ");
+    if (indicatorOption) {
+      type = indicatorOption.getAttribute("data-type");
+      if ((_ref = document.getElementById("indicator")) != null) {
+        _ref.innerHTML = type;
+      }
     }
     return (_ref1 = document.getElementById("year")) != null ? _ref1.innerHTML = year : void 0;
   };
@@ -276,7 +318,7 @@
   };
 
   renderCharts = function(data) {
-    var barContainer, countryView, getContinentColour, getLegendElements, lineContainer, mapContainer, mapView, options, rankingContainer, rankingContainerDiv, rankingLegend, rankingWrapper, resize, view, _ref, _ref1, _ref2, _ref3, _ref4, _ref5, _ref6;
+    var barContainer, countryView, getContinentColour, getLegendElements, lineContainer, mapContainer, mapView, options, rankingContainer, rankingContainerDiv, rankingLegend, rankingWrapper, resize, series, view, _ref, _ref1, _ref2, _ref3, _ref4, _ref5, _ref6;
     mapContainer = "#map";
     barContainer = "#country-bars";
     lineContainer = "#lines";
@@ -368,7 +410,7 @@
         container: rankingWrapper,
         chartType: "ranking",
         rankingElementShape: "square",
-        rankingDirection: "HigherToLower",
+        rankingDirection: global.selections.indicatorTendency ? "HigherToLower" : "LowerToHigher",
         sortSeries: true,
         mean: {
           show: true,
@@ -434,6 +476,10 @@
         _ref4.innerHTML = "";
       }
       view = document.querySelector(countryView);
+      series = data.observations;
+      if (!global.selections.indicatorTendency) {
+        series.reverse();
+      }
       options = {
         container: barContainer,
         chartType: "bar",
@@ -453,7 +499,7 @@
           title: ""
         },
         groupMargin: 0,
-        series: data.observations,
+        series: series,
         mean: {
           show: true
         },
@@ -533,6 +579,10 @@
     if ((_ref6 = document.querySelector(barContainer)) != null) {
       _ref6.innerHTML = "";
     }
+    series = data.bars;
+    if (!global.selections.indicatorTendency) {
+      series.reverse();
+    }
     options = {
       container: barContainer,
       chartType: "bar",
@@ -554,7 +604,7 @@
         title: ""
       },
       groupMargin: 0,
-      series: data.bars,
+      series: series,
       mean: {
         show: true
       },
@@ -593,10 +643,14 @@
   };
 
   renderMap = function() {
-    var map, mapContainer, _ref;
+    var colours, map, mapContainer, _ref;
     mapContainer = "#map > div.chart";
     if ((_ref = document.querySelector(mapContainer)) != null) {
       _ref.innerHTML = "";
+    }
+    colours = ["#E5E066", "#83C04C", "#1B7A65", "#1B4E5A", "#005475"];
+    if (!global.selections.indicatorTendency) {
+      colours.reverse();
     }
     return map = wesCountry.maps.createMap({
       container: mapContainer,
@@ -605,7 +659,7 @@
       borderColour: "#fff",
       backgroundColour: "none",
       countries: global.observations,
-      colourRange: ["#E5E066", "#83C04C", "#1B7A65", "#1B4E5A", "#005475"],
+      colourRange: colours,
       onCountryClick: function(info) {
         var code;
         code = info.iso3;
@@ -835,7 +889,7 @@
   };
 
   renderBoxes = function(data) {
-    var higher, higherArea, higherContainer, lower, lowerArea, lowerContainer, mean, median, _ref, _ref1;
+    var higher, higherArea, higherContainer, higherLegend, labelHigher, labelLower, lower, lowerArea, lowerContainer, lowerLegend, mean, median, _ref, _ref1, _ref2, _ref3;
     mean = data.mean;
     median = data.median;
     higher = data.higher["short_name"];
@@ -850,7 +904,7 @@
     }
     higherContainer = document.getElementById("higher");
     if (higherContainer) {
-      higherContainer.innerHTML = higher;
+      higherContainer.innerHTML = global.selections.indicatorTendency ? higher : lower;
       higherContainer.onclick = function() {
         global.options.countrySelector.select(higherArea);
         return global.options.countrySelector.refresh();
@@ -858,11 +912,21 @@
     }
     lowerContainer = document.getElementById("lower");
     if (lowerContainer) {
-      lowerContainer.innerHTML = lower;
-      return lowerContainer.onclick = function() {
+      lowerContainer.innerHTML = global.selections.indicatorTendency ? lower : higher;
+      lowerContainer.onclick = function() {
         global.options.countrySelector.select(lowerArea);
         return global.options.countrySelector.refresh();
       };
+    }
+    labelHigher = (_ref2 = document.getElementById("label_higher")) != null ? _ref2.value : void 0;
+    labelLower = (_ref3 = document.getElementById("label_lower")) != null ? _ref3.value : void 0;
+    higherLegend = document.getElementById("legend-higher");
+    if (higherLegend) {
+      higherLegend.innerHTML = global.selections.indicatorTendency ? labelHigher : labelLower;
+    }
+    lowerLegend = document.getElementById("legend-lower");
+    if (lowerLegend) {
+      return lowerLegend.innerHTML = global.selections.indicatorTendency ? labelLower : labelHigher;
     }
   };
 

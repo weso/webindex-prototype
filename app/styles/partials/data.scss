@@ -19,6 +19,23 @@
     padding: 0 0.5em;
   }
 
+  section.info {
+
+    label {
+      color: #888;
+      font-weight: 500;
+      text-align: left;
+      font-style: italic;
+    }
+
+    h2 {
+      font-size: 1em;
+      margin-top: 0.2em;
+      text-align: justify !important;
+      padding: 0 !important;
+    }
+  }
+
   header.collapsable-header {
     font-size: 1.2em;
     color: #888;
@@ -70,6 +87,23 @@
     }
   }
 }
+
+.notifications.info {
+  background-color: $data-info;
+  padding-top: 0.7em;
+
+  header {
+    i {
+      margin-right: 1em;
+      color: darken($data-info, 40%);
+    }
+
+    h2 {
+      color: darken($data-info, 70%);
+    }
+  }
+}
+
 
 /* SIGNATURE */
 
@@ -245,6 +279,24 @@ div.timeline {
       border: none;
       background-color: #ccc;
     }
+
+    a.circle.disabled {
+      background-color: #eee;
+      background-image: url(../images/cross.png);
+      background-size: cover;
+      border: 1px solid #ccc;
+    }
+
+    a.circle.disabled:hover {
+      background-color: #eee !important;
+    }
+  }
+
+  div.elements {
+    .disabled a {
+      text-decoration: none;
+      color: #666;
+    }
   }
 
   div.line:before {
@@ -335,8 +387,8 @@ div.middle-section {
     }
 
     .indicator {
-      font-size: 0.9em;
-      height: 4em;
+      font-size: 1.4em;
+      height: 2.4em;
     }
   }
 
