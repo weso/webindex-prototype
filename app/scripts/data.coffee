@@ -6,9 +6,10 @@ global.selections = {
   indicatorOption: null,
   indicatorTendency: null,
   countries: null,
-  year: null
+  year: null,
+  years: []
 }
-global.maxTableRows = 7
+global.maxChartBars = 5
 global.continents = {}
 
 ################################################################################
@@ -48,36 +49,7 @@ setPageStateful = ->
 
           updateInfo()
 
-          # Show republish notification
-
-          republish = option.getAttribute("data-republish")
-          republish = republish == "true"
-
-          document.getElementById("notifications")?.style?.display = if republish then "none" else "block"
-
-          # Primary indicators don't have historical values
-          type = option.getAttribute("data-type")
-          primary = type.toLowerCase() == "primary"
-
-          document.getElementById("primary-info")?.style?.display = if primary then "block" else "none"
-
-          years = global.options.timeline.getElements()
-
-          for i in [0..years.length - 2]
-            year = years[i]
-
-            if primary
-              global.options.timeline.disable(year)
-            else
-              global.options.timeline.enable(year)
-
-          # Description
-          description = option.getAttribute("data-description")
-          document.getElementById("indicator-description")?.innerHTML = description
-          # Type
-          document.getElementById("indicator-type")?.innerHTML = type
-          # Tendency
-          document.getElementById("indicator-tendency")?.innerHTML = if tendency then document.getElementById("label_ascending")?.value else document.getElementById("label_descending")?.value
+          renderIndicatorInfo(option, tendency)
       },
       {
         name: "time",
@@ -85,7 +57,7 @@ setPageStateful = ->
         onChange: (index, value, parameters, selectors) ->
           if settings.debug then console.log "year:onChange index:#{index} value:#{value}"
 
-          global.selections.year = value
+          global.selections.year = parseInt(value)
           updateInfo()
       },
       {
@@ -127,30 +99,85 @@ getIndicators = () ->
 
   if data.success then indicators = data.data
 
-  setIndicatorOptions(document.getElementById("indicator-select"), indicators, 0)
+  selector = document.getElementById("indicator-select")
+
+  table = document.getElementById("indicator-list") || document.createElement "table"
+  setIndicatorOptions(selector, table, indicators, 0, false)
 
   global.selectorDataReady.indicatorSelector = true
   checkSelectorDataReady()
 
-setIndicatorOptions = (select, element, level) ->
+  global.options.indicatorSelector = selector
+
+setIndicatorOptions = (select, table, element, level, last) ->
   republish = if element.republish then element.republish else false
   type = if element.type then element.type else "Primary"
   description = if element.description then element.description else ""
-  tendency = if element.tendency then element.tendency else 1
+  tendency = if element.high_low then element.high_low else "high"
+  tendency = if tendency == "high" then 1 else -1
+  provider_name = if element.provider_name then element.provider_name else ""
+  provider_url = if element.provider_url then element.provider_url else ""
+  weight = if element.weight then element.weight else ""
+  subindex = if element.subindex then element.subindex else null
+  if !subindex then subindex = element.indicator
+  component = if element.component then element.component  else null
+  if !component then component = element.indicator
+  indicator = if element.indicator then element.indicator.replace(/_/g, " ")  else ""
+  code = if element.indicator then element.indicator  else ""
+  name = if element.name then element.name  else ""
 
   option = document.createElement("option")
-  option.value = element.indicator
+  option.value = code
   option.setAttribute("data-republish", republish)
   option.setAttribute("data-type", type)
+  option.setAttribute("data-name", name)
+  option.setAttribute("data-subindex", subindex)
+  option.setAttribute("data-component", component)
   option.setAttribute("data-description", description)
   option.setAttribute("data-tendency", tendency)
+  option.setAttribute("data-provider_name", provider_name)
+  option.setAttribute("data-provider_url", provider_url)
 
   space = Array(level * 3).join '&nbsp'
-  option.innerHTML = space + element.name
+  option.innerHTML = space + name
   select.appendChild(option)
 
+  # Table cells
+  tbody = document.createElement "tbody"
+  tbody.code = code
+  tbody.setAttribute("data-subindex", if type.toLowerCase() != "subindex" then subindex else element.indicator)
+  tbody.setAttribute("data-type", type)
+  table.appendChild tbody
+  tbody.onclick = ->
+    code = this.code
+    global.options.indicatorSelector.value = code
+    global.options.indicatorSelector.refresh()
+
+  if level == 3 && last
+    tbody.className = "last"
+
+  tr = document.createElement "tr"
+  tbody.appendChild tr
+
+  createTableCell(tr, "Indicator", name)
+  createTableCell(tr, "Code", code)
+  createTableCell(tr, "Type", type)
+  createTableCell(tr, "Weight", weight)
+  createTableCell(tr, "Provider", "<a href='#{provider_url}'>#{provider_name}</a>")
+  createTableCell(tr, "Publish", if republish then "Yes" else "No")
+
+  if description && description != ""
+    tr = document.createElement "tr"
+    tbody.appendChild tr
+    createTableCell(tr, "Description", description, 6)
+
+  # Loop children
+  count = 0
+  max = element.children.length - 1
+
   for child in element.children
-    setIndicatorOptions(select, child, level + 1)
+    setIndicatorOptions(select, table, child, level + 1, count == max)
+    count++
 
 # Years
 
@@ -168,6 +195,11 @@ getYears = () ->
   years = []
 
   if data.success then years = data.data.sort()
+
+  for year, index in years
+    years[index] = parseInt(years[index]) + 1
+
+  global.selections.years = years
 
   # Timeline
 
@@ -207,7 +239,7 @@ getCountries = () ->
   global.options.countrySelector = new wesCountry.selector.basic({
     data: countries,
     selectedItems: ["ALL"],
-    maxSelectedItems: global.maxTableRows,
+    maxSelectedItems: global.maxChartBars,
     labelName: "short_name",
     valueName: "iso3",
     childrenName: "countries",
@@ -258,6 +290,17 @@ getObservations = (indicator, countries, year) ->
   renderTable(observations)
   renderBoxes(observations)
 
+  countries = data.data.countries
+  observationsByCountry = data.data.observationsByCountry
+  renderCountries(countries, observationsByCountry)
+
+  # region
+  renderRegionLabel(data.data.region)
+
+renderRegionLabel = (region) ->
+  regionName = global.continents[region]
+  document.getElementById("region-label")?.innerHTML = if region != "ALL" then " for <strong>#{regionName}</strong>" else ""
+
 # Update information
 
 updateInfo = () ->
@@ -265,18 +308,53 @@ updateInfo = () ->
   countries = global.selections.countries
   indicator = global.selections.indicator
   indicatorOption = global.selections.indicatorOption
+  primary = true
 
   if settings.debug then console.log "year: #{year} countries: #{countries} indicator: #{indicator}"
 
   if !year or !countries or !indicator then return
 
-  getObservations(indicator, countries, year)
+  getObservations(indicator, countries, year - 1)
 
   if indicatorOption
+    name = indicatorOption.getAttribute("data-name")
+    document.getElementById("indicator")?.innerHTML = name
+    document.getElementById("global-indicator")?.innerHTML = name
     type = indicatorOption.getAttribute("data-type")
-    document.getElementById("indicator")?.innerHTML = type
+    primary = type.toLowerCase() == "primary"
 
-  document.getElementById("year")?.innerHTML = year
+  yearContainer = document.getElementById("year")
+  renderYearBox(yearContainer, primary, year)
+
+  yearGlobalContainer = document.getElementById("global-year")
+  renderYearBox(yearGlobalContainer, primary, year)
+
+renderYearBox = (yearContainer, primary, year) ->
+  yearContainer?.innerHTML = ""
+
+  i = document.createElement "i"
+  i.className = "fa fa-caret-left left"
+  yearContainer?.appendChild i
+  if !primary and global.selections.years.length > 0 and year > global.selections.years[0]
+    i.className += " active"
+    i.year = year - 1
+    i.onclick = (event) ->
+      global.options.timeline.select(this.year)
+      global.options.timeline.refresh()
+
+  span = document.createElement "span"
+  span.innerHTML = year
+  yearContainer?.appendChild span
+
+  i = document.createElement "i"
+  i.className = "fa fa-caret-right right"
+  yearContainer?.appendChild i
+  if global.selections.years.length > 0 and year < global.selections.years[global.selections.years.length - 1]
+    i.className += " active"
+    i.year = year + 1
+    i.onclick = (event) ->
+      global.options.timeline.select(this.year)
+      global.options.timeline.refresh()
 
 renderContinentLegend = (data, options, container, getContinents, getContinentColour) ->
   continents = getContinents(options)
@@ -455,7 +533,13 @@ renderCharts = (data) ->
     view = document.querySelector(countryView)
 
     series = data.observations
-    if !global.selections.indicatorTendency then series.reverse()
+
+    serieColours = wesCountry.makeGradientPalette(["#005475",
+                                                  "#1B4E5A",
+                                                  "#1B7A65",
+                                                  "#83C04C",
+                                                  "#E5E066"
+                                                  ], data.bars.length)
 
     # Bar
     options = {
@@ -486,12 +570,7 @@ renderCharts = (data) ->
       },
       width: view.offsetWidth,
       height: view.offsetHeight,
-      serieColours: wesCountry.makeGradientPalette(["#005475",
-                                                    "#1B4E5A",
-                                                    "#1B7A65",
-                                                    "#83C04C",
-                                                    "#E5E066"
-                                                    ], data.bars.length),
+      serieColours: serieColours,
       getElementColour: (options, element, index) ->
         rank = if element.ranked then element.ranked - 1 else index
         rank = if rank >= 0 and rank < options.serieColours.length then rank else index
@@ -519,6 +598,11 @@ renderCharts = (data) ->
     # Line chart
     document.querySelector(lineContainer)?.innerHTML = ""
 
+    values = if data.years then data.years else []
+
+    for value, index in values
+      values[index] = parseInt(values[index]) + 1
+
     options = {
       container: lineContainer,
       chartType: "line",
@@ -529,7 +613,7 @@ renderCharts = (data) ->
       },
       xAxis: {
         title: "",
-        values: if data.years then data.years else []
+        values: values
       },
       series: if data.secondVisualisation then data.secondVisualisation else [],
       width: view.offsetWidth,
@@ -561,7 +645,13 @@ renderCharts = (data) ->
   document.querySelector(barContainer)?.innerHTML = ""
 
   series = data.bars
-  if !global.selections.indicatorTendency then series.reverse()
+
+  serieColours = wesCountry.makeGradientPalette(["#005475",
+                                                "#1B4E5A",
+                                                "#1B7A65",
+                                                "#83C04C",
+                                                "#E5E066"
+                                                ], data.bars.length)
 
   options = {
     container: barContainer,
@@ -591,12 +681,7 @@ renderCharts = (data) ->
     median: {
       show: true
     },
-    serieColours: wesCountry.makeGradientPalette(["#005475",
-                                                  "#1B4E5A",
-                                                  "#1B7A65",
-                                                  "#83C04C",
-                                                  "#E5E066"
-                                                  ], data.bars.length),
+    serieColours: serieColours,
     getElementColour: (options, element, index) ->
       colour = options.serieColours[index]
 
@@ -710,10 +795,7 @@ renderTable = (data) ->
   for tbody in tbodies
     table.removeChild tbody
 
-  count = 0
-
   for observation in observations
-    count++
     code = observation.code
     name = observation.short_name
     rank = if observation.ranked then observation.ranked else count
@@ -743,9 +825,6 @@ renderTable = (data) ->
       code = this.code
       global.options.countrySelector.select(code)
       global.options.countrySelector.refresh()
-
-    if count > global.maxTableRows
-      tbody.className = "to-hide"
 
     td = document.createElement "td"
     td.setAttribute("data-title", "Rank")
@@ -801,36 +880,7 @@ renderTable = (data) ->
 
     # header
 
-    extraTheader = document.createElement "thead"
-    extraTable.appendChild extraTheader
-
-    tr = document.createElement "tr"
-    extraTheader.appendChild tr
-
-    th = document.createElement "th"
-    th.setAttribute("data-title", "Web Index Rank")
-    tr.appendChild th
-    th.innerHTML = "Web Index Rank"
-
-    th = document.createElement "th"
-    th.setAttribute("data-title", "Universal Access")
-    tr.appendChild th
-    th.innerHTML = "Universal Access"
-
-    th = document.createElement "th"
-    th.setAttribute("data-title", "Relevant Content")
-    tr.appendChild th
-    th.innerHTML = "Relevant Content"
-
-    th = document.createElement "th"
-    th.setAttribute("data-title", "Freedom And Openness")
-    tr.appendChild th
-    th.innerHTML = "Freedom And Openness"
-
-    th = document.createElement "th"
-    th.setAttribute("data-title", "Empowerment")
-    tr.appendChild th
-    th.innerHTML = "Empowerment"
+    renderExtraTableHeader(extraTable)
 
     # body
 
@@ -870,47 +920,156 @@ renderTable = (data) ->
 
     td.innerHTML = empowerment
 
-  if count > global.maxTableRows
-    tbodies = table.querySelectorAll(".to-hide")
+renderExtraTableHeader = (extraTable) ->
+  extraTheader = document.createElement "thead"
+  extraTable.appendChild extraTheader
 
-    for tbody in tbodies
-      tbody.className = "hidden"
+  tr = document.createElement "tr"
+  extraTheader.appendChild tr
 
-    tbody = document.createElement "tbody"
-    tbody.className = "tbody-view-more"
-    table.appendChild tbody
+  th = document.createElement "th"
+  th.setAttribute("data-title", "Web Index Rank")
+  tr.appendChild th
+  th.innerHTML = "Web Index Rank"
 
-    tr = document.createElement "tr"
-    tbody.appendChild tr
+  th = document.createElement "th"
+  th.setAttribute("data-title", "Universal Access")
+  tr.appendChild th
+  th.innerHTML = "Universal Access"
 
-    td = document.createElement "td"
-    td.colSpan = 4
-    td.className = "view-more"
-    tr.appendChild td
+  th = document.createElement "th"
+  th.setAttribute("data-title", "Relevant Content")
+  tr.appendChild th
+  th.innerHTML = "Relevant Content"
 
-    a = document.createElement "a"
-    a.innerHTML = "View more"
-    td.appendChild a
+  th = document.createElement "th"
+  th.setAttribute("data-title", "Freedom And Openness")
+  tr.appendChild th
+  th.innerHTML = "Freedom And Openness"
 
-    a.collapsed = true
-    a.table = table
+  th = document.createElement "th"
+  th.setAttribute("data-title", "Empowerment")
+  tr.appendChild th
+  th.innerHTML = "Empowerment"
 
-    a.onclick = ->
-      collapsed = this.collapsed
-      this.collapsed = !collapsed
+renderIndicatorInfo = (option, tendency) ->
+  # Show republish notification
 
-      className = if collapsed then "hidden" else "shown"
-      newClassName = if collapsed then "shown" else "hidden"
-      text = if collapsed then "View less" else "View more"
+  republish = option.getAttribute("data-republish")
+  republish = republish == "true"
 
-      this.innerHTML = text
+  document.getElementById("notifications")?.style?.display = if republish then "none" else "block"
 
-      rows = this.table.querySelectorAll("tbody.#{className}")
+  # Primary indicators don't have historical values
+  type = option.getAttribute("data-type")
+  index = type.toLowerCase() == "index"
+  subindex = type.toLowerCase() == "subindex"
+  component = type.toLowerCase() == "component"
+  primary = type.toLowerCase() == "primary"
+  secondary = type.toLowerCase() == "secondary"
 
-      for row in rows
-        row.className = newClassName
+  document.getElementById("primary-info")?.style?.display = if primary then "block" else "none"
+
+  years = global.options.timeline.getElements()
+
+  for i in [0..years.length - 2]
+    year = years[i]
+
+    if primary
+      global.options.timeline.disable(year)
+    else
+      global.options.timeline.enable(year)
+
+  # Name
+  name = option.getAttribute("data-name")
+  document.getElementById("indicator-name")?.innerHTML = name
+  # Description
+  description = option.getAttribute("data-description")
+  document.getElementById("indicator-description")?.innerHTML = description
+  # Type
+  document.getElementById("indicator-type")?.innerHTML = type
+  document.getElementById("indicator-type-icon")?.innerHTML = type
+  # Tendency
+  tendencyLabel = if tendency then document.getElementById("label_ascending")?.value else document.getElementById("label_descending")?.value
+  document.getElementById("indicator-tendency")?.innerHTML = tendencyLabel
+  document.getElementById("indicator-tendency-icon")?.innerHTML = tendencyLabel
+  tendencyIcon = if tendency then "fa fa-arrow-up" else "fa fa-arrow-down"
+  document.getElementById("indicator-tendency-arrow")?.className = tendencyIcon
+  # Provider
+  provider_name = option.getAttribute("data-provider_name")
+  provider_url = option.getAttribute("data-provider_url")
+  provider_anchor = "<a href='#{provider_url}'>#{provider_name}</a>"
+  document.getElementById("indicator-provider")?.innerHTML = provider_anchor
+  document.getElementById("indicator-provider-icon")?.innerHTML = provider_anchor
+
+  # Hierarchy
+  hierarchy = document.getElementById("hierarchy")
+
+  indexBox = hierarchy.querySelector(".index")
+  subindexBox = hierarchy.querySelector(".subindex")
+  componentBox = hierarchy.querySelector(".component")
+  indicatorBox = hierarchy.querySelector(".indicator")
+
+  subindexNameSpan = hierarchy.querySelector(".subindex .name")
+  componentNameSpan = hierarchy.querySelector(".component .name")
+  indicatorNameSpan = hierarchy.querySelector(".indicator .name")
+
+  subindexName = option.getAttribute("data-subindex")
+  componentName = option.getAttribute("data-component")
+  indicatorName = name
+  indicatorValue = option.value
+
+  subindexNameSpan?.innerHTML = subindexName.replace(/_/g, " ").toLowerCase()
+  componentNameSpan?.innerHTML = componentName.replace(/_/g, " ").toLowerCase()
+  indicatorNameSpan?.innerHTML = indicatorName
+
+  subindexBox.setAttribute("data-subindex", subindexName)
+  componentBox.setAttribute("data-subindex", subindexName)
+  indicatorBox.setAttribute("data-subindex", subindexName)
+
+  if primary or secondary
+    show(indicatorBox)
+    show(componentBox)
+    show(subindexBox)
+  else if component
+    hide(indicatorBox)
+    show(componentBox)
+    show(subindexBox)
+  else if subindex
+    hide(indicatorBox)
+    hide(componentBox)
+    show(subindexBox)
+  else if index
+    hide(indicatorBox)
+    hide(componentBox)
+    hide(subindexBox)
+
+  indicatorBox.onclick = ->
+    global.options.indicatorSelector.value = indicatorValue
+    global.options.indicatorSelector.refresh()
+  componentBox.onclick = ->
+    global.options.indicatorSelector.value = componentName
+    global.options.indicatorSelector.refresh()
+  subindexBox.onclick = ->
+    global.options.indicatorSelector.value = subindexName
+    global.options.indicatorSelector.refresh()
+  indexBox.onclick = ->
+    global.options.indicatorSelector.value = "INDEX"
+    global.options.indicatorSelector.refresh()
+
+show = (element) ->
+  element.style.display = "block"
+
+hide = (element) ->
+  element.style.display = "none"
 
 renderBoxes = (data) ->
+  # Global boxes
+  renderSomeBoxes(data.statistics, "")
+  # Country boxes
+  renderSomeBoxes(data.globalStatistics, "global-")
+
+renderSomeBoxes = (data, prefix) ->
   mean = data.mean
   median = data.median
   higher = data.higher["short_name"]
@@ -919,10 +1078,10 @@ renderBoxes = (data) ->
   higherArea = data.higher.area
   lowerArea = data.lower.area
 
-  document.getElementById("mean")?.innerHTML = mean.toFixed(2);
-  document.getElementById("median")?.innerHTML = median.toFixed(2);
+  document.getElementById("#{prefix}mean")?.innerHTML = mean.toFixed(2);
+  document.getElementById("#{prefix}median")?.innerHTML = median.toFixed(2);
 
-  higherContainer = document.getElementById("higher")
+  higherContainer = document.getElementById("#{prefix}higher")
   if higherContainer
     higherContainer.innerHTML = if global.selections.indicatorTendency then higher else lower
 
@@ -930,25 +1089,13 @@ renderBoxes = (data) ->
       global.options.countrySelector.select(higherArea)
       global.options.countrySelector.refresh()
 
-  lowerContainer = document.getElementById("lower")
+  lowerContainer = document.getElementById("#{prefix}lower")
   if lowerContainer
     lowerContainer.innerHTML = if global.selections.indicatorTendency then lower else higher
 
     lowerContainer.onclick = ->
       global.options.countrySelector.select(lowerArea)
       global.options.countrySelector.refresh()
-
-  # Map colour legend
-  labelHigher = document.getElementById("label_higher")?.value
-  labelLower = document.getElementById("label_lower")?.value
-
-  higherLegend = document.getElementById("legend-higher")
-  if higherLegend
-    higherLegend.innerHTML = if global.selections.indicatorTendency then labelHigher else labelLower
-
-  lowerLegend = document.getElementById("legend-lower")
-  if lowerLegend
-    lowerLegend.innerHTML = if global.selections.indicatorTendency then labelLower else labelHigher
 
 # Script load
 
@@ -999,26 +1146,29 @@ for li in chartSelectors
 
 msie6 = $.browser is "msie" and $.browser.version < 7
 
-selectBar = $(".select-bar")
+selectBar = $(".select-bar > section")
+siteHeader = $(".site-header").height()
+
+if !selectBar then return;
 
 top = null
 
 if !msie6
   $(window).scroll((event) ->
-    firstHeader = document.querySelector(".select-box header")
-    top ?= selectBar.offset().top + firstHeader.offsetHeight
+    top ?= selectBar.offset().top
 
     # What the y position of the scroll is
     y = $(this).scrollTop()
 
     # Whether that's below the form
-    if y >= top
+    if y >= siteHeader
       if !selectBar.collapsed
         setBoxesInitialPosition()
         # if so, add the class
         selectBar.addClass("fixed")
         setBoxesPosition()
         selectBar.collapsed = true
+        selectBar.css("width", selectBar.parent().width())
     else
       # otherwise remove it
       selectBar.removeClass("fixed")
@@ -1062,25 +1212,35 @@ setBoxesPosition = ->
 #                               COLLAPSABLE BOXES
 ################################################################################
 
-collapsables = document.querySelectorAll(".collapsable")
+collapsables = document.querySelectorAll(".collapsable-header")
 
-for collapsable in collapsables
-  button = collapsable.querySelector(".button")
+for collapsableHeader in collapsables
+  button = collapsableHeader.querySelector(".button")
   if !button then continue
 
+  collapsable = collapsableHeader.parentNode
+
   collapsableSection = collapsable.querySelector("section")
+
   if ! collapsableSection then continue
 
-  button.collapsed = false
+  collapsed = collapsable.className.indexOf("collapsed") != -1
+
+  button.collapsed = collapsed
   button.container = collapsable
+
+  button.setStyles = ->
+    collapsed = this.collapsed
+    container = this.container
+    containerClass = container.className.replace(" collapsed", "")
+    container.className = if collapsed then containerClass + " collapsed"  else containerClass
+    this.className = if collapsed then "button fa fa-toggle-off" else "button fa fa-toggle-on"
 
   button.onclick = ->
     this.collapsed = !this.collapsed
+    this.setStyles()
 
-    container = this.container
-    containerClass = container.className
-    container.className = if this.collapsed then containerClass + " collapsed"  else containerClass.replace(" collapsed", "")
-    this.className = if this.collapsed then "button fa fa-toggle-off" else "button fa fa-toggle-on"
+  button.setStyles()
 
 ################################################################################
 #                               CHART TOOLTIP
@@ -1094,7 +1254,7 @@ chartTooltip = (info, global) ->
   ranked = info["data-ranked"]
   code = info["data-area"]
   name = info["data-area_name"]
-  time = info["data-year"]
+  time = parseInt(info["data-year"]) + 1
 
   continent = ""
 
@@ -1116,3 +1276,352 @@ getValue = (value, republish) ->
   isNumeric = !isNaN(parseFloat(value)) && isFinite(value)
 
   if isNumeric then parseFloat(value).toFixed(2) else value
+
+################################################################################
+#                               ACCORDION TABS
+################################################################################
+
+tabs = document.querySelectorAll(".accordion-tabs-minimal li")
+
+if tabs.length > 0
+  a = tabs[0].querySelector("a")
+  content = tabs[0].querySelector("div.tab-content")
+  a.className += " is-active"
+  content.className += " is-open"
+
+for tab in tabs
+  a = tab.querySelector("a")
+  a?.onclick = (event) ->
+    if this.className.indexOf("is-active") == -1
+      event.preventDefault()
+      open = document.querySelector(".accordion-tabs-minimal .is-active")
+      open?.className = open.className.replace(" is-active", "")
+      open = document.querySelector(".accordion-tabs-minimal .is-open")
+      open?.className = open.className.replace(" is-open", "")
+
+      this.className += " is-active"
+      content = this.parentNode.querySelector("div.tab-content")
+      content?.className += " is-open"
+    else
+      event.preventDefault()
+
+################################################################################
+#                               RENDER COUNTRIES
+################################################################################
+
+renderCountries = (countries, observations) ->
+  container = document.getElementById("country-section")
+
+  container?.style.display = if global.selections.countries == "ALL" then "none" else "block"
+
+  selectedCountries = global.selections.countries
+  selectedCountries = selectedCountries.split(",")
+
+  ul = document.getElementById("country-tabs")
+  ul.innerHTML = ""
+
+  count = 1
+
+  for country in selectedCountries
+    country = countries[country]
+
+    if !country then continue
+
+    renderCountryInfo = (country, count) ->
+      code = country.iso3
+      name = country.name
+      continent = country.area
+      observation = observations[code]
+      republish = observation.republish
+      value = observation.value
+      value = getValue(value, republish)
+      ranking = observation.ranked
+      extraInfo = observation.extra
+      globalRank = extraInfo.rank
+      universalAccess = extraInfo["UNIVERSAL_ACCESS"].toFixed(2)
+      freedomOpenness = extraInfo["FREEDOM_AND_OPENNESS"].toFixed(2)
+      relevantContent = extraInfo["RELEVANT_CONTENT_AND_USE"].toFixed(2)
+      empowerment = extraInfo["EMPOWERMENT"].toFixed(2)
+
+      if continent
+        continent = global.continents[continent]
+      else
+        continent = ""
+
+      li = document.createElement "li"
+      li.className = "tab-header-and-content"
+      ul.appendChild li
+
+      a = document.createElement "a"
+      a.href = "javascript:void(0)"
+      a.className = if count == 1 then "tab-link is-active" else "tab-link"
+      a.opened = false
+      li.appendChild a
+
+      img = document.createElement "img"
+      img.className = "flag"
+      path = document.getElementById("path").value
+      img.src = "#{path}/images/flags/#{code}.png"
+      a.appendChild img
+
+      span = document.createElement "span"
+      span.className = "country"
+      a.appendChild span
+      span.innerHTML = country.short_name
+
+      div = document.createElement "div"
+      div.className = if count == 1 then "tab-content is-open" else "tab-content"
+      li.appendChild div
+      a.container = div
+
+      a.onclick = (event) ->
+        if this.className.indexOf("is-active") == -1
+          event.preventDefault()
+          open = document.querySelector(".accordion-tabs-minimal .is-active")
+          open?.className = open.className.replace(" is-active", "")
+          open = document.querySelector(".accordion-tabs-minimal .is-open")
+          open?.className = open.className.replace(" is-open", "")
+
+          this.className += " is-active"
+          content = this.parentNode.querySelector("div.tab-content")
+          content?.className += " is-open"
+        else
+          event.preventDefault()
+
+        if this.opened then return
+
+        this.opened = true
+        div = this.container
+
+        map = document.createElement "div"
+        map.className = "country-map"
+        map.id = "m" + wesCountry.guid()
+        div.appendChild map
+
+        countryMap = wesCountry.maps.createMap({
+          container: "##{map.id}",
+          "borderWidth": 1.5,
+          countries: [{
+            code: code,
+            value: 1
+          }],
+          download: false,
+          "zoom": false,
+          landColour: "#ddd",
+          borderColour: "#ddd",
+          colourRange: ["#0096af"]
+        })
+
+        wrapper = document.createElement "div"
+        div.appendChild wrapper
+
+        valueDiv = document.createElement "div"
+        valueDiv.className = "value"
+        valueDiv.innerHTML = "<p>value</p>#{value}"
+        wrapper.appendChild valueDiv
+
+        rankingDiv = document.createElement "div"
+        rankingDiv.className = "value ranking"
+        rankingDiv.innerHTML = "<p>rank</p>#{ranking}"
+        wrapper.appendChild rankingDiv
+
+        p = document.createElement "p"
+        wrapper.appendChild p
+
+        p.innerHTML = name
+
+        p = document.createElement "p"
+        p.className = "continent"
+        wrapper.appendChild p
+
+        p.innerHTML = continent
+
+        tableWrapper = document.createElement "div"
+        tableWrapper.className = "table-wrapper"
+        div.appendChild tableWrapper
+
+        table = document.createElement "table"
+        table.className = "extra-table"
+        tableWrapper.appendChild table
+
+        # thead
+        renderExtraTableHeader(table)
+
+        # tbody
+        extraTbody = document.createElement "tbody"
+        table.appendChild extraTbody
+
+        tr = document.createElement "tr"
+        extraTbody.appendChild tr
+
+        td = document.createElement "td"
+        td.setAttribute("data-title", "Web Index Rank")
+        tr.appendChild td
+
+        td.innerHTML = globalRank
+
+        td = document.createElement "td"
+        td.setAttribute("data-title", "Universal Access")
+        tr.appendChild td
+
+        renderPieChart(td, universalAccess, "#f93845")
+
+        td = document.createElement "td"
+        td.setAttribute("data-title", "Relevant Content")
+        tr.appendChild td
+
+        renderPieChart(td, freedomOpenness, "#0096af")
+
+        td = document.createElement "td"
+        td.setAttribute("data-title", "Freedom And Openness")
+        tr.appendChild td
+
+        renderPieChart(td, relevantContent, "#89ba00")
+
+        td = document.createElement "td"
+        td.setAttribute("data-title", "Empowerment")
+        tr.appendChild td
+
+        renderPieChart(td, empowerment, "#ff761c")
+
+      if count == 1
+        a.click()
+
+    renderCountryInfo(country, count)
+    count++
+
+renderPieChart = (container, value, colour) ->
+  chart = document.createElement "div"
+  chart.className = "chart"
+  chart.id = "c#{wesCountry.guid()}"
+  container.appendChild chart
+
+  pie = wesCountry.charts.chart({
+    chartType: "pie",
+    container: "##{chart.id}",
+    serieColours: ["#ddd", colour]
+    series: [
+      {
+        name: "",
+        values: [100 - value]
+      },
+      {
+        name: name,
+        values: [value]
+      }
+    ],
+    events: {
+      onmouseover: ->
+    },
+    valueOnItem: {
+      show: false
+    },
+    xAxis: {
+      "font-colour": "none"
+    },
+    yAxis: {
+      "font-colour": "none"
+    },
+    legend: {
+      show: false
+    },
+    margins: [0, 0, 0, 0]
+  })
+
+################################################################################
+#                                  TABLE CELL
+################################################################################
+
+createTableCell = (tr, title, content, colspan) ->
+  td = document.createElement "td"
+  td.setAttribute("data-title", title)
+  td.innerHTML = content
+  tr.appendChild td
+
+  if colspan
+    td.setAttribute("colspan", colspan)
+
+################################################################################
+#                               MOVING TABS
+################################################################################
+
+msie6 = $.browser is "msie" and $.browser.version < 7
+
+siteHeader = $(".site-header").height()
+firstSection = $(".first-section")
+firstTab = $(".first-tab")
+secondTab = $(".second-tab")
+firstTabFixedPosition = 0
+secondTabAbsolutePosition = 0
+firstTabStartedMoving = 0
+secondTabStartedMoving = 0
+
+if !selectBar then return;
+
+top = null
+previousY = 0
+
+if !msie6
+  $(window).scroll((event) ->
+    top ?= section.offset().top
+
+    windowHeight = $(window).height()
+    fistTabHeight = firstTab.height()
+
+    # What the y position of the scroll is
+    y = $(this).scrollTop()
+    tendency = y - previousY
+
+    firstTabTop = Math.floor(y - firstTab.offset().top)
+    secondTabTop = Math.floor(y - secondTab.offset().top)
+
+    # Whether that's below the form
+    if y >= siteHeader && windowHeight > fistTabHeight
+      if !firstSection.collapsed && tendency > 0
+        parent = firstSection.parent()
+        height = parent.height()
+
+        parent.css("min-height", height)
+
+        firstSection.siblings().each(->
+            offset = $(this).position().top
+            secondTabAbsolutePosition = offset
+            $(this).css("top", offset)
+            $(this).addClass("absolute")
+        )
+
+        firstTabFixedPosition = firstTab.position().top
+        firstSection.children().each(->
+          width = $(this).width()
+          $(this).css("width", width)
+          $(this).addClass("fixed")
+        )
+        firstTab.css("top", firstTabFixedPosition)
+        firstSection.collapsed = true
+        secondTabStartedMoving = y
+      else if !firstTab.moving && tendency > 0 && secondTabTop >= firstTabTop
+        offset = secondTabAbsolutePosition - 6
+        firstTab.css("top", offset).addClass("absolute").removeClass("fixed")
+        firstTab.moving = true
+        firstTabStartedMoving = y
+      else if tendency < 0 && firstTab.moving && y <= firstTabStartedMoving
+        firstTab.css("top", firstTabFixedPosition).addClass("fixed").removeClass("absolute")
+        firstTab.moving = false
+      else if tendency < 0 && y <= secondTabStartedMoving
+        returnToStoppedPosition(firstSection, firstTab)
+    else
+      returnToStoppedPosition(firstSection, firstTab)
+
+    previousY = y
+  )
+
+returnToStoppedPosition = (firstSection, firstTab) ->
+  if !firstSection.collapsed then return
+
+  firstSection.children().removeClass("fixed").removeClass("absolute")
+  firstSection.collapsed = false
+  firstTab.moving = false
+
+  firstSection.siblings().each(->
+      $(this).removeClass("absolute")
+  )

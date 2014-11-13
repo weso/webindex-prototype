@@ -1,37 +1,97 @@
 header.site-header {
-
+  @include outer-container;
+  max-width: 80em;
 }
 
 header.site-header .logo {
-  margin: 0.5em 0 0 0.5em;
+  margin: 1.5em 0 0 0;
   display: inline-block;
   float: left;
 }
 
 header.site-header .top {
-  background-color: $green;
-  background-image: url(../images/world-small.png);
-  background-size: cover;
+  background-color: white;
+
   padding: 0 0 0.3em 0;
   margin-bottom: 0;
   overflow: auto;
 }
 
+header.site-header .bottom {
+  overflow: hidden;
+  box-shadow: 0 0.3em 0.3em -0.3em #111;
+
+  div {
+    height: 1.6em;
+    width: 25%;
+    padding-top: 0.1em;
+    float: left;
+    background-color: #ccc;
+    background-image: url(../images/world-header-1.png);
+    background-size: cover;
+    text-transform: uppercase;
+    text-align: center;
+    font-size: 1em;
+    font-weight: 600;
+    text-shadow: 0px 1px 0px rgba(white, .3), 0px -1px 0px rgba(black, .7);
+  }
+
+  div:nth-child(1) {
+    background-color: nth($home-accordion-colours, 4);
+    border-right: 0.1em solid darken(nth($home-accordion-colours, 4), 30%);
+    color: darken(nth($home-accordion-colours, 4), 30%);
+    text-shadow: 0px 1px 0px rgba(white, .3), 0px -1px 0px rgba(darken(nth($home-accordion-colours, 4), 15%), .7);
+  }
+
+  div:nth-child(2) {
+    background-color: nth($home-accordion-colours, 3);
+    border-right: 0.1em solid darken(nth($home-accordion-colours, 3), 8%);
+    box-shadow: inset 0.5em 0 0.8em -0.5em darken(nth($home-accordion-colours, 4), 8%);
+    background-image: url(../images/world-header-2.png);
+    color: darken(nth($home-accordion-colours, 3), 12%);
+    text-shadow: 0px 1px 0px rgba(white, .3), 0px -1px 0px rgba(darken(nth($home-accordion-colours, 3), 15%), .7);
+  }
+
+  div:nth-child(3) {
+    background-color: nth($home-accordion-colours, 2);
+    border-right: 0.1em solid darken(nth($home-accordion-colours, 2), 10%);
+    box-shadow: inset 0.5em 0 0.8em -0.5em darken(nth($home-accordion-colours, 3), 20%);
+    background-image: url(../images/world-header-3.png);
+    color: darken(nth($home-accordion-colours, 2), 12%);
+    text-shadow: 0px 1px 0px rgba(white, .3), 0px -1px 0px rgba(darken(nth($home-accordion-colours, 2), 15%), .7);
+  }
+
+  div:nth-child(4) {
+    background-color: nth($home-accordion-colours, 1);
+    box-shadow: inset 0.5em 0 0.8em -0.5em darken(nth($home-accordion-colours, 2), 20%);
+    background-image: url(../images/world-header-4.png);
+    color: darken(nth($home-accordion-colours, 1), 20%);
+    text-shadow: 0px 1px 0px rgba(white, .3), 0px -1px 0px rgba(darken(nth($home-accordion-colours, 1), 15%), .7);
+  }
+}
+
 @media (min-width: 64em) {
   header.site-header .top {
-    background-image: url(../images/world.png);
+
   }
 }
 
 header.site-header nav {
   overflow: auto;
   clear: right;
-  padding: 0 0.5em;
+  padding: 1em 0.5em 1em 0;
+  width: intrinsic;
+  float: right;
+
+  div {
+    overflow: hidden;
+    width: intrinsic;
+  }
 }
 
 @media (min-width: 40em) {
   header.site-header nav {
-    padding: 0 1em;
+    padding: 1em 0 1em 1em;
   }
 }
 
@@ -88,7 +148,7 @@ header.site-header nav li a:hover {
 }
 
 header.site-header nav li.current-menu-item a {
-  border-bottom: 0.5em solid $header-link-color;
+  border-bottom: 0.5em solid $header-underline;
 }
 
 header.site-header nav li a {
@@ -97,36 +157,16 @@ header.site-header nav li a {
   text-transform: lowercase;
 }
 
-/*
-header.site-header span.separator {
-  display: inline-block;
-  margin-left: 0.5em;
-  color: #666;
-}
-
-header.site-header span.separator {
-  display: none;
-}
-
-@media (min-width: 64em) {
-  header.site-header span.separator {
-    display: inline;
-  }
-}
-
-header.site-header li:last-child span.separator {
-  display: none;
-}
-*/
-
 /* BY */
 
 .by {
-  padding: 0.5em;
+  padding: 0.5em 0;
   margin: 0;
   text-align: right;
   font-weight: 300;
-  box-shadow: inset 0px 0.2em 0.3em -0.1em $header-bottom-shadow;
+  @include outer-container;
+  max-width: 80em;
+  display: none;
 }
 
 .by img {
@@ -140,7 +180,7 @@ p.donate {
   font-family: "Merriweather Sans", sans-serif !important;
   float: right;
   background-color: $donate-colour;
-  margin: 0.5em 0 0 0;
+  margin: 0;
   text-transform: uppercase;
 }
 
@@ -177,7 +217,7 @@ a.read-more {
 
 div.translator {
   float: right;
-  margin: 0.5em 1em 0 0;
+  margin: 0.1em 1em 0 0;
 
   div {
     font-size: 1em;
@@ -202,7 +242,7 @@ div.translator {
 
   .goog-te-menu-value {
     span:first-child {
-      color: white;
+      color: #111;
       text-transform: lowercase;
     }
 
@@ -211,7 +251,7 @@ div.translator {
     }
 
     span:last-child {
-      color: white !important;
+      color: #111 !important;
       font-size: 0.8em;
     }
   }

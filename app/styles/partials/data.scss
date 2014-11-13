@@ -1,19 +1,125 @@
 .data-right-content {
   min-height: 60em;
+  margin-top: 0.3em;
+  position: relative;
+}
+
+/* TABS */
+
+.first-section {
+  background-color: white;
+  padding-top: 0em;
+  z-index: -1;
+}
+
+.first-section .fixed {
+  top: 1em;
+}
+
+.tab.absolute {
+  position: absolute;
+  left: 0;
+}
+
+.tab {
+  width: 100%;
+  margin-top: -0.5em;
+
+  > header {
+    box-sizing: border-box;
+    position: relative;
+    min-height: 2.5em;
+
+    div {
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 25%;
+      max-width: 12em;
+      border-top: 1px solid #ccc;
+      border-left: 1px solid #ccc;
+      border-right: 1px solid #ccc;
+      margin-left: 0.5em;
+      margin-bottom: -1px;
+      padding: 0.4em  1em 0.6em 1em;
+      border-radius: 3px 3px 0 0;
+      box-shadow: 0 -5px 5px -5px #333;
+      z-index: 1000;
+
+      h2 {
+        margin: 0;
+        text-align: center;
+        font-size: 1.1em;
+      }
+
+      i {
+        margin-right: 0.5em;
+        position: absolute;
+        font-size: 1.4em;
+      }
+    }
+  }
+
+  > .tab-content {
+    border-top: 1px solid #666;
+    border-radius: 3px 3px 0 0;
+    border-top: 1px solid #ccc;
+    border-left: 1px solid #ccc;
+    border-right: 1px solid #ccc;
+    box-shadow: 0px 3px 3px #888, 0px -3px 3px #aaa;
+    z-index: 0;
+  }
+}
+
+.indicator-header {
+  div {
+    background-color: nth($data-select-colours, 1);
+    border-top: 2px solid darken(nth($data-select-colours, 1), 20%) !important;
+    border-left: 2px solid darken(nth($data-select-colours, 1), 20%) !important;
+    color: darken(nth($data-select-colours, 1), 40%) !important;
+
+    i {
+      color: darken(nth($data-select-colours, 1), 30%);
+    }
+  }
+}
+
+.country-header {
+  margin-left: 15% !important;
+
+  div {
+    background-color: nth($data-select-colours, 3);
+    border-top: 2px solid darken(nth($data-select-colours, 3), 10%) !important;
+    border-left: 2px solid darken(nth($data-select-colours, 3), 10%) !important;
+    color: darken(nth($data-select-colours, 3), 25%) !important;
+
+    i {
+      color: darken(nth($data-select-colours, 3), 20%);
+    }
+  }
 }
 
 /* COLLAPSABLE */
 
 .collapsable {
   background-color: white;
-  border-left: 1px solid #ccc;
-  border-right: 1px solid #ccc;
-  border-bottom: 1px solid #ccc;
-  box-shadow: 0 0.4em 0.2em -0.2em #777;
   padding: 0 0 0.5em 0;
   position: relative;
   overflow-y: hidden;
-  margin-bottom: 1em;
+
+  .collapsable {
+    padding: 0.5em 0 0 0;
+    margin: 0.5em 0 0 0;
+    border: none;
+    border-top: 0.1em solid #eee;
+    box-shadow: none;
+  }
+
+  .collapsable:first-child {
+    border: none;
+    margin: 0 0 0.5em 0;
+    padding: 0;
+  }
 
   section {
     padding: 0 0.5em;
@@ -29,26 +135,392 @@
     }
 
     h2 {
+      font-family: "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif !important;
       font-size: 1em;
+      font-weight: 300;
+      font-style: normal;
       margin-top: 0.2em;
       text-align: justify !important;
       padding: 0 !important;
     }
   }
 
+  .icons {
+    font-size: 0.8em;
+    line-height: 1.25;
+    padding-top: 0.1em;
+    float: left;
+    color: #999;
+
+    i {
+      margin-left: 1em;
+    }
+
+    i:first-child {
+      margin-left: 0;
+    }
+  }
+
+  span.full-details {
+    float: right;
+    margin-right: 1em;
+    margin-top: -0.1em;
+    font-size: 0.8em;
+    color: #555;
+    text-transform: lowercase;
+  }
+
+  .hierarchy2 {
+    overflow: hidden;
+    float: left;
+    font-size: 0.8em;
+    max-width: 95%;
+
+    li {
+      float: left;
+      max-width: 25%;
+
+      a {
+        display: block;
+        position: relative;
+        float: left;
+        border-radius: 0.2em;
+        padding: 0.2em 0.4em;
+        background-color: #ccc;
+        color: #333;
+        height: 3.6em;
+        overflow: hidden;
+
+        span {
+          display: block;
+          font-size: 0.8em;
+        }
+
+        span.type {
+          font-size: 0.7em;
+          text-transform: lowercase;
+          width: 100%;
+          text-align: center;
+        }
+      }
+
+      a:after {
+        content: " ";
+      	display: block;
+      	width: 0;
+      	height: 0;
+      	border-top: 50px solid transparent;
+      	border-bottom: 50px solid transparent;
+      	border-left: 30px solid hsla(34,85%,35%, 1);
+      	position: absolute;
+      	top: 50%;
+      	margin-top: -50px;
+      	left: 100%;
+      	z-index: 2;
+      }
+
+      i {
+        margin: 1.5em 0.5em 0 0.4em;
+        float: left;
+      }
+    }
+
+    .index a {
+      display: table-cell;
+      vertical-align: middle;
+    }
+
+    .subindex, .component, .indicator {
+      display: none;
+    }
+
+    li.subindex[data-subindex="UNIVERSAL_ACCESS"] a {
+      background-color: rgba($data-universal-access, 0.8);
+    }
+
+    li.component[data-subindex="UNIVERSAL_ACCESS"] a {
+      background-color: rgba($data-universal-access, 0.5);
+    }
+
+    li.indicator[data-subindex="UNIVERSAL_ACCESS"] a {
+      background-color: rgba($data-universal-access, 0.3);
+    }
+
+    li.subindex[data-subindex="FREEDOM_AND_OPENNESS"] a {
+      background-color: rgba($data-freedom-openness, 0.8);
+    }
+
+    li.component[data-subindex="FREEDOM_AND_OPENNESS"] a {
+      background-color: rgba($data-freedom-openness, 0.5);
+    }
+
+    li.indicator[data-subindex="FREEDOM_AND_OPENNESS"] a {
+      background-color: rgba($data-freedom-openness, 0.3);
+    }
+
+    li.subindex[data-subindex="RELEVANT_CONTENT_AND_USE"] a {
+      background-color: rgba($data-relevant-content-use, 0.8);
+    }
+
+    li.component[data-subindex="RELEVANT_CONTENT_AND_USE"] a {
+      background-color: rgba($data-relevant-content-use, 0.5);
+    }
+
+    li.indicator[data-subindex="RELEVANT_CONTENT_AND_USE"] a {
+      background-color: rgba($data-relevant-content-use, 0.3);
+    }
+
+    li.subindex[data-subindex="EMPOWERMENT"] a {
+      background-color: rgba($data-empowerment, 0.8);
+    }
+
+    li.component[data-subindex="EMPOWERMENT"] a {
+      background-color: rgba($data-empowerment, 0.5);
+    }
+
+    li.indicator[data-subindex="EMPOWERMENT"] a {
+      background-color: rgba($data-empowerment, 0.3);
+    }
+  }
+
+  .hierarchy {
+		list-style: none;
+		overflow: hidden;
+		font: 18px Helvetica, Arial, Sans-Serif;
+
+    li {
+			float: left;
+			max-width: 50%;
+		}
+
+    li a {
+			color: #333;
+			text-decoration: none;
+			padding: 0.2em 0.2em 0.2em 3em;
+			background-color: #ccc;
+			position: relative;
+			display: block;
+			float: left;
+      width: 100%;
+			height: 3em;
+			font-size: 0.7em;
+		}
+
+		li a:hover {
+      background-color: #bbb;
+    }
+
+		li a span {
+			display: block;
+			font-size: 0.9em;
+      height: 1.2em;
+      overflow: hidden;
+      width: 100%;
+      text-align: center;
+		}
+
+    li a span.name {
+      text-transform: capitalize;
+    }
+
+		li a span.type {
+			font-size: 0.8em;
+			margin-bottom: 0.2em;
+      text-transform: lowercase;
+		}
+
+		li a:after {
+			content: " ";
+			display: block;
+			width: 0;
+			height: 0;
+			border-top: 50px solid transparent;
+			border-bottom: 50px solid transparent;
+			border-left: 30px solid #ccc;
+			position: absolute;
+			top: 50%;
+			margin-top: -50px;
+			left: 100%;
+			z-index: 2;
+		}
+
+    li a:hover:after {
+      border-left-color: #bbb;
+    }
+
+    li a:before {
+			content: " ";
+			display: block;
+			width: 0;
+			height: 0;
+			border-top: 50px solid transparent;
+			border-bottom: 50px solid transparent;
+			border-left: 30px solid white;
+			position: absolute;
+			top: 50%;
+			margin-top: -50px;
+			margin-left: 0;
+			left: 100%;
+			z-index: 1;
+		}
+
+    li:first-child a {
+			padding-left: 10px;
+
+      span.type {
+        text-transform: capitalize;
+      }
+		}
+
+		li:first-child a span.type {
+			font-size: 1em;
+			margin-top: 0.7em;
+		}
+
+		li:last-child a:after { border: 0; }
+
+    .subindex, .component, .indicator {
+      display: none;
+    }
+
+    .index {
+      width: 10%;
+    }
+
+    .subindex, .component {
+      width: 20%;
+    }
+
+    .indicator {
+      width: 100%;
+    }
+
+    li[data-subindex="UNIVERSAL_ACCESS"] a:hover {
+      background-color: rgba($data-universal-access, 1) !important;
+    }
+
+    li[data-subindex="UNIVERSAL_ACCESS"] a:hover:after {
+      border-left-color: rgba($data-universal-access, 1) !important;
+    }
+
+    li.subindex[data-subindex="UNIVERSAL_ACCESS"] a {
+      background-color: rgba($data-universal-access, 0.8);
+    }
+
+    li.subindex[data-subindex="UNIVERSAL_ACCESS"] a:after {
+      border-left-color: rgba($data-universal-access, 0.8);
+    }
+
+    li.component[data-subindex="UNIVERSAL_ACCESS"] a {
+      background-color: rgba($data-universal-access, 0.5);
+    }
+
+    li.component[data-subindex="UNIVERSAL_ACCESS"] a:after {
+      border-left-color: rgba($data-universal-access, 0.5);
+    }
+
+    li.indicator[data-subindex="UNIVERSAL_ACCESS"] a {
+      background-color: rgba($data-universal-access, 0.3);
+    }
+
+    li[data-subindex="FREEDOM_AND_OPENNESS"] a:hover {
+      background-color: rgba($data-freedom-openness, 1) !important;
+    }
+
+    li[data-subindex="FREEDOM_AND_OPENNESS"] a:hover:after {
+      border-left-color: rgba($data-freedom-openness, 1) !important;
+    }
+
+    li.subindex[data-subindex="FREEDOM_AND_OPENNESS"] a {
+      background-color: rgba($data-freedom-openness, 0.8);
+    }
+
+    li.subindex[data-subindex="FREEDOM_AND_OPENNESS"] a:after {
+      border-left-color: rgba($data-freedom-openness, 0.8);
+    }
+
+    li.component[data-subindex="FREEDOM_AND_OPENNESS"] a {
+      background-color: rgba($data-freedom-openness, 0.5);
+    }
+
+    li.component[data-subindex="FREEDOM_AND_OPENNESS"] a:after {
+      border-left-color: rgba($data-freedom-openness, 0.5);
+    }
+
+
+    li.indicator[data-subindex="FREEDOM_AND_OPENNESS"] a {
+      background-color: rgba($data-freedom-openness, 0.3);
+    }
+
+    li[data-subindex="RELEVANT_CONTENT_AND_USE"] a:hover {
+      background-color: rgba($data-relevant-content-use, 1) !important;
+    }
+
+    li[data-subindex="RELEVANT_CONTENT_AND_USE"] a:hover:after {
+      border-left-color: rgba($data-relevant-content-use, 1) !important;
+    }
+
+    li.subindex[data-subindex="RELEVANT_CONTENT_AND_USE"] a {
+      background-color: rgba($data-relevant-content-use, 0.8);
+    }
+
+    li.subindex[data-subindex="RELEVANT_CONTENT_AND_USE"] a:after {
+      border-left-color: rgba($data-relevant-content-use, 0.8);
+    }
+
+    li.component[data-subindex="RELEVANT_CONTENT_AND_USE"] a {
+      background-color: rgba($data-relevant-content-use, 0.5);
+    }
+
+    li.component[data-subindex="RELEVANT_CONTENT_AND_USE"] a:after {
+      border-left-color: rgba($data-relevant-content-use, 0.5);
+    }
+
+    li.indicator[data-subindex="RELEVANT_CONTENT_AND_USE"] a {
+      background-color: rgba($data-relevant-content-use, 0.3);
+    }
+
+    li[data-subindex="EMPOWERMENT"] a:hover {
+      background-color: rgba($data-empowerment, 1) !important;
+    }
+
+    li[data-subindex="EMPOWERMENT"] a:hover:after {
+      border-left-color: rgba($data-empowerment, 1) !important;
+    }
+
+    li.subindex[data-subindex="EMPOWERMENT"] a {
+      background-color: rgba($data-empowerment, 0.8);
+    }
+
+    li.subindex[data-subindex="EMPOWERMENT"] a:after {
+      border-left-color: rgba($data-empowerment, 0.8);
+    }
+
+    li.component[data-subindex="EMPOWERMENT"] a {
+      background-color: rgba($data-empowerment, 0.5);
+    }
+
+    li.component[data-subindex="EMPOWERMENT"] a:after {
+      border-left-color: rgba($data-empowerment, 0.5);
+    }
+
+    li.indicator[data-subindex="EMPOWERMENT"] a {
+      background-color: rgba($data-empowerment, 0.3);
+    }
+  }
+
   header.collapsable-header {
     font-size: 1.2em;
-    color: #888;
-    border: none !important;
-    margin: 0 0 0.2em 0 !important;
+    margin: 0 !important;
     overflow: hidden;
-    padding: 0 0.5em;
+    padding: 0.2em  0.5em;
 
     h2 {
       float: left;
       text-align: left;
       font-size: 1em;
       margin: 0 !important;
+      color: #888;
     }
 
     .button {
@@ -59,38 +531,51 @@
   }
 }
 
+.collapsable-no-margin {
+  padding-bottom: 0;
+}
+
 .collapsable.collapsed {
-  .button {
-    color: #888 !important;
+  > header .button {
+    color: #888;
   }
 
-  section {
+  > section {
     width: 100%;
     position: absolute;
     bottom: 0;
     z-index: -1;
+    visibility: hidden;
   }
 }
 
 .notifications {
   background-color: $data-notification;
-  padding-top: 0.7em;
+  padding: 0.5em;
+  margin: 0.5em 0 0 0;
+  display: none;
+  border-top: 0.1em solid darken($data-notification, 10%);
 
   header {
     i {
-      margin-right: 1em;
       color: darken($data-notification, 40%);
     }
 
     h2 {
       color: darken($data-notification, 70%);
+      margin: 0;
+      font-size: 0.9em;
+      text-align: left;
     }
   }
 }
 
-.notifications.info {
+.primary-info {
   background-color: $data-info;
-  padding-top: 0.7em;
+  padding: 0.5em;
+  margin: 0.5em 0 0 0;
+  display: none;
+  border-top: 0.1em solid darken($data-info, 10%);
 
   header {
     i {
@@ -100,10 +585,224 @@
 
     h2 {
       color: darken($data-info, 70%);
+      margin: 0;
+      font-size: 1.1em;
+      text-align: left;
     }
   }
 }
 
+.accordion-tabs-minimal {
+  $tab-border-color: $base-border-color;
+  $tab-border: 1px solid $tab-border-color;
+  $tab-content-background: $base-background-color;
+  $tab-active-background: $tab-content-background;
+  $tab-inactive-color: #eee;
+  $tab-inactive-hover-color: darken($light-gray, 5);
+  $tab-mode: $medium-screen;
+
+  @include clearfix;
+  margin-top: 0.5em;
+
+  li.tab-header-and-content {
+    @include media($tab-mode) {
+      display: inline;
+    }
+  }
+
+  a.tab-link {
+    background-color: $tab-inactive-color;
+    border: $tab-border;
+    border-bottom: 0;
+    border-bottom-color: #ccc;
+    color: $dark-gray;
+    display: block;
+    font-weight: 400;
+    padding: 0.5em 0.5em;
+    box-shadow: 2px 0 2px -5px #111;
+    min-width: 15%;
+
+    @include media($tab-mode) {
+      @include inline-block;
+      border-top: 0;
+    }
+
+    &:hover {
+      color: $base-link-color;
+    }
+
+    &:focus {
+      outline: none;
+    }
+
+    &.is-active {
+      border-bottom: 0;
+      background-color: white;
+
+      @include media($tab-mode) {
+        border: $tab-border;
+        border-bottom-color: $tab-active-background;
+        margin-bottom: -1px;
+      }
+    }
+
+    .flag {
+      width: 1.5em;
+      height: 1.5em;
+      border: 0.1em solid #ccc;
+      padding: 0;
+      margin-right: 0.5em;
+      vertical-align: middle;
+    }
+
+    span {
+      font-size: 0.8em;
+    }
+  }
+
+  .tab-content {
+    display: none;
+    padding: $base-spacing $gutter;
+    width: 100%;
+
+    @include media($tab-mode) {
+      border-top: $tab-border;
+      float: left;
+    }
+  }
+
+  .tab-content.is-open {
+    display: block;
+  }
+}
+
+.indicator-list {
+
+  table {
+    font-size: 0.8em;
+    table-layout: auto;
+
+    tbody {
+      cursor: pointer;
+      background-color: #ccc;
+    }
+
+    tbody:hover {
+      background-color: #bbb;
+    }
+
+    /* Universal Access */
+
+    tbody[data-subindex="UNIVERSAL_ACCESS"] {
+      background-color: rgba($data-universal-access, 0.6);
+    }
+
+    tbody[data-subindex="UNIVERSAL_ACCESS"][data-type="Component"] {
+      background-color: rgba($data-universal-access, 0.4);
+    }
+
+    tbody[data-subindex="UNIVERSAL_ACCESS"][data-type="Primary"],
+    tbody[data-subindex="UNIVERSAL_ACCESS"][data-type="Secondary"] {
+      background-color: rgba($data-universal-access, 0.2);
+      border-bottom: 0.1em solid lighten($data-universal-access, 10%);
+    }
+
+    tbody[data-subindex="UNIVERSAL_ACCESS"]:hover {
+      background-color: rgba($data-universal-access, 0.8);
+    }
+
+    /* Freedom & Openness */
+
+    tbody[data-subindex="FREEDOM_AND_OPENNESS"] {
+      background-color: rgba($data-freedom-openness, 0.6);
+    }
+
+    tbody[data-subindex="FREEDOM_AND_OPENNESS"][data-type="Component"] {
+      background-color: rgba($data-freedom-openness, 0.4);
+    }
+
+    tbody[data-subindex="FREEDOM_AND_OPENNESS"][data-type="Primary"],
+    tbody[data-subindex="FREEDOM_AND_OPENNESS"][data-type="Secondary"] {
+      background-color: rgba($data-freedom-openness, 0.2);
+      border-bottom: 0.1em solid lighten($data-freedom-openness, 10%);
+    }
+
+    tbody[data-subindex="FREEDOM_AND_OPENNESS"]:hover {
+      background-color: rgba($data-freedom-openness, 0.8);
+    }
+
+    /* Relevant Content & Use */
+
+    tbody[data-subindex="RELEVANT_CONTENT_AND_USE"] {
+      background-color: rgba($data-relevant-content-use, 0.6);
+    }
+
+    tbody[data-subindex="RELEVANT_CONTENT_AND_USE"][data-type="Component"] {
+      background-color: rgba($data-relevant-content-use, 0.4);
+    }
+
+    tbody[data-subindex="RELEVANT_CONTENT_AND_USE"][data-type="Primary"],
+    tbody[data-subindex="RELEVANT_CONTENT_AND_USE"][data-type="Secondary"] {
+      background-color: rgba($data-relevant-content-use, 0.2);
+      border-bottom: 0.1em solid darken($data-relevant-content-use, 10%);
+    }
+
+    tbody[data-subindex="RELEVANT_CONTENT_AND_USE"]:hover {
+      background-color: rgba($data-relevant-content-use, 0.8);
+    }
+
+    /* Empowerment */
+
+    tbody[data-subindex="EMPOWERMENT"] {
+      background-color: rgba($data-empowerment, 0.6);
+    }
+
+    tbody[data-subindex="EMPOWERMENT"][data-type="Component"] {
+      background-color: rgba($data-empowerment, 0.4);
+    }
+
+    tbody[data-subindex="EMPOWERMENT"][data-type="Primary"],
+    tbody[data-subindex="EMPOWERMENT"][data-type="Secondary"] {
+      background-color: rgba($data-empowerment, 0.2);
+      border-bottom: 0.1em solid darken($data-empowerment, 10%);
+    }
+
+    tbody[data-subindex="EMPOWERMENT"]:hover {
+      background-color: rgba($data-empowerment, 0.8);
+    }
+
+    tbody.last {
+      border: none !important;
+    }
+
+    th {
+      font-weight: 400;
+    }
+
+    td {
+      border: none;
+      padding: 0.4em 0.3em;
+      vertical-align: middle;
+    }
+
+    td[data-title="Indicator"] {
+      width: 50%;
+      font-weight: 600;
+    }
+
+    td[data-title="Description"] {
+      color: #333;
+    }
+
+    td[data-title="Weight"] {
+      text-align: center;
+    }
+
+    td[data-title="Publish"] {
+      text-align: center;
+    }
+  }
+}
 
 /* SIGNATURE */
 
@@ -125,8 +824,15 @@
   }
 
   h1 {
-    margin-bottom: 1em !important;
+    margin-bottom: 0.2em !important;
     font-size: 2em;
+  }
+
+  div.first-section > div > h2 {
+    margin: 0 0 1.5em 0.2em;
+    color: #444;
+    text-align: left;
+    font-size: 1.1em;
   }
 
   section > h2 {
@@ -138,6 +844,8 @@
 
   .downloads {
     text-align: right;
+    float: right;
+    padding-top: 0.5em;
   }
 
   .indicator-selector {
@@ -162,11 +870,14 @@
 /* SELECT-BOX */
 
 .select-bar {
-
+  section {
+    margin-top: 1em;
+  }
 }
 
-.select-bar.fixed {
+.select-bar .fixed {
   top: 1em !important;
+  padding-top: 0;
   height: 100%;
   overflow-y: hidden;
 
@@ -186,6 +897,8 @@ div.select-box {
   border-right: 1px solid #ccc;
   border-bottom: 1px solid #ccc;
   box-shadow: 0 0.4em 0.2em -0.2em #777;
+  border-radius: 0 0 0.3em 0.3em;
+  overflow: hidden;
 
   > div {
     padding: 0.5em 0.5em 0.8em 0.5em;
@@ -316,8 +1029,6 @@ div.timeline {
 /* BOXES */
 
 .data-box {
-  background-color: #aaa;
-
   header {
     overflow: hidden;
     margin-bottom: 0;
@@ -325,32 +1036,30 @@ div.timeline {
 }
 
 .map-box {
-  background-color: $data-map-background-color;
-  margin-top: 0.5em;
+
 }
 
 .table-box {
-  background-color: $data-table-background-color;
-
   header {
 
     h2 {
 
     }
   }
-
-  .view-more a {
-
-  }
 }
 
 div.middle-section {
   background-color: white;
+  margin: 1em 0;
 
-  section > div:first-child {
-    @include outer-container;
-    margin-bottom: 0.5em;
-    clear: both;
+  section {
+    padding: 0 !important;
+
+    > div:first-child {
+      @include outer-container;
+      margin-bottom: 0.5em;
+      clear: both;
+    }
   }
 
   div {
@@ -361,12 +1070,35 @@ div.middle-section {
     @include span-columns(2);
     background-color: #ccc;
     color: white;
-    padding: 0.8em 0.5em 0.3em 0.5em;
+    padding: 0.5em 0.5em 0.1em 0.5em;
     text-align: center;
     height: 7.5em;
 
     p {
-      margin: 0.5em 0 0 0;
+      margin: 0.2em 0 0 0;
+    }
+
+    p:first-child {
+      font-size: 0.9em;
+    }
+
+    .left {
+      float: left;
+      margin-top: 0.3em;
+      font-weight: 300;
+      color: nth($data-mini-background-colours, 2);
+    }
+
+    .right {
+      float: right;
+      margin-top: 0.3em;
+      font-weight: 300;
+      color: nth($data-mini-background-colours, 2);
+    }
+
+    .left.active, .right.active {
+      color: darken(nth($data-mini-background-colours, 2), 10%);
+      cursor: pointer;
     }
 
     .value {
@@ -377,18 +1109,23 @@ div.middle-section {
       display: table-cell;
       vertical-align: middle;
       width: 10%;
-      height: 1em;
+      height: 2.1em;
       color: white;
     }
 
     .higher-lower {
       font-size: 1.3em;
-      height: 2.5em;
+      height: 2.7em;
+      line-height: 1.2em;
     }
 
     .indicator {
-      font-size: 1.4em;
+      font-size: 1em;
       height: 2.4em;
+      height: 4.5em;
+      display: block;
+      width: 100%;
+      overflow: hidden;
     }
   }
 
@@ -431,7 +1168,7 @@ div.country-box {
       color: #111;
 
       div.circle {
-        background-color: darken(nth($data-select-colours, 3), 20%) !important;
+        background-color: darken(nth($data-select-colours, 3), 10%) !important;
         color: white;
       }
     }
@@ -629,42 +1366,46 @@ div.bars {
 /* TABS */
 
 nav.tabs {
-  margin-top: 0.2em;
-  overflow: hidden;
-  width: 50%;
-  min-width: 10em;
-  float: right;
-
   ul {
-    overflow: hidden;
-    padding-top: 0.2em;
-    padding-bottom: 0.3em;
-    width: 100%;
-    float: right;
+    overflow: visible;
+    box-sizing: content-box;
+    list-style-type: none;
+    padding-bottom: 2.2em;
+    border-bottom: 1px solid #ccc;
+    margin: 0 0 0.5em 0;
 
     li {
-      float: left;
-      width: 50%;
-      text-align: center;
+      float: right;
+      background-color: #fff;
+      margin: 0 0.5em 0 0.2em;
+    }
+
+    li.selected {
+      border-top: 1px solid #ccc;
+      border-left: 1px solid #ccc;
+      border-right: 1px solid #ccc;
+      border-bottom: 1px solid #fff;
+      border-radius: 0.3em;
+      background-color: #fff;
+      height: 2.3em;
 
       a {
-        color: #444;
+        color: #777;
       }
     }
 
-    li.selected span.circle {
-      background-color: #006a7c;
+    a {
+      float: left;
+      display: block;
+      color: #aaa;
+      background: #fff;
+      text-decoration: none;
+      padding: 0.4em 4em 0.3em 4em;
     }
-  }
 
-  span.circle {
-    display: inline-block;
-    vertical-align: middle;
-    width: 1.6em;
-    height: 1.6em;
-    border-radius: 50%;
-    margin-right: 0.5em;
-    background-color: #ccc;
+    a:hover {
+      background: #fff;
+    }
   }
 }
 
@@ -675,7 +1416,7 @@ nav.tabs {
 table.full-ranking {
   table-layout: auto;
   color: black;
-  font-family: 'Varela Round', sans-serif;
+  font-family: Arial, sans-serif;
 
   th {
     text-align: center;
@@ -693,7 +1434,7 @@ table.full-ranking {
   }
 
   td.big-number {
-    font-size: 10em;
+    font-size: 11em;
     line-height: 1em;
     padding: 0;
     color: #ccc;
@@ -742,12 +1483,8 @@ table.full-ranking {
     }
   }
 
-  .tbody-view-more {
+  tbody:last-child {
     border: none;
-  }
-
-  tbody.hidden {
-    display: none;
   }
 
   td {
@@ -799,14 +1536,88 @@ table.full-ranking {
       }
     }
   }
+}
 
-  td.view-more {
-    text-align: right;
-    border-bottom: none;
+/* COUNTRY SECTION */
+
+.country-section {
+  overflow: hidden;
+
+  .tab-content {
     padding-bottom: 0;
+  }
 
-    a {
-      cursor: pointer;
+  p.continent {
+    font-size: 0.9em;
+    color: #555;
+  }
+
+  div.country-map {
+    float: right;
+    width: 45%;
+    height: 15em;
+
+    .visor {
+      display: none;
+    }
+
+    .ATA {
+      display: none;
     }
   }
+
+  div.value {
+    float: right;
+    margin-right: 1em;
+    width: 4em;
+    height: 4em;
+    text-align: center;
+    border-radius: 50%;
+    background-color: #0096af;
+    color: white;
+    font-weight: 500;
+
+    p {
+      font-size: 0.8em;
+      margin: 0.6em 0 0 0;
+    }
+  }
+
+  div.ranking {
+    background-color: #f93845;
+  }
+
+  div.table-wrapper {
+    float: left;
+    width: 55%;
+  }
+
+  table {
+    text-align: center;
+
+    tbody, td {
+      border: none;
+    }
+
+    td[data-title="Web Index Rank"] {
+      font-size: 2em;
+      line-height: 1em;
+      color: #666;
+    }
+
+    th {
+      font-size: 0.5em;
+      text-align: center;
+    }
+
+    .chart {
+      height: 4.5em;
+    }
+  }
+}
+
+.region-name strong {
+  font-size: 1.2em;
+  color: #1B4E5A;
+  font-weight: 500;
 }

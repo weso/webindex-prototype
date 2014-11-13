@@ -25,7 +25,8 @@
 
 body {
   font-family: Raleway, sans-serif;
-  color: #333;
+  color: #111;
+  background-color: white;
   margin: 0;
   position: inherit !important;
   top: 0 !important;
@@ -42,6 +43,7 @@ body {
 .container {
   @include outer-container;
   max-width: 80em;
+  margin-top: 2em;
   height: 100%;
   overflow: hidden;
 }

@@ -1,5 +1,5 @@
 (function() {
-  var button, chartSelectors, chartTooltip, checkSelectorDataReady, collapsable, collapsableSection, collapsables, getCountries, getIndicators, getObservations, getSelectorData, getValue, getYears, global, li, msie6, renderBoxes, renderCharts, renderContinentLegend, renderMap, renderTable, selectBar, setBoxesInitialPosition, setBoxesPosition, setIndicatorOptions, setPageStateful, top, updateInfo, _i, _j, _len, _len1;
+  var a, button, chartSelectors, chartTooltip, checkSelectorDataReady, collapsable, collapsableHeader, collapsableSection, collapsables, collapsed, content, createTableCell, firstSection, firstTab, firstTabFixedPosition, firstTabStartedMoving, getCountries, getIndicators, getObservations, getSelectorData, getValue, getYears, global, hide, li, msie6, previousY, renderBoxes, renderCharts, renderContinentLegend, renderCountries, renderExtraTableHeader, renderIndicatorInfo, renderMap, renderPieChart, renderRegionLabel, renderSomeBoxes, renderTable, renderYearBox, returnToStoppedPosition, secondTab, secondTabAbsolutePosition, secondTabStartedMoving, selectBar, setBoxesInitialPosition, setBoxesPosition, setIndicatorOptions, setPageStateful, show, siteHeader, tab, tabs, top, updateInfo, _i, _j, _k, _len, _len1, _len2;
 
   global = this;
 
@@ -12,10 +12,11 @@
     indicatorOption: null,
     indicatorTendency: null,
     countries: null,
-    year: null
+    year: null,
+    years: []
   };
 
-  global.maxTableRows = 7;
+  global.maxChartBars = 5;
 
   global.continents = {};
 
@@ -38,7 +39,7 @@
           name: "indicator",
           selector: "#indicator-select",
           onChange: function(index, value, parameters, selectors) {
-            var description, i, option, primary, republish, tendency, type, year, years, _i, _ref, _ref1, _ref10, _ref11, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9;
+            var option, tendency, _ref, _ref1;
             if (settings.debug) {
               console.log("indicator:onChange index:" + index + " value:" + value);
             }
@@ -49,37 +50,7 @@
             global.selections.indicatorOption = option;
             global.selections.indicatorTendency = tendency;
             updateInfo();
-            republish = option.getAttribute("data-republish");
-            republish = republish === "true";
-            if ((_ref2 = document.getElementById("notifications")) != null) {
-              if ((_ref3 = _ref2.style) != null) {
-                _ref3.display = republish ? "none" : "block";
-              }
-            }
-            type = option.getAttribute("data-type");
-            primary = type.toLowerCase() === "primary";
-            if ((_ref4 = document.getElementById("primary-info")) != null) {
-              if ((_ref5 = _ref4.style) != null) {
-                _ref5.display = primary ? "block" : "none";
-              }
-            }
-            years = global.options.timeline.getElements();
-            for (i = _i = 0, _ref6 = years.length - 2; 0 <= _ref6 ? _i <= _ref6 : _i >= _ref6; i = 0 <= _ref6 ? ++_i : --_i) {
-              year = years[i];
-              if (primary) {
-                global.options.timeline.disable(year);
-              } else {
-                global.options.timeline.enable(year);
-              }
-            }
-            description = option.getAttribute("data-description");
-            if ((_ref7 = document.getElementById("indicator-description")) != null) {
-              _ref7.innerHTML = description;
-            }
-            if ((_ref8 = document.getElementById("indicator-type")) != null) {
-              _ref8.innerHTML = type;
-            }
-            return (_ref9 = document.getElementById("indicator-tendency")) != null ? _ref9.innerHTML = tendency ? (_ref10 = document.getElementById("label_ascending")) != null ? _ref10.value : void 0 : (_ref11 = document.getElementById("label_descending")) != null ? _ref11.value : void 0 : void 0;
+            return renderIndicatorInfo(option, tendency);
           }
         }, {
           name: "time",
@@ -88,7 +59,7 @@
             if (settings.debug) {
               console.log("year:onChange index:" + index + " value:" + value);
             }
-            global.selections.year = value;
+            global.selections.year = parseInt(value);
             return updateInfo();
           }
         }, {
@@ -126,36 +97,88 @@
   };
 
   this.getIndicatorsCallback = function(data) {
-    var indicators;
+    var indicators, selector, table;
     indicators = [];
     if (data.success) {
       indicators = data.data;
     }
-    setIndicatorOptions(document.getElementById("indicator-select"), indicators, 0);
+    selector = document.getElementById("indicator-select");
+    table = document.getElementById("indicator-list") || document.createElement("table");
+    setIndicatorOptions(selector, table, indicators, 0, false);
     global.selectorDataReady.indicatorSelector = true;
-    return checkSelectorDataReady();
+    checkSelectorDataReady();
+    return global.options.indicatorSelector = selector;
   };
 
-  setIndicatorOptions = function(select, element, level) {
-    var child, description, option, republish, space, tendency, type, _i, _len, _ref, _results;
+  setIndicatorOptions = function(select, table, element, level, last) {
+    var child, code, component, count, description, indicator, max, name, option, provider_name, provider_url, republish, space, subindex, tbody, tendency, tr, type, weight, _i, _len, _ref, _results;
     republish = element.republish ? element.republish : false;
     type = element.type ? element.type : "Primary";
     description = element.description ? element.description : "";
-    tendency = element.tendency ? element.tendency : 1;
+    tendency = element.high_low ? element.high_low : "high";
+    tendency = tendency === "high" ? 1 : -1;
+    provider_name = element.provider_name ? element.provider_name : "";
+    provider_url = element.provider_url ? element.provider_url : "";
+    weight = element.weight ? element.weight : "";
+    subindex = element.subindex ? element.subindex : null;
+    if (!subindex) {
+      subindex = element.indicator;
+    }
+    component = element.component ? element.component : null;
+    if (!component) {
+      component = element.indicator;
+    }
+    indicator = element.indicator ? element.indicator.replace(/_/g, " ") : "";
+    code = element.indicator ? element.indicator : "";
+    name = element.name ? element.name : "";
     option = document.createElement("option");
-    option.value = element.indicator;
+    option.value = code;
     option.setAttribute("data-republish", republish);
     option.setAttribute("data-type", type);
+    option.setAttribute("data-name", name);
+    option.setAttribute("data-subindex", subindex);
+    option.setAttribute("data-component", component);
     option.setAttribute("data-description", description);
     option.setAttribute("data-tendency", tendency);
+    option.setAttribute("data-provider_name", provider_name);
+    option.setAttribute("data-provider_url", provider_url);
     space = Array(level * 3).join('&nbsp');
-    option.innerHTML = space + element.name;
+    option.innerHTML = space + name;
     select.appendChild(option);
+    tbody = document.createElement("tbody");
+    tbody.code = code;
+    tbody.setAttribute("data-subindex", type.toLowerCase() !== "subindex" ? subindex : element.indicator);
+    tbody.setAttribute("data-type", type);
+    table.appendChild(tbody);
+    tbody.onclick = function() {
+      code = this.code;
+      global.options.indicatorSelector.value = code;
+      return global.options.indicatorSelector.refresh();
+    };
+    if (level === 3 && last) {
+      tbody.className = "last";
+    }
+    tr = document.createElement("tr");
+    tbody.appendChild(tr);
+    createTableCell(tr, "Indicator", name);
+    createTableCell(tr, "Code", code);
+    createTableCell(tr, "Type", type);
+    createTableCell(tr, "Weight", weight);
+    createTableCell(tr, "Provider", "<a href='" + provider_url + "'>" + provider_name + "</a>");
+    createTableCell(tr, "Publish", republish ? "Yes" : "No");
+    if (description && description !== "") {
+      tr = document.createElement("tr");
+      tbody.appendChild(tr);
+      createTableCell(tr, "Description", description, 6);
+    }
+    count = 0;
+    max = element.children.length - 1;
     _ref = element.children;
     _results = [];
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
       child = _ref[_i];
-      _results.push(setIndicatorOptions(select, child, level + 1));
+      setIndicatorOptions(select, table, child, level + 1, count === max);
+      _results.push(count++);
     }
     return _results;
   };
@@ -173,11 +196,16 @@
   };
 
   this.getYearsCallback = function(data) {
-    var years;
+    var index, year, years, _i, _len;
     years = [];
     if (data.success) {
       years = data.data.sort();
     }
+    for (index = _i = 0, _len = years.length; _i < _len; index = ++_i) {
+      year = years[index];
+      years[index] = parseInt(years[index]) + 1;
+    }
+    global.selections.years = years;
     global.options.timeline = wesCountry.selector.timeline({
       container: '#timeline',
       maxShownElements: 10,
@@ -212,7 +240,7 @@
     global.options.countrySelector = new wesCountry.selector.basic({
       data: countries,
       selectedItems: ["ALL"],
-      maxSelectedItems: global.maxTableRows,
+      maxSelectedItems: global.maxChartBars,
       labelName: "short_name",
       valueName: "iso3",
       childrenName: "countries",
@@ -259,7 +287,7 @@
   };
 
   this.getObservationsCallback = function(data) {
-    var observations;
+    var countries, observations, observationsByCountry;
     if (!data.success) {
       return;
     }
@@ -267,29 +295,86 @@
     global.continents = data.data.continents;
     renderCharts(observations);
     renderTable(observations);
-    return renderBoxes(observations);
+    renderBoxes(observations);
+    countries = data.data.countries;
+    observationsByCountry = data.data.observationsByCountry;
+    renderCountries(countries, observationsByCountry);
+    return renderRegionLabel(data.data.region);
+  };
+
+  renderRegionLabel = function(region) {
+    var regionName, _ref;
+    regionName = global.continents[region];
+    return (_ref = document.getElementById("region-label")) != null ? _ref.innerHTML = region !== "ALL" ? " for <strong>" + regionName + "</strong>" : "" : void 0;
   };
 
   updateInfo = function() {
-    var countries, indicator, indicatorOption, type, year, _ref, _ref1;
+    var countries, indicator, indicatorOption, name, primary, type, year, yearContainer, yearGlobalContainer, _ref, _ref1;
     year = global.selections.year;
     countries = global.selections.countries;
     indicator = global.selections.indicator;
     indicatorOption = global.selections.indicatorOption;
+    primary = true;
     if (settings.debug) {
       console.log("year: " + year + " countries: " + countries + " indicator: " + indicator);
     }
     if (!year || !countries || !indicator) {
       return;
     }
-    getObservations(indicator, countries, year);
+    getObservations(indicator, countries, year - 1);
     if (indicatorOption) {
-      type = indicatorOption.getAttribute("data-type");
+      name = indicatorOption.getAttribute("data-name");
       if ((_ref = document.getElementById("indicator")) != null) {
-        _ref.innerHTML = type;
+        _ref.innerHTML = name;
       }
+      if ((_ref1 = document.getElementById("global-indicator")) != null) {
+        _ref1.innerHTML = name;
+      }
+      type = indicatorOption.getAttribute("data-type");
+      primary = type.toLowerCase() === "primary";
     }
-    return (_ref1 = document.getElementById("year")) != null ? _ref1.innerHTML = year : void 0;
+    yearContainer = document.getElementById("year");
+    renderYearBox(yearContainer, primary, year);
+    yearGlobalContainer = document.getElementById("global-year");
+    return renderYearBox(yearGlobalContainer, primary, year);
+  };
+
+  renderYearBox = function(yearContainer, primary, year) {
+    var i, span;
+    if (yearContainer != null) {
+      yearContainer.innerHTML = "";
+    }
+    i = document.createElement("i");
+    i.className = "fa fa-caret-left left";
+    if (yearContainer != null) {
+      yearContainer.appendChild(i);
+    }
+    if (!primary && global.selections.years.length > 0 && year > global.selections.years[0]) {
+      i.className += " active";
+      i.year = year - 1;
+      i.onclick = function(event) {
+        global.options.timeline.select(this.year);
+        return global.options.timeline.refresh();
+      };
+    }
+    span = document.createElement("span");
+    span.innerHTML = year;
+    if (yearContainer != null) {
+      yearContainer.appendChild(span);
+    }
+    i = document.createElement("i");
+    i.className = "fa fa-caret-right right";
+    if (yearContainer != null) {
+      yearContainer.appendChild(i);
+    }
+    if (global.selections.years.length > 0 && year < global.selections.years[global.selections.years.length - 1]) {
+      i.className += " active";
+      i.year = year + 1;
+      return i.onclick = function(event) {
+        global.options.timeline.select(this.year);
+        return global.options.timeline.refresh();
+      };
+    }
   };
 
   renderContinentLegend = function(data, options, container, getContinents, getContinentColour) {
@@ -318,7 +403,7 @@
   };
 
   renderCharts = function(data) {
-    var barContainer, countryView, getContinentColour, getLegendElements, lineContainer, mapContainer, mapView, options, rankingContainer, rankingContainerDiv, rankingLegend, rankingWrapper, resize, series, view, _ref, _ref1, _ref2, _ref3, _ref4, _ref5, _ref6;
+    var barContainer, countryView, getContinentColour, getLegendElements, index, lineContainer, mapContainer, mapView, options, rankingContainer, rankingContainerDiv, rankingLegend, rankingWrapper, resize, serieColours, series, value, values, view, _i, _len, _ref, _ref1, _ref2, _ref3, _ref4, _ref5, _ref6;
     mapContainer = "#map";
     barContainer = "#country-bars";
     lineContainer = "#lines";
@@ -477,9 +562,7 @@
       }
       view = document.querySelector(countryView);
       series = data.observations;
-      if (!global.selections.indicatorTendency) {
-        series.reverse();
-      }
+      serieColours = wesCountry.makeGradientPalette(["#005475", "#1B4E5A", "#1B7A65", "#83C04C", "#E5E066"], data.bars.length);
       options = {
         container: barContainer,
         chartType: "bar",
@@ -508,7 +591,7 @@
         },
         width: view.offsetWidth,
         height: view.offsetHeight,
-        serieColours: wesCountry.makeGradientPalette(["#005475", "#1B4E5A", "#1B7A65", "#83C04C", "#E5E066"], data.bars.length),
+        serieColours: serieColours,
         getElementColour: function(options, element, index) {
           var colour, rank;
           rank = element.ranked ? element.ranked - 1 : index;
@@ -536,6 +619,11 @@
       if ((_ref5 = document.querySelector(lineContainer)) != null) {
         _ref5.innerHTML = "";
       }
+      values = data.years ? data.years : [];
+      for (index = _i = 0, _len = values.length; _i < _len; index = ++_i) {
+        value = values[index];
+        values[index] = parseInt(values[index]) + 1;
+      }
       options = {
         container: lineContainer,
         chartType: "line",
@@ -546,7 +634,7 @@
         },
         xAxis: {
           title: "",
-          values: data.years ? data.years : []
+          values: values
         },
         series: data.secondVisualisation ? data.secondVisualisation : [],
         width: view.offsetWidth,
@@ -580,9 +668,7 @@
       _ref6.innerHTML = "";
     }
     series = data.bars;
-    if (!global.selections.indicatorTendency) {
-      series.reverse();
-    }
+    serieColours = wesCountry.makeGradientPalette(["#005475", "#1B4E5A", "#1B7A65", "#83C04C", "#E5E066"], data.bars.length);
     options = {
       container: barContainer,
       chartType: "bar",
@@ -611,7 +697,7 @@
       median: {
         show: true
       },
-      serieColours: wesCountry.makeGradientPalette(["#005475", "#1B4E5A", "#1B7A65", "#83C04C", "#E5E066"], data.bars.length),
+      serieColours: serieColours,
       getElementColour: function(options, element, index) {
         var colour;
         colour = options.serieColours[index];
@@ -721,7 +807,7 @@
   };
 
   renderTable = function(data) {
-    var a, code, continent, count, empowerment, extraInfo, extraTable, extraTbody, extraTheader, freedomOpenness, globalRank, img, name, observation, observations, path, previousValue, rank, relevantContent, republish, span, table, tbodies, tbody, td, tendency, th, tr, universalAccess, value, _i, _j, _k, _len, _len1, _len2, _ref;
+    var code, continent, empowerment, extraInfo, extraTable, extraTbody, freedomOpenness, globalRank, img, name, observation, observations, path, previousValue, rank, relevantContent, republish, span, table, tbodies, tbody, td, tendency, tr, universalAccess, value, _i, _j, _len, _len1, _ref, _results;
     observations = data.observations;
     table = document.querySelector("#ranking");
     path = (_ref = document.getElementById("path")) != null ? _ref.value : void 0;
@@ -730,10 +816,9 @@
       tbody = tbodies[_i];
       table.removeChild(tbody);
     }
-    count = 0;
+    _results = [];
     for (_j = 0, _len1 = observations.length; _j < _len1; _j++) {
       observation = observations[_j];
-      count++;
       code = observation.code;
       name = observation.short_name;
       rank = observation.ranked ? observation.ranked : count;
@@ -760,9 +845,6 @@
         global.options.countrySelector.select(code);
         return global.options.countrySelector.refresh();
       };
-      if (count > global.maxTableRows) {
-        tbody.className = "to-hide";
-      }
       td = document.createElement("td");
       td.setAttribute("data-title", "Rank");
       td.setAttribute("rowspan", "2");
@@ -800,30 +882,7 @@
       extraTable = document.createElement("table");
       extraTable.className = "extra-table";
       td.appendChild(extraTable);
-      extraTheader = document.createElement("thead");
-      extraTable.appendChild(extraTheader);
-      tr = document.createElement("tr");
-      extraTheader.appendChild(tr);
-      th = document.createElement("th");
-      th.setAttribute("data-title", "Web Index Rank");
-      tr.appendChild(th);
-      th.innerHTML = "Web Index Rank";
-      th = document.createElement("th");
-      th.setAttribute("data-title", "Universal Access");
-      tr.appendChild(th);
-      th.innerHTML = "Universal Access";
-      th = document.createElement("th");
-      th.setAttribute("data-title", "Relevant Content");
-      tr.appendChild(th);
-      th.innerHTML = "Relevant Content";
-      th = document.createElement("th");
-      th.setAttribute("data-title", "Freedom And Openness");
-      tr.appendChild(th);
-      th.innerHTML = "Freedom And Openness";
-      th = document.createElement("th");
-      th.setAttribute("data-title", "Empowerment");
-      tr.appendChild(th);
-      th.innerHTML = "Empowerment";
+      renderExtraTableHeader(extraTable);
       extraTbody = document.createElement("tbody");
       extraTable.appendChild(extraTbody);
       tr = document.createElement("tr");
@@ -847,62 +906,189 @@
       td = document.createElement("td");
       td.setAttribute("data-title", "Empowerment");
       tr.appendChild(td);
-      td.innerHTML = empowerment;
+      _results.push(td.innerHTML = empowerment);
     }
-    if (count > global.maxTableRows) {
-      tbodies = table.querySelectorAll(".to-hide");
-      for (_k = 0, _len2 = tbodies.length; _k < _len2; _k++) {
-        tbody = tbodies[_k];
-        tbody.className = "hidden";
+    return _results;
+  };
+
+  renderExtraTableHeader = function(extraTable) {
+    var extraTheader, th, tr;
+    extraTheader = document.createElement("thead");
+    extraTable.appendChild(extraTheader);
+    tr = document.createElement("tr");
+    extraTheader.appendChild(tr);
+    th = document.createElement("th");
+    th.setAttribute("data-title", "Web Index Rank");
+    tr.appendChild(th);
+    th.innerHTML = "Web Index Rank";
+    th = document.createElement("th");
+    th.setAttribute("data-title", "Universal Access");
+    tr.appendChild(th);
+    th.innerHTML = "Universal Access";
+    th = document.createElement("th");
+    th.setAttribute("data-title", "Relevant Content");
+    tr.appendChild(th);
+    th.innerHTML = "Relevant Content";
+    th = document.createElement("th");
+    th.setAttribute("data-title", "Freedom And Openness");
+    tr.appendChild(th);
+    th.innerHTML = "Freedom And Openness";
+    th = document.createElement("th");
+    th.setAttribute("data-title", "Empowerment");
+    tr.appendChild(th);
+    return th.innerHTML = "Empowerment";
+  };
+
+  renderIndicatorInfo = function(option, tendency) {
+    var component, componentBox, componentName, componentNameSpan, description, hierarchy, i, index, indexBox, indicatorBox, indicatorName, indicatorNameSpan, indicatorValue, name, primary, provider_anchor, provider_name, provider_url, republish, secondary, subindex, subindexBox, subindexName, subindexNameSpan, tendencyIcon, tendencyLabel, type, year, years, _i, _ref, _ref1, _ref10, _ref11, _ref12, _ref13, _ref14, _ref15, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9;
+    republish = option.getAttribute("data-republish");
+    republish = republish === "true";
+    if ((_ref = document.getElementById("notifications")) != null) {
+      if ((_ref1 = _ref.style) != null) {
+        _ref1.display = republish ? "none" : "block";
       }
-      tbody = document.createElement("tbody");
-      tbody.className = "tbody-view-more";
-      table.appendChild(tbody);
-      tr = document.createElement("tr");
-      tbody.appendChild(tr);
-      td = document.createElement("td");
-      td.colSpan = 4;
-      td.className = "view-more";
-      tr.appendChild(td);
-      a = document.createElement("a");
-      a.innerHTML = "View more";
-      td.appendChild(a);
-      a.collapsed = true;
-      a.table = table;
-      return a.onclick = function() {
-        var className, collapsed, newClassName, row, rows, text, _l, _len3, _results;
-        collapsed = this.collapsed;
-        this.collapsed = !collapsed;
-        className = collapsed ? "hidden" : "shown";
-        newClassName = collapsed ? "shown" : "hidden";
-        text = collapsed ? "View less" : "View more";
-        this.innerHTML = text;
-        rows = this.table.querySelectorAll("tbody." + className);
-        _results = [];
-        for (_l = 0, _len3 = rows.length; _l < _len3; _l++) {
-          row = rows[_l];
-          _results.push(row.className = newClassName);
-        }
-        return _results;
-      };
     }
+    type = option.getAttribute("data-type");
+    index = type.toLowerCase() === "index";
+    subindex = type.toLowerCase() === "subindex";
+    component = type.toLowerCase() === "component";
+    primary = type.toLowerCase() === "primary";
+    secondary = type.toLowerCase() === "secondary";
+    if ((_ref2 = document.getElementById("primary-info")) != null) {
+      if ((_ref3 = _ref2.style) != null) {
+        _ref3.display = primary ? "block" : "none";
+      }
+    }
+    years = global.options.timeline.getElements();
+    for (i = _i = 0, _ref4 = years.length - 2; 0 <= _ref4 ? _i <= _ref4 : _i >= _ref4; i = 0 <= _ref4 ? ++_i : --_i) {
+      year = years[i];
+      if (primary) {
+        global.options.timeline.disable(year);
+      } else {
+        global.options.timeline.enable(year);
+      }
+    }
+    name = option.getAttribute("data-name");
+    if ((_ref5 = document.getElementById("indicator-name")) != null) {
+      _ref5.innerHTML = name;
+    }
+    description = option.getAttribute("data-description");
+    if ((_ref6 = document.getElementById("indicator-description")) != null) {
+      _ref6.innerHTML = description;
+    }
+    if ((_ref7 = document.getElementById("indicator-type")) != null) {
+      _ref7.innerHTML = type;
+    }
+    if ((_ref8 = document.getElementById("indicator-type-icon")) != null) {
+      _ref8.innerHTML = type;
+    }
+    tendencyLabel = tendency ? (_ref9 = document.getElementById("label_ascending")) != null ? _ref9.value : void 0 : (_ref10 = document.getElementById("label_descending")) != null ? _ref10.value : void 0;
+    if ((_ref11 = document.getElementById("indicator-tendency")) != null) {
+      _ref11.innerHTML = tendencyLabel;
+    }
+    if ((_ref12 = document.getElementById("indicator-tendency-icon")) != null) {
+      _ref12.innerHTML = tendencyLabel;
+    }
+    tendencyIcon = tendency ? "fa fa-arrow-up" : "fa fa-arrow-down";
+    if ((_ref13 = document.getElementById("indicator-tendency-arrow")) != null) {
+      _ref13.className = tendencyIcon;
+    }
+    provider_name = option.getAttribute("data-provider_name");
+    provider_url = option.getAttribute("data-provider_url");
+    provider_anchor = "<a href='" + provider_url + "'>" + provider_name + "</a>";
+    if ((_ref14 = document.getElementById("indicator-provider")) != null) {
+      _ref14.innerHTML = provider_anchor;
+    }
+    if ((_ref15 = document.getElementById("indicator-provider-icon")) != null) {
+      _ref15.innerHTML = provider_anchor;
+    }
+    hierarchy = document.getElementById("hierarchy");
+    indexBox = hierarchy.querySelector(".index");
+    subindexBox = hierarchy.querySelector(".subindex");
+    componentBox = hierarchy.querySelector(".component");
+    indicatorBox = hierarchy.querySelector(".indicator");
+    subindexNameSpan = hierarchy.querySelector(".subindex .name");
+    componentNameSpan = hierarchy.querySelector(".component .name");
+    indicatorNameSpan = hierarchy.querySelector(".indicator .name");
+    subindexName = option.getAttribute("data-subindex");
+    componentName = option.getAttribute("data-component");
+    indicatorName = name;
+    indicatorValue = option.value;
+    if (subindexNameSpan != null) {
+      subindexNameSpan.innerHTML = subindexName.replace(/_/g, " ").toLowerCase();
+    }
+    if (componentNameSpan != null) {
+      componentNameSpan.innerHTML = componentName.replace(/_/g, " ").toLowerCase();
+    }
+    if (indicatorNameSpan != null) {
+      indicatorNameSpan.innerHTML = indicatorName;
+    }
+    subindexBox.setAttribute("data-subindex", subindexName);
+    componentBox.setAttribute("data-subindex", subindexName);
+    indicatorBox.setAttribute("data-subindex", subindexName);
+    if (primary || secondary) {
+      show(indicatorBox);
+      show(componentBox);
+      show(subindexBox);
+    } else if (component) {
+      hide(indicatorBox);
+      show(componentBox);
+      show(subindexBox);
+    } else if (subindex) {
+      hide(indicatorBox);
+      hide(componentBox);
+      show(subindexBox);
+    } else if (index) {
+      hide(indicatorBox);
+      hide(componentBox);
+      hide(subindexBox);
+    }
+    indicatorBox.onclick = function() {
+      global.options.indicatorSelector.value = indicatorValue;
+      return global.options.indicatorSelector.refresh();
+    };
+    componentBox.onclick = function() {
+      global.options.indicatorSelector.value = componentName;
+      return global.options.indicatorSelector.refresh();
+    };
+    subindexBox.onclick = function() {
+      global.options.indicatorSelector.value = subindexName;
+      return global.options.indicatorSelector.refresh();
+    };
+    return indexBox.onclick = function() {
+      global.options.indicatorSelector.value = "INDEX";
+      return global.options.indicatorSelector.refresh();
+    };
+  };
+
+  show = function(element) {
+    return element.style.display = "block";
+  };
+
+  hide = function(element) {
+    return element.style.display = "none";
   };
 
   renderBoxes = function(data) {
-    var higher, higherArea, higherContainer, higherLegend, labelHigher, labelLower, lower, lowerArea, lowerContainer, lowerLegend, mean, median, _ref, _ref1, _ref2, _ref3;
+    renderSomeBoxes(data.statistics, "");
+    return renderSomeBoxes(data.globalStatistics, "global-");
+  };
+
+  renderSomeBoxes = function(data, prefix) {
+    var higher, higherArea, higherContainer, lower, lowerArea, lowerContainer, mean, median, _ref, _ref1;
     mean = data.mean;
     median = data.median;
     higher = data.higher["short_name"];
     lower = data.lower["short_name"];
     higherArea = data.higher.area;
     lowerArea = data.lower.area;
-    if ((_ref = document.getElementById("mean")) != null) {
+    if ((_ref = document.getElementById("" + prefix + "mean")) != null) {
       _ref.innerHTML = mean.toFixed(2);
     }
-    if ((_ref1 = document.getElementById("median")) != null) {
+    if ((_ref1 = document.getElementById("" + prefix + "median")) != null) {
       _ref1.innerHTML = median.toFixed(2);
     }
-    higherContainer = document.getElementById("higher");
+    higherContainer = document.getElementById("" + prefix + "higher");
     if (higherContainer) {
       higherContainer.innerHTML = global.selections.indicatorTendency ? higher : lower;
       higherContainer.onclick = function() {
@@ -910,23 +1096,13 @@
         return global.options.countrySelector.refresh();
       };
     }
-    lowerContainer = document.getElementById("lower");
+    lowerContainer = document.getElementById("" + prefix + "lower");
     if (lowerContainer) {
       lowerContainer.innerHTML = global.selections.indicatorTendency ? lower : higher;
-      lowerContainer.onclick = function() {
+      return lowerContainer.onclick = function() {
         global.options.countrySelector.select(lowerArea);
         return global.options.countrySelector.refresh();
       };
-    }
-    labelHigher = (_ref2 = document.getElementById("label_higher")) != null ? _ref2.value : void 0;
-    labelLower = (_ref3 = document.getElementById("label_lower")) != null ? _ref3.value : void 0;
-    higherLegend = document.getElementById("legend-higher");
-    if (higherLegend) {
-      higherLegend.innerHTML = global.selections.indicatorTendency ? labelHigher : labelLower;
-    }
-    lowerLegend = document.getElementById("legend-lower");
-    if (lowerLegend) {
-      return lowerLegend.innerHTML = global.selections.indicatorTendency ? labelLower : labelHigher;
     }
   };
 
@@ -968,24 +1144,30 @@
 
   msie6 = $.browser === "msie" && $.browser.version < 7;
 
-  selectBar = $(".select-bar");
+  selectBar = $(".select-bar > section");
+
+  siteHeader = $(".site-header").height();
+
+  if (!selectBar) {
+    return;
+  }
 
   top = null;
 
   if (!msie6) {
     $(window).scroll(function(event) {
-      var firstHeader, y;
-      firstHeader = document.querySelector(".select-box header");
+      var y;
       if (top == null) {
-        top = selectBar.offset().top + firstHeader.offsetHeight;
+        top = selectBar.offset().top;
       }
       y = $(this).scrollTop();
-      if (y >= top) {
+      if (y >= siteHeader) {
         if (!selectBar.collapsed) {
           setBoxesInitialPosition();
           selectBar.addClass("fixed");
           setBoxesPosition();
-          return selectBar.collapsed = true;
+          selectBar.collapsed = true;
+          return selectBar.css("width", selectBar.parent().width());
         }
       } else {
         selectBar.removeClass("fixed");
@@ -1034,28 +1216,35 @@
     return _results;
   };
 
-  collapsables = document.querySelectorAll(".collapsable");
+  collapsables = document.querySelectorAll(".collapsable-header");
 
   for (_j = 0, _len1 = collapsables.length; _j < _len1; _j++) {
-    collapsable = collapsables[_j];
-    button = collapsable.querySelector(".button");
+    collapsableHeader = collapsables[_j];
+    button = collapsableHeader.querySelector(".button");
     if (!button) {
       continue;
     }
+    collapsable = collapsableHeader.parentNode;
     collapsableSection = collapsable.querySelector("section");
     if (!collapsableSection) {
       continue;
     }
-    button.collapsed = false;
+    collapsed = collapsable.className.indexOf("collapsed") !== -1;
+    button.collapsed = collapsed;
     button.container = collapsable;
-    button.onclick = function() {
+    button.setStyles = function() {
       var container, containerClass;
-      this.collapsed = !this.collapsed;
+      collapsed = this.collapsed;
       container = this.container;
-      containerClass = container.className;
-      container.className = this.collapsed ? containerClass + " collapsed" : containerClass.replace(" collapsed", "");
-      return this.className = this.collapsed ? "button fa fa-toggle-off" : "button fa fa-toggle-on";
+      containerClass = container.className.replace(" collapsed", "");
+      container.className = collapsed ? containerClass + " collapsed" : containerClass;
+      return this.className = collapsed ? "button fa fa-toggle-off" : "button fa fa-toggle-on";
     };
+    button.onclick = function() {
+      this.collapsed = !this.collapsed;
+      return this.setStyles();
+    };
+    button.setStyles();
   }
 
   chartTooltip = function(info, global) {
@@ -1067,7 +1256,7 @@
     ranked = info["data-ranked"];
     code = info["data-area"];
     name = info["data-area_name"];
-    time = info["data-year"];
+    time = parseInt(info["data-year"]) + 1;
     continent = "";
     if (info["data-continent"]) {
       continent = info["data-continent"];
@@ -1091,6 +1280,343 @@
     } else {
       return value;
     }
+  };
+
+  tabs = document.querySelectorAll(".accordion-tabs-minimal li");
+
+  if (tabs.length > 0) {
+    a = tabs[0].querySelector("a");
+    content = tabs[0].querySelector("div.tab-content");
+    a.className += " is-active";
+    content.className += " is-open";
+  }
+
+  for (_k = 0, _len2 = tabs.length; _k < _len2; _k++) {
+    tab = tabs[_k];
+    a = tab.querySelector("a");
+    if (a != null) {
+      a.onclick = function(event) {
+        var open;
+        if (this.className.indexOf("is-active") === -1) {
+          event.preventDefault();
+          open = document.querySelector(".accordion-tabs-minimal .is-active");
+          if (open != null) {
+            open.className = open.className.replace(" is-active", "");
+          }
+          open = document.querySelector(".accordion-tabs-minimal .is-open");
+          if (open != null) {
+            open.className = open.className.replace(" is-open", "");
+          }
+          this.className += " is-active";
+          content = this.parentNode.querySelector("div.tab-content");
+          return content != null ? content.className += " is-open" : void 0;
+        } else {
+          return event.preventDefault();
+        }
+      };
+    }
+  }
+
+  renderCountries = function(countries, observations) {
+    var container, count, country, renderCountryInfo, selectedCountries, ul, _l, _len3, _results;
+    container = document.getElementById("country-section");
+    if (container != null) {
+      container.style.display = global.selections.countries === "ALL" ? "none" : "block";
+    }
+    selectedCountries = global.selections.countries;
+    selectedCountries = selectedCountries.split(",");
+    ul = document.getElementById("country-tabs");
+    ul.innerHTML = "";
+    count = 1;
+    _results = [];
+    for (_l = 0, _len3 = selectedCountries.length; _l < _len3; _l++) {
+      country = selectedCountries[_l];
+      country = countries[country];
+      if (!country) {
+        continue;
+      }
+      renderCountryInfo = function(country, count) {
+        var code, continent, div, empowerment, extraInfo, freedomOpenness, globalRank, img, name, observation, path, ranking, relevantContent, republish, span, universalAccess, value;
+        code = country.iso3;
+        name = country.name;
+        continent = country.area;
+        observation = observations[code];
+        republish = observation.republish;
+        value = observation.value;
+        value = getValue(value, republish);
+        ranking = observation.ranked;
+        extraInfo = observation.extra;
+        globalRank = extraInfo.rank;
+        universalAccess = extraInfo["UNIVERSAL_ACCESS"].toFixed(2);
+        freedomOpenness = extraInfo["FREEDOM_AND_OPENNESS"].toFixed(2);
+        relevantContent = extraInfo["RELEVANT_CONTENT_AND_USE"].toFixed(2);
+        empowerment = extraInfo["EMPOWERMENT"].toFixed(2);
+        if (continent) {
+          continent = global.continents[continent];
+        } else {
+          continent = "";
+        }
+        li = document.createElement("li");
+        li.className = "tab-header-and-content";
+        ul.appendChild(li);
+        a = document.createElement("a");
+        a.href = "javascript:void(0)";
+        a.className = count === 1 ? "tab-link is-active" : "tab-link";
+        a.opened = false;
+        li.appendChild(a);
+        img = document.createElement("img");
+        img.className = "flag";
+        path = document.getElementById("path").value;
+        img.src = "" + path + "/images/flags/" + code + ".png";
+        a.appendChild(img);
+        span = document.createElement("span");
+        span.className = "country";
+        a.appendChild(span);
+        span.innerHTML = country.short_name;
+        div = document.createElement("div");
+        div.className = count === 1 ? "tab-content is-open" : "tab-content";
+        li.appendChild(div);
+        a.container = div;
+        a.onclick = function(event) {
+          var countryMap, extraTbody, map, open, p, rankingDiv, table, tableWrapper, td, tr, valueDiv, wrapper;
+          if (this.className.indexOf("is-active") === -1) {
+            event.preventDefault();
+            open = document.querySelector(".accordion-tabs-minimal .is-active");
+            if (open != null) {
+              open.className = open.className.replace(" is-active", "");
+            }
+            open = document.querySelector(".accordion-tabs-minimal .is-open");
+            if (open != null) {
+              open.className = open.className.replace(" is-open", "");
+            }
+            this.className += " is-active";
+            content = this.parentNode.querySelector("div.tab-content");
+            if (content != null) {
+              content.className += " is-open";
+            }
+          } else {
+            event.preventDefault();
+          }
+          if (this.opened) {
+            return;
+          }
+          this.opened = true;
+          div = this.container;
+          map = document.createElement("div");
+          map.className = "country-map";
+          map.id = "m" + wesCountry.guid();
+          div.appendChild(map);
+          countryMap = wesCountry.maps.createMap({
+            container: "#" + map.id,
+            "borderWidth": 1.5,
+            countries: [
+              {
+                code: code,
+                value: 1
+              }
+            ],
+            download: false,
+            "zoom": false,
+            landColour: "#ddd",
+            borderColour: "#ddd",
+            colourRange: ["#0096af"]
+          });
+          wrapper = document.createElement("div");
+          div.appendChild(wrapper);
+          valueDiv = document.createElement("div");
+          valueDiv.className = "value";
+          valueDiv.innerHTML = "<p>value</p>" + value;
+          wrapper.appendChild(valueDiv);
+          rankingDiv = document.createElement("div");
+          rankingDiv.className = "value ranking";
+          rankingDiv.innerHTML = "<p>rank</p>" + ranking;
+          wrapper.appendChild(rankingDiv);
+          p = document.createElement("p");
+          wrapper.appendChild(p);
+          p.innerHTML = name;
+          p = document.createElement("p");
+          p.className = "continent";
+          wrapper.appendChild(p);
+          p.innerHTML = continent;
+          tableWrapper = document.createElement("div");
+          tableWrapper.className = "table-wrapper";
+          div.appendChild(tableWrapper);
+          table = document.createElement("table");
+          table.className = "extra-table";
+          tableWrapper.appendChild(table);
+          renderExtraTableHeader(table);
+          extraTbody = document.createElement("tbody");
+          table.appendChild(extraTbody);
+          tr = document.createElement("tr");
+          extraTbody.appendChild(tr);
+          td = document.createElement("td");
+          td.setAttribute("data-title", "Web Index Rank");
+          tr.appendChild(td);
+          td.innerHTML = globalRank;
+          td = document.createElement("td");
+          td.setAttribute("data-title", "Universal Access");
+          tr.appendChild(td);
+          renderPieChart(td, universalAccess, "#f93845");
+          td = document.createElement("td");
+          td.setAttribute("data-title", "Relevant Content");
+          tr.appendChild(td);
+          renderPieChart(td, freedomOpenness, "#0096af");
+          td = document.createElement("td");
+          td.setAttribute("data-title", "Freedom And Openness");
+          tr.appendChild(td);
+          renderPieChart(td, relevantContent, "#89ba00");
+          td = document.createElement("td");
+          td.setAttribute("data-title", "Empowerment");
+          tr.appendChild(td);
+          return renderPieChart(td, empowerment, "#ff761c");
+        };
+        if (count === 1) {
+          return a.click();
+        }
+      };
+      renderCountryInfo(country, count);
+      _results.push(count++);
+    }
+    return _results;
+  };
+
+  renderPieChart = function(container, value, colour) {
+    var chart, pie;
+    chart = document.createElement("div");
+    chart.className = "chart";
+    chart.id = "c" + (wesCountry.guid());
+    container.appendChild(chart);
+    return pie = wesCountry.charts.chart({
+      chartType: "pie",
+      container: "#" + chart.id,
+      serieColours: ["#ddd", colour],
+      series: [
+        {
+          name: "",
+          values: [100 - value]
+        }, {
+          name: name,
+          values: [value]
+        }
+      ],
+      events: {
+        onmouseover: function() {}
+      },
+      valueOnItem: {
+        show: false
+      },
+      xAxis: {
+        "font-colour": "none"
+      },
+      yAxis: {
+        "font-colour": "none"
+      },
+      legend: {
+        show: false
+      },
+      margins: [0, 0, 0, 0]
+    });
+  };
+
+  createTableCell = function(tr, title, content, colspan) {
+    var td;
+    td = document.createElement("td");
+    td.setAttribute("data-title", title);
+    td.innerHTML = content;
+    tr.appendChild(td);
+    if (colspan) {
+      return td.setAttribute("colspan", colspan);
+    }
+  };
+
+  msie6 = $.browser === "msie" && $.browser.version < 7;
+
+  siteHeader = $(".site-header").height();
+
+  firstSection = $(".first-section");
+
+  firstTab = $(".first-tab");
+
+  secondTab = $(".second-tab");
+
+  firstTabFixedPosition = 0;
+
+  secondTabAbsolutePosition = 0;
+
+  firstTabStartedMoving = 0;
+
+  secondTabStartedMoving = 0;
+
+  if (!selectBar) {
+    return;
+  }
+
+  top = null;
+
+  previousY = 0;
+
+  if (!msie6) {
+    $(window).scroll(function(event) {
+      var firstTabTop, fistTabHeight, height, offset, parent, secondTabTop, tendency, windowHeight, y;
+      if (top == null) {
+        top = section.offset().top;
+      }
+      windowHeight = $(window).height();
+      fistTabHeight = firstTab.height();
+      y = $(this).scrollTop();
+      tendency = y - previousY;
+      firstTabTop = Math.floor(y - firstTab.offset().top);
+      secondTabTop = Math.floor(y - secondTab.offset().top);
+      if (y >= siteHeader && windowHeight > fistTabHeight) {
+        if (!firstSection.collapsed && tendency > 0) {
+          parent = firstSection.parent();
+          height = parent.height();
+          parent.css("min-height", height);
+          firstSection.siblings().each(function() {
+            var offset;
+            offset = $(this).position().top;
+            secondTabAbsolutePosition = offset;
+            $(this).css("top", offset);
+            return $(this).addClass("absolute");
+          });
+          firstTabFixedPosition = firstTab.position().top;
+          firstSection.children().each(function() {
+            var width;
+            width = $(this).width();
+            $(this).css("width", width);
+            return $(this).addClass("fixed");
+          });
+          firstTab.css("top", firstTabFixedPosition);
+          firstSection.collapsed = true;
+          secondTabStartedMoving = y;
+        } else if (!firstTab.moving && tendency > 0 && secondTabTop >= firstTabTop) {
+          offset = secondTabAbsolutePosition - 6;
+          firstTab.css("top", offset).addClass("absolute").removeClass("fixed");
+          firstTab.moving = true;
+          firstTabStartedMoving = y;
+        } else if (tendency < 0 && firstTab.moving && y <= firstTabStartedMoving) {
+          firstTab.css("top", firstTabFixedPosition).addClass("fixed").removeClass("absolute");
+          firstTab.moving = false;
+        } else if (tendency < 0 && y <= secondTabStartedMoving) {
+          returnToStoppedPosition(firstSection, firstTab);
+        }
+      } else {
+        returnToStoppedPosition(firstSection, firstTab);
+      }
+      return previousY = y;
+    });
+  }
+
+  returnToStoppedPosition = function(firstSection, firstTab) {
+    if (!firstSection.collapsed) {
+      return;
+    }
+    firstSection.children().removeClass("fixed").removeClass("absolute");
+    firstSection.collapsed = false;
+    firstTab.moving = false;
+    return firstSection.siblings().each(function() {
+      return $(this).removeClass("absolute");
+    });
   };
 
 }).call(this);
