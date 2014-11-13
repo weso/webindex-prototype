@@ -69,6 +69,8 @@
   "data_by_time": "by time",
   "data_higher": "best score",
   "data_lower": "worst score",
+  "data_higher_short": "best",
+  "data_lower_short": "worst",
   "data_mean": "mean",
   "data_median": "median",
   "data_extra_info": "Extra Info",
