@@ -20,6 +20,7 @@ header.site-header .top {
 header.site-header .bottom {
   overflow: hidden;
   box-shadow: 0 0.3em 0.3em -0.3em #111;
+  font-family: arial;
 
   div {
     height: 1.6em;
@@ -29,11 +30,14 @@ header.site-header .bottom {
     background-color: #ccc;
     background-image: url(../images/world-header-1.png);
     background-size: cover;
-    text-transform: uppercase;
     text-align: center;
     font-size: 1em;
-    font-weight: 600;
-    text-shadow: 0px 1px 0px rgba(white, .3), 0px -1px 0px rgba(black, .7);
+    font-weight: 400;
+    /*text-shadow: 0px 1px 0px rgba(white, .3), 0px -1px 0px rgba(black, .7);*/
+
+    strong {
+      font-weight: 900;
+    }
   }
 
   div:nth-child(1) {
@@ -67,6 +71,11 @@ header.site-header .bottom {
     background-image: url(../images/world-header-4.png);
     color: darken(nth($home-accordion-colours, 1), 20%);
     text-shadow: 0px 1px 0px rgba(white, .3), 0px -1px 0px rgba(darken(nth($home-accordion-colours, 1), 15%), .7);
+
+    a {
+      color: darken(nth($home-accordion-colours, 1), 20%);
+      text-transform: uppercase;
+    }
   }
 }
 

@@ -1,5 +1,5 @@
 (function() {
-  var a, button, chartSelectors, chartTooltip, checkSelectorDataReady, collapsable, collapsableHeader, collapsableSection, collapsables, collapsed, content, createTableCell, firstSection, firstTab, firstTabFixedPosition, firstTabStartedMoving, getCountries, getIndicators, getObservations, getSelectorData, getValue, getYears, global, hide, li, msie6, previousY, renderBoxes, renderCharts, renderContinentLegend, renderCountries, renderExtraTableHeader, renderIndicatorInfo, renderMap, renderPieChart, renderRegionLabel, renderSomeBoxes, renderTable, renderYearBox, returnToStoppedPosition, secondTab, secondTabAbsolutePosition, secondTabStartedMoving, selectBar, setBoxesInitialPosition, setBoxesPosition, setIndicatorOptions, setPageStateful, show, siteHeader, tab, tabs, top, updateInfo, _i, _j, _k, _len, _len1, _len2;
+  var a, button, chartSelectors, chartTooltip, checkSelectorDataReady, collapsable, collapsableHeader, collapsableSection, collapsables, collapsed, content, createTableCell, firstBox, firstBoxHeaderHeight, firstHeight, firstSection, firstTab, firstTabFixedPosition, firstTabStartedMoving, getCountries, getIndicators, getObservations, getSelectorData, getValue, getYears, global, hide, li, msie6, previousY, renderBoxes, renderCharts, renderContinentLegend, renderCountries, renderExtraTableHeader, renderIndicatorInfo, renderMap, renderPieChart, renderRegionLabel, renderSomeBoxes, renderTable, renderYearBox, returnToStoppedPosition, secondBox, secondBoxHeaderHeight, secondHeight, secondTab, secondTabAbsolutePosition, secondTabStartedMoving, selectBar, setBoxesInitialPosition, setBoxesPosition, setIndicatorOptions, setPageStateful, show, siteHeader, tab, tabs, thirdBox, thirdBoxHeaderHeight, thirdHeight, top, totalHeight, updateInfo, _i, _j, _k, _len, _len1, _len2;
 
   global = this;
 
@@ -1146,22 +1146,55 @@
 
   selectBar = $(".select-bar > section");
 
-  siteHeader = $(".site-header").height();
+  siteHeader = null;
 
   if (!selectBar) {
     return;
   }
 
+  firstBox = document.querySelector(".first-box");
+
+  secondBox = document.querySelector(".second-box");
+
+  thirdBox = document.querySelector(".third-box");
+
+  firstHeight = null;
+
+  secondHeight = null;
+
+  thirdHeight = null;
+
+  thirdHeight = null;
+
+  firstBoxHeaderHeight = null;
+
+  secondBoxHeaderHeight = null;
+
+  thirdBoxHeaderHeight = null;
+
+  totalHeight = null;
+
   top = null;
 
   if (!msie6) {
     $(window).scroll(function(event) {
-      var y;
+      var y, _ref, _ref1, _ref2;
       if (top == null) {
         top = selectBar.offset().top;
       }
+      if (siteHeader == null) {
+        siteHeader = $(".site-header").height();
+      }
+      firstHeight = firstBox ? firstBox.offsetHeight : 0;
+      secondHeight = secondBox ? secondBox.offsetHeight : 0;
+      thirdHeight = thirdBox ? thirdBox.offsetHeight : 0;
+      firstBoxHeaderHeight = (firstBox != null ? (_ref = firstBox.querySelector("header")) != null ? _ref.offsetHeight : void 0 : void 0) || 0;
+      secondBoxHeaderHeight = (secondBox != null ? (_ref1 = secondBox.querySelector("header")) != null ? _ref1.offsetHeight : void 0 : void 0) || 0;
+      thirdBoxHeaderHeight = (thirdBox != null ? (_ref2 = thirdBox.querySelector("header")) != null ? _ref2.offsetHeight : void 0 : void 0) || 0;
+      thirdHeight = (thirdHeight - thirdBoxHeaderHeight) * 2.8;
+      totalHeight = firstHeight + secondHeight + thirdHeight - firstBoxHeaderHeight - secondBoxHeaderHeight;
       y = $(this).scrollTop();
-      if (y >= siteHeader) {
+      if (y >= siteHeader && totalHeight < window.innerHeight) {
         if (!selectBar.collapsed) {
           setBoxesInitialPosition();
           selectBar.addClass("fixed");
@@ -1546,6 +1579,8 @@
   firstTabStartedMoving = 0;
 
   secondTabStartedMoving = 0;
+
+  selectBar = $(".select-bar > section");
 
   if (!selectBar) {
     return;

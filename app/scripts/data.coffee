@@ -1147,21 +1147,49 @@ for li in chartSelectors
 msie6 = $.browser is "msie" and $.browser.version < 7
 
 selectBar = $(".select-bar > section")
-siteHeader = $(".site-header").height()
+siteHeader = null
 
 if !selectBar then return;
+
+firstBox = document.querySelector(".first-box")
+secondBox = document.querySelector(".second-box")
+thirdBox = document.querySelector(".third-box")
+
+firstHeight = null
+secondHeight = null
+thirdHeight = null
+thirdHeight = null
+
+firstBoxHeaderHeight = null
+secondBoxHeaderHeight = null
+thirdBoxHeaderHeight = null
+
+totalHeight = null
 
 top = null
 
 if !msie6
   $(window).scroll((event) ->
     top ?= selectBar.offset().top
+    siteHeader ?= $(".site-header").height()
+
+    firstHeight = if firstBox then firstBox.offsetHeight else 0
+    secondHeight = if secondBox then secondBox.offsetHeight else 0
+    thirdHeight = if thirdBox then thirdBox.offsetHeight else 0
+
+    firstBoxHeaderHeight = firstBox?.querySelector("header")?.offsetHeight || 0
+    secondBoxHeaderHeight = secondBox?.querySelector("header")?.offsetHeight || 0
+    thirdBoxHeaderHeight = thirdBox?.querySelector("header")?.offsetHeight || 0
+
+    thirdHeight = (thirdHeight - thirdBoxHeaderHeight) * 2.8 # Height when open
+
+    totalHeight = firstHeight + secondHeight + thirdHeight - firstBoxHeaderHeight - secondBoxHeaderHeight
 
     # What the y position of the scroll is
     y = $(this).scrollTop()
 
     # Whether that's below the form
-    if y >= siteHeader
+    if y >= siteHeader and totalHeight < window.innerHeight
       if !selectBar.collapsed
         setBoxesInitialPosition()
         # if so, add the class
@@ -1555,6 +1583,7 @@ firstTabFixedPosition = 0
 secondTabAbsolutePosition = 0
 firstTabStartedMoving = 0
 secondTabStartedMoving = 0
+selectBar = $(".select-bar > section")
 
 if !selectBar then return;
 
