@@ -847,14 +847,17 @@ div.follow-box {
 
   div.sign-up {
     background-color: nth($grid-item-colors, 6);
-    padding: 2em 1em 1em 1em;
+    padding: 1em;
     margin-bottom: 1em;
     height: 19em;
 
     p {
-      margin-top: 1em;
-      margin-bottom: 1em;
-      min-height: 4em;
+      margin: 0;
+    }
+
+    label {
+      font-size: 0.8em;
+      font-weight: normal;
     }
   }
 
@@ -896,8 +899,8 @@ div.follow-box {
 
   position: relative;
   display: inline-block;
-  width: 90%;
-  margin: 1.3em 0;
+  width: 100%;
+  margin: 0;
 
   input {
     @include box-sizing(border-box);
@@ -906,6 +909,8 @@ div.follow-box {
 
   div.newsletter-and-submit {
     position: relative;
+    margin: 1em auto 0 auto;
+    width: 90%;
 
     input[type=email] {
       @include appearance(none);
@@ -915,6 +920,10 @@ div.follow-box {
       font-style: italic;
       border-radius: $base-border-radius;
       margin: 0;
+
+      &.mce_inline_error {
+        background-color: white !important;
+      }
     }
 
     button[type=submit] {
@@ -925,12 +934,18 @@ div.follow-box {
       border-top-left-radius: 0;
       border-bottom-left-radius: 0;
       padding: 5px 10px;
-
-      img {
-        height: 12px;
-        opacity: .7;
-      }
     }
+  }
+
+  .mce_inline_error {
+    background-color: transparent !important;
+    color: black !important;
+  }
+
+  .response {
+    margin-top: 0.5em;
+    color: #333;
+    font-size: 0.9em;
   }
 }
 
