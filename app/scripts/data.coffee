@@ -7,10 +7,18 @@ global.selections = {
   indicatorTendency: null,
   countries: null,
   year: null,
-  years: []
+  years: [],
+  areas: []
 }
 global.maxChartBars = 5
 global.continents = {}
+global.tutorial = true
+global.tutorialRestoreValues = {
+  indicator: null,
+  year: null,
+  countries: null,
+  selections: [false, false, false, false, false]
+}
 
 ################################################################################
 #                                 INIT SELECTORS
@@ -50,6 +58,10 @@ setPageStateful = ->
           updateInfo()
 
           renderIndicatorInfo(option, tendency)
+
+          if global.tutorial
+            tutorialBoxOnChange.call(selectors["#indicator-select"])
+            global.tutorialRestoreValues.selections[0] = true
       },
       {
         name: "time",
@@ -59,6 +71,10 @@ setPageStateful = ->
 
           global.selections.year = parseInt(value)
           updateInfo()
+
+          if global.tutorial
+            tutorialBoxOnChange.call(global.options.timeline)
+            global.tutorialRestoreValues.selections[1] = true
       },
       {
         name: "country",
@@ -69,6 +85,23 @@ setPageStateful = ->
 
           global.selections.countries = value
           updateInfo()
+
+          text = "&nbsp;"
+          if global.options.countrySelector.selectedLength() == global.maxChartBars
+            text = document.getElementById("data_countries_reach").value || "&nbsp;"
+
+          document.getElementById("third-box-help")?.innerHTML = text
+
+          # Prevent select more countries that the limit by changing URL
+          if global.options.countrySelector.selectedLength() > global.maxChartBars
+            items = global.options.countrySelector.selected().split(",")
+            if items.length > 0
+              global.options.countrySelector.unselect(items[items.length - 1])
+              global.options.countrySelector.refresh()
+
+          if global.tutorial
+            tutorialBoxOnChange.call(global.options.countrySelector)
+            global.tutorialRestoreValues.selections[2] = true
       }
     ]
   })
@@ -239,24 +272,45 @@ getCountries = () ->
   global.options.countrySelector = new wesCountry.selector.basic({
     data: countries,
     selectedItems: ["ALL"],
-    maxSelectedItems: global.maxChartBars,
+    maxSelectedItems: -1, # No limit, it's managed in beforeChange
     labelName: "short_name",
     valueName: "iso3",
     childrenName: "countries",
     autoClose: true,
-    selectParentNodes: false,
+    selectParentNodes: true,
     beforeChange: (selectedItems, element) ->
       if !global.options.countrySelector
         return
 
+      isRegion = (element?.element?.data?.iso2 || null) == null
+
       if selectedItems.length == 0
         global.options.countrySelector.select("ALL")
+        global.selections.areas = []
       else if element.code == "ALL"
         if selectedItems.length > 1
           global.options.countrySelector.clear()
           global.options.countrySelector.select("ALL")
-      else if selectedItems.search("ALL") != -1
-        global.options.countrySelector.unselect("ALL")
+          global.selections.areas = []
+      else
+        if selectedItems.search("ALL") != -1
+          global.options.countrySelector.unselect("ALL")
+        if isRegion
+          # A region has been selected
+          global.options.countrySelector.clear()
+          global.options.countrySelector.select(element.code)
+          global.selections.areas = [ element.code ]
+        else
+          # A country has been entered
+          # Check if a region is entered, then clear
+          if global.selections.areas.length > 0
+            global.selections.areas = []
+            global.options.countrySelector.clear()
+            global.options.countrySelector.select(element.code)
+          else
+            # Check if country limit has been reached
+            if global.options.countrySelector.selectedLength() == global.maxChartBars + 1
+              global.options.countrySelector.unselect(element.code)
 
     sort: false })
 
@@ -1189,7 +1243,7 @@ if !msie6
     y = $(this).scrollTop()
 
     # Whether that's below the form
-    if y >= siteHeader and totalHeight < window.innerHeight
+    if !global.tutorial and y >= siteHeader and totalHeight < window.innerHeight
       if !selectBar.collapsed
         setBoxesInitialPosition()
         # if so, add the class
@@ -1199,9 +1253,17 @@ if !msie6
         selectBar.css("width", selectBar.parent().width())
     else
       # otherwise remove it
-      selectBar.removeClass("fixed")
-      selectBar.collapsed = false
+      setUnfixedPosition()
   )
+
+setUnfixedPosition = ->
+  selectBar.removeClass("fixed")
+  selectBar.collapsed = false
+
+  boxes = document.querySelectorAll(".select-box")
+
+  for box in boxes
+    box.style.top = "0px"
 
 setBoxesInitialPosition = ->
   boxes = document.querySelectorAll(".select-box")
@@ -1605,8 +1667,8 @@ if !msie6
     secondTabTop = Math.floor(y - secondTab.offset().top)
 
     # Whether that's below the form
-    if y >= siteHeader && windowHeight > fistTabHeight
-      if !firstSection.collapsed && tendency > 0
+    if !global.tutorial and y >= siteHeader and windowHeight > fistTabHeight
+      if !firstSection.collapsed and tendency > 0
         parent = firstSection.parent()
         height = parent.height()
 
@@ -1654,3 +1716,171 @@ returnToStoppedPosition = (firstSection, firstTab) ->
   firstSection.siblings().each(->
       $(this).removeClass("absolute")
   )
+
+################################################################################
+#                                  TUTORIAL
+################################################################################
+$(->
+  if typeof(Storage) != "undefined"
+    shown = localStorage.getItem("tutorialShown")
+
+    if !shown
+      showTutorial()
+    else
+      global.tutorial = false
+  else
+    global.tutorial = false
+)
+
+showTutorial = ->
+  global.tutorial = true
+  window.scrollTo(0, 0)
+
+  # Save restore selector values
+  global.tutorialRestoreValues = {
+    indicator: document.getElementById("indicator-select").value,
+    year: global.options.timeline.selected(),
+    countries: global.options.countrySelector.selected(),
+    selections: [false, false, false, false, false]
+  }
+  # Set initial values for selectors
+  global.options.indicatorSelector.value = -1
+  global.options.timeline.clear()
+  global.options.countrySelector.clear()
+
+  # Uncollapse left bar
+  setUnfixedPosition()
+
+  localStorage.setItem("tutorialShown", true)
+  tutorial = document.querySelector(".tutorial")
+  document.body.appendChild tutorial
+
+  back = document.createElement "div"
+  back.className = "tutorial-back"
+  document.body.appendChild back
+
+  tutorialElements = [
+    ".first-box",
+    ".second-box",
+    ".third-box",
+    ".first-tab",
+    ".second-tab"
+  ]
+
+  tutorial.style.display = "block"
+
+  createTip(tutorial, tutorialElements, 0, back)
+
+# Box on change
+
+tutorialBoxOnChange = () ->
+  if (this.selectedIndex and this.selectedIndex != -1) or (this.selected and this.selected() != -1 and this.selected != "")
+    document.getElementById("tutorial-next").setAttribute("status", "active")
+    document.getElementById("tutorial-next")?.click()
+
+# Restore selectors if tutorial closed
+tutorialRestore = () ->
+  if global.options.indicatorSelector.selectedIndex == -1
+    global.options.indicatorSelector.value = global.tutorialRestoreValues.indicator
+    global.options.indicatorSelector.refresh()
+  if global.options.timeline.selected() == -1
+    global.options.timeline.select(global.tutorialRestoreValues.year)
+    global.options.timeline.refresh()
+  if global.options.countrySelector.selected() == ""
+    global.options.countrySelector.select(global.tutorialRestoreValues.countries)
+    global.options.countrySelector.refresh()
+
+# Show tutorial on demand
+
+document.getElementById("view-tutorial")?.onclick = (event) ->
+  showTutorial()
+
+# Auxiliary tutorial functions
+
+createTip = (tutorial, elements, index, back) ->
+  element = elements[index]
+  number = index + 1
+  total = elements.length
+
+  elementBox = $(element)
+  elementBox.addClass("tutorial-element")
+
+  step = document.getElementById("tutorial-step")
+  step.innerHTML = ""
+
+  span = document.createElement "span"
+  span.className = "number large-text"
+  span.innerHTML = "#{number}/#{total}"
+  step.appendChild span
+
+  text = document.getElementById("data_tutorial_step_#{number}")?.value || ""
+  textNode = document.createTextNode text
+  step.appendChild textNode
+
+  # Enjoy
+  document.getElementById("tutorial-enjoy")?.style?.display = if index < total - 1 then "none" else "block"
+
+  # Close
+  closes = document.querySelectorAll(".tutorial-close")
+
+  for close in closes
+    close.onclick = (event) ->
+      removePreviousStep()
+      global.tutorial = false
+      back.parentNode?.removeChild? back
+      tutorial.style.display = "none"
+      tutorialRestore()
+
+  # Arrow
+  arrowContainer = document.createElement "div"
+  arrowContainer.style.position = "absolute"
+  tutorial.appendChild arrowContainer
+
+  arrow = document.createElement "i"
+  if index < total - 1
+    arrow.className = "fa fa-long-arrow-left fa-5x bouncing-arrow-left"
+    arrowContainer.style.left = elementBox.offset().left + elementBox.width() + 5 + "px"
+  else
+    arrow.className = "fa fa-long-arrow-down fa-5x bouncing-arrow-down"
+    arrowContainer.style.left = elementBox.offset().left + elementBox.width() / 2 + "px"
+  arrowContainer.appendChild arrow
+
+  if index < total - 1
+    arrowContainer.style.top = elementBox.offset().top + elementBox.height() / 2 - arrow.offsetHeight / 2 + "px"
+  else
+    arrowContainer.style.top = elementBox.offset().top - arrow.offsetHeight / 2 - 25 + "px"
+
+  # Previous and next buttons
+  previous = document.getElementById("tutorial-previous")
+  next = document.getElementById("tutorial-next")
+
+  previousStatus = if index > 0 then "active" else "inactive"
+
+  nextStatus = "inactive"
+  if index >= 3 and index < total - 1
+    nextStatus = "active"
+  else if index < 3 and global.tutorialRestoreValues.selections[index]
+    nextStatus = "active"
+
+  previous.setAttribute("status", previousStatus)
+  next.setAttribute("status", nextStatus)
+
+  removePreviousStep = ->
+    elementBox.removeClass("tutorial-element")
+    arrow.parentNode.removeChild arrow
+
+  if index > 0
+    previous.onclick = (event) ->
+      removePreviousStep()
+      createTip(tutorial, elements, index - 1, back)
+  else
+    previous.onclick = (event) ->
+
+  if index < total - 1
+    next.onclick = (event) ->
+      status = this.getAttribute("status")
+      if status == "inactive" then return
+      removePreviousStep()
+      createTip(tutorial, elements, index + 1, back)
+  else
+    next.onclick = (event) ->

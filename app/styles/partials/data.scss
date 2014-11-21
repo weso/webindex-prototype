@@ -814,7 +814,9 @@
   color: #222 !important;
 }
 
-.data-container{
+.data-container {
+  position: relative;
+
   .help {
       float: right;
       text-align: center;
@@ -842,10 +844,12 @@
     padding: 0 0.3em !important;
   }
 
-  .downloads {
+  .downloads, .view-tutorial {
     text-align: right;
     float: right;
+    clear: both;
     padding-top: 0.5em;
+    margin: 0;
   }
 
   .indicator-selector {
@@ -911,6 +915,19 @@ div.select-box {
   h2 {
     margin-bottom: 1em !important;
     text-align: center;
+    font-size: 1.4em;
+  }
+
+  &.third-box h2 {
+    margin-bottom: 0 !important;
+  }
+
+  p.select-help {
+    color: $data-up-arrow;
+    margin-bottom: 0;
+    font-size: 0.9em;
+    text-align: center;
+    line-height: 2em;
   }
 
   div.circle-number {
@@ -1620,4 +1637,163 @@ table.full-ranking {
   font-size: 1.2em;
   color: #1B4E5A;
   font-weight: 500;
+}
+
+/* TUTORIAL */
+
+.tutorial {
+  position: absolute;
+  z-index: 3000;
+  width: 100%;
+  top: 0;
+  left: 0;
+  display: none;
+
+  .close {
+    color: #333;
+    position: absolute;
+    top: 1em;
+    right: 1em;
+    font-size: 1.5em;
+    z-index: 6000;
+
+    span {
+      display: inline-block;
+      margin-top: 0.2em;
+    }
+  }
+
+  header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding-top: 1em;
+    text-align: center;
+    font-size: 1em;
+    color: #333;
+    background-color: rgba(white, 0.5);
+
+    h2 {
+      margin: 0 0 0.2em 0;
+      font-size: 3em;
+    }
+
+    h3 {
+      font-weight: 400;
+      font-size: 1.3em;
+      margin-bottom: 0.5em;
+      color: #777;
+    }
+
+    h4 {
+      font-size: 2.5em;
+      margin-top: 0.2em;
+
+      p {
+        margin: 0;
+        line-height: 0.5em;
+      }
+    }
+
+    p {
+      font-size: 1.5em;
+      max-width: 55em;
+      text-align: center;
+      margin: 0 auto;
+
+      .tutorial-close {
+        font-size: 0.4em;
+        margin: 0;
+      }
+
+      .left {
+        float: left;
+      }
+
+      .right {
+        float: right;
+      }
+
+      i {
+        display: block;
+      }
+
+      a.left, a.right {
+        color: #333;
+
+        i {
+          line-height: 0.6em;
+        }
+
+        span {
+          font-size: 0.7em;
+        }
+
+        &:hover {
+          color: $data-up-arrow;
+          text-decoration: none !important;
+        }
+      }
+
+      a[status="inactive"] {
+        color: #ddd;
+
+        &:hover {
+          color: #ddd;
+          cursor: default;
+        }
+      }
+
+      span.large-text {
+        font-size: 2em;
+        line-height: 0.5em;
+        margin-right: 0.5em;
+        margin-top: 0.2em;
+        display: inline-block;
+        font-family: "Roboto" sans-serif;
+      }
+    }
+  }
+}
+
+.tutorial-back {
+  overflow: scroll;
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	width: 100%;
+  background-color: rgba(white, 0.9);
+  z-index: 2500;
+}
+
+.tutorial-element {
+  position: relative !important;
+  z-index: 4000 !important;
+}
+
+.bouncing-arrow-left {
+  color: $data-up-arrow;
+  animation: bounce-left 1s infinite;
+}
+
+@keyframes bounce-left {
+  0% { margin-left: 5px; }
+  25%, 75% { margin-left: 15px; }
+  50% { margin-left: 20px; }
+  100% { margin-left: 0; }
+}
+
+.bouncing-arrow-down {
+  color: $data-up-arrow;
+  animation: bounce-down 1s infinite;
+}
+
+@keyframes bounce-down {
+  0% { margin-top: 5px; }
+  25%, 75% { margin-top: 15px; }
+  50% { margin-top: 20px; }
+  100% { margin-top: 0; }
 }
