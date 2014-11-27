@@ -72,6 +72,10 @@ div.lighthouse {
   div.search-and-submit {
     position: relative;
 
+    label span {
+      display: none;
+    }
+
     input[type=search] {
       @include appearance(none);
       width: 100%;
@@ -82,7 +86,7 @@ div.lighthouse {
       margin: 0;
     }
 
-    button[type=submit] {
+    [type=submit] {
       position: absolute;
       top: 0;
       right: 0;
@@ -93,11 +97,6 @@ div.lighthouse {
       border-bottom-left-radius: 0;
       padding: 5px 10px;
       background-color: $error-button;
-
-      img {
-        height: 12px;
-        opacity: .7;
-      }
     }
   }
 }

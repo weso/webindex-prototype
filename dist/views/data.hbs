@@ -4,20 +4,28 @@
   <input type="hidden" id="label_descending" value="{{#labels}}{{data_descending}}{{/labels}}" />
   <input type="hidden" id="label_higher" value="{{#labels}}{{data_higher}}{{/labels}}" />
   <input type="hidden" id="label_lower" value="{{#labels}}{{data_lower}}{{/labels}}" />
-  <input type="hidden" id="data_tutorial_step_1" value="{{#labels}}{{data_tutorial_step_1}}{{/labels}}" />
-  <input type="hidden" id="data_tutorial_step_2" value="{{#labels}}{{data_tutorial_step_2}}{{/labels}}" />
-  <input type="hidden" id="data_tutorial_step_3" value="{{#labels}}{{data_tutorial_step_3}}{{/labels}}" />
-  <input type="hidden" id="data_tutorial_step_4" value="{{#labels}}{{data_tutorial_step_4}}{{/labels}}" />
-  <input type="hidden" id="data_tutorial_step_5" value="{{#labels}}{{data_tutorial_step_5}}{{/labels}}" />
+  <input type="hidden" id="data_tutorial_step_1" value="{{#labels}}{{{data_tutorial_step_1}}}{{/labels}}" />
+  <input type="hidden" id="data_tutorial_step_2" value="{{#labels}}{{{data_tutorial_step_2}}}{{/labels}}" />
+  <input type="hidden" id="data_tutorial_step_3" value="{{#labels}}{{{data_tutorial_step_3}}}{{/labels}}" />
+  <input type="hidden" id="data_tutorial_step_4" value="{{#labels}}{{{data_tutorial_step_4}}}{{/labels}}" />
+  <input type="hidden" id="data_tutorial_step_5" value="{{#labels}}{{{data_tutorial_step_5}}}{{/labels}}" />
+  <input type="hidden" id="data_countries_reach" value="{{#labels}}{{{data_countries_reach}}}{{/labels}}" />
+
   <div class="container data-container">
     <div class="tutorial">
-      <a href="javascript:void(0)" class="tutorial-close close"><i class="fa fa-times fa-lg"></i> <span>{{#labels}}{{data_tutorial_close}}{{/labels}}</span></a>
+      <a href="javascript:void(0)" class="tutorial-close close"><i class="fa fa-times fa-lg"></i> <span class="large-text">{{#labels}}{{data_tutorial_close}}{{/labels}}</span></a>
       <header>
         <h2>{{#labels}}{{data_tutorial_title}}{{/labels}}</h2>
         <h3>{{#labels}}{{data_tutorial_description}}{{/labels}}</h3>
         <p>
-          <i id="tutorial-previous" class="fa fa-angle-left fa-3x left"></i>
-          <i id="tutorial-next" class="fa fa-angle-right fa-3x right"></i>
+          <a id="tutorial-previous" href="javascript:void(0)" class="left">
+            <i class="fa fa-angle-left fa-3x"></i>
+            <span>{{#labels}}{{data_previous}}{{/labels}}</span>
+          </a>
+          <a id="tutorial-next" href="javascript:void(0)" class="right">
+            <i class="fa fa-angle-right fa-3x"></i>
+            <span>{{#labels}}{{data_next}}{{/labels}}</span>
+          </a>
           <p id="tutorial-step" class="step-content"></p>
         </p>
         <h4 id="tutorial-enjoy">
@@ -65,6 +73,7 @@
               <abbr class="help" title='{{#labels}}{{data_country_help}}{{/labels}}'><i class="fa fa-info-circle fa-2x"></i></abbr>
               <div class="circle-number">3</div>
               <h2>{{#labels}}{{data_pick_countries}}{{/labels}}</h2>
+              <p id="third-box-help" class="select-help">&nbsp;</p>
             </header>
             <div class="country-box">
               <div id="country-selector" class="selector"></div>
@@ -96,9 +105,9 @@
             <div class="country-section collapsable collapsed">
               <header class="collapsable-header">
                 <div class="icons">
-                  <i id="indicator-tendency-arrow" class="fa fa-arrow-up"></i> <span id="indicator-tendency-icon"></span>
-                  <i class="fa fa-tag"></i> <span id="indicator-type-icon"></span>
-                  <i class="fa fa-university"></i> <span id="indicator-provider-icon"></span>
+                  <i id="indicator-tendency-arrow" class="fa fa-arrow-up"></i> <span class="name">{{#labels}}{{indicator_tendency}}{{/labels}}:</span> <span id="indicator-tendency-icon" class="value"></span>
+                  <i class="fa fa-tag"></i> <span class="name">{{#labels}}{{indicator_type}}{{/labels}}:</span> <span id="indicator-type-icon" class="value"></span>
+                  <i class="fa fa-university"></i> <span class="name">{{#labels}}{{data_provider}}{{/labels}}:</span> <span id="indicator-provider-icon" class="value"></span>
                 </div>
                 <i class="button fa fa-toggle-on"></i>
                 <span class="full-details">{{#labels}}{{data_indicator_full_details}}{{/labels}}</i></span>
@@ -240,11 +249,11 @@
                     <p id="year" class="value"></p>
                   </div>
                   <div class="box-mini">
-                    <p>{{#labels}}{{data_higher}}{{/labels}}</p>
+                    <p>{{#labels}}{{data_regional_higher}}{{/labels}}</p>
                     <p id="higher" class="value higher-lower"></p>
                   </div>
                   <div class="box-mini">
-                    <p>{{#labels}}{{data_lower}}{{/labels}}</p>
+                    <p>{{#labels}}{{data_regional_lower}}{{/labels}}</p>
                     <p id="lower" class="value higher-lower"></p>
                   </div>
                   <div class="box-mini">

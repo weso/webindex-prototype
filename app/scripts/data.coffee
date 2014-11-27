@@ -35,6 +35,7 @@ setPageStateful = ->
   wesCountry.stateful.start({
     init: (parameters, selectors) ->
       if settings.debug then console.log "init"
+      startTutorialFirstTime()
     urlChanged: (parameters, selectors) ->
       url = wesCountry.stateful.getFullURL()
 
@@ -1634,7 +1635,7 @@ createTableCell = (tr, title, content, colspan) ->
 ################################################################################
 #                               MOVING TABS
 ################################################################################
-
+###
 msie6 = $.browser is "msie" and $.browser.version < 7
 
 siteHeader = $(".site-header").height()
@@ -1716,11 +1717,12 @@ returnToStoppedPosition = (firstSection, firstTab) ->
   firstSection.siblings().each(->
       $(this).removeClass("absolute")
   )
-
+###
 ################################################################################
 #                                  TUTORIAL
 ################################################################################
-$(->
+
+startTutorialFirstTime = ->
   if typeof(Storage) != "undefined"
     shown = localStorage.getItem("tutorialShown")
 
@@ -1730,7 +1732,6 @@ $(->
       global.tutorial = false
   else
     global.tutorial = false
-)
 
 showTutorial = ->
   global.tutorial = true

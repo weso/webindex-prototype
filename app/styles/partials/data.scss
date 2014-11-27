@@ -76,7 +76,7 @@
     background-color: nth($data-select-colours, 1);
     border-top: 2px solid darken(nth($data-select-colours, 1), 20%) !important;
     border-left: 2px solid darken(nth($data-select-colours, 1), 20%) !important;
-    color: darken(nth($data-select-colours, 1), 40%) !important;
+    color: darken(nth($data-select-colours, 1), 50%) !important;
 
     i {
       color: darken(nth($data-select-colours, 1), 30%);
@@ -150,10 +150,23 @@
     line-height: 1.25;
     padding-top: 0.1em;
     float: left;
-    color: #999;
+    color: #555;
+
+    span.name {
+      font-size: 0.8em;
+    }
+
+    span.value {
+      color: darken($data-up-arrow, 10%);
+
+      a {
+        color: darken($data-up-arrow, 10%);
+      }
+    }
 
     i {
       margin-left: 1em;
+      line-height: 0.6em;
     }
 
     i:first-child {
@@ -520,7 +533,7 @@
       text-align: left;
       font-size: 1em;
       margin: 0 !important;
-      color: #888;
+      color: #555;
     }
 
     .button {
@@ -1096,7 +1109,7 @@ div.middle-section {
     }
 
     p:first-child {
-      font-size: 0.9em;
+      font-size: 0.8em;
     }
 
     .left {
@@ -1120,7 +1133,7 @@ div.middle-section {
 
     .value {
       font-size: 2.3em;
-      font-family: "Roboto" sans-serif;
+      font-family: "Roboto", sans-serif;
       font-weight: 400;
       margin: 0 0 0.2em 0;
       display: table-cell;
@@ -1140,9 +1153,10 @@ div.middle-section {
       font-size: 1em;
       height: 2.4em;
       height: 4.5em;
-      display: block;
-      width: 100%;
+      width: 10%;
       overflow: hidden;
+      display: table-cell;
+      vertical-align: middle;
     }
   }
 
@@ -1407,14 +1421,14 @@ nav.tabs {
       height: 2.3em;
 
       a {
-        color: #777;
+        color: #333;
       }
     }
 
     a {
       float: left;
       display: block;
-      color: #aaa;
+      color: #555;
       background: #fff;
       text-decoration: none;
       padding: 0.4em 4em 0.3em 4em;
@@ -1454,7 +1468,7 @@ table.full-ranking {
     font-size: 11em;
     line-height: 1em;
     padding: 0;
-    color: #ccc;
+    color: #888;
     text-align: right !important;
     padding-right: 0.2em;
     min-width: 1.5em;
@@ -1496,7 +1510,7 @@ table.full-ranking {
     background-color: darken($data-table-background-color, 20%);
 
     .big-number {
-      color: darken($data-table-background-color, 30%);
+      color: darken($data-table-background-color, 40%);
     }
   }
 
@@ -1751,7 +1765,7 @@ table.full-ranking {
         margin-right: 0.5em;
         margin-top: 0.2em;
         display: inline-block;
-        font-family: "Roboto" sans-serif;
+        font-family: "Roboto", sans-serif;
       }
     }
   }
