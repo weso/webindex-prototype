@@ -27,9 +27,10 @@ var jsonData = {
       }
     ],
     visualisations: [
-    {"id":"gender","position":"1","caption":"Gender","url":"\/visualisations\/gender.html"},
-    {"id":"neutrality","position":"2","caption":"Neutrality","url":"\/visualisations\/neutrality.html"},
-    {"id":"censorship","position":"3","caption":"Censorship","url":"\/visualisations\/censorship.html"}
+    {"id":"gender","position":"1","caption":"Gender","url":"\/visualisations\/gender.html","fullurl":"\/visualisations\/gender-full.html"},
+    {"id":"neutrality","position":"2","caption":"Neutrality","url":"\/visualisations\/neutrality.html","fullurl":"\/visualisations\/neutrality-full.html"},
+    {"id":"censorship","position":"3","caption":"Censorship","url":"\/visualisations\/censorship.html","fullurl":"\/visualisations\/censorship-full.html"},
+    {"id":"equality","position":"3","caption":"Equality","url":"\/visualisations\/equality.html","fullurl":"\/visualisations\/equality-full.html"}
     ],
     news: [
       {

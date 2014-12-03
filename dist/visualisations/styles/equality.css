@@ -1,0 +1,70 @@
+.eq-ui h5 {
+  font-size: 14px;
+  line-height: 14px;
+  margin: 0;
+  font-weight: 600;
+}
+
+.eq-country {
+  fill: #336699;
+  stroke: #fafafa;
+  stroke-width: 0.1em;
+  stroke-opacity: .6;
+  cursor: pointer;
+  opacity: .85;
+  transition: all 0.3s linear;
+}
+
+.eq-country.hover-over {
+  stroke-width: 0.5em;
+}
+
+.eq-hide {
+  opacity: .2;
+}
+
+.eq-viz text {
+  font-size: 12px;
+  text-transform: uppercase;
+  font-weight: 600;
+  cursor: default;
+}
+
+.eq-country text {
+  font-size: 1.2em;
+  cursor: pointer;
+}
+
+.eq-divider {
+  stroke: #aaa;
+}
+
+.eq-overlay td {
+  position: relative;
+  font-size: 10px;
+}
+
+.eq-ui-right {
+  float: right;
+  width: 255px;
+  height: 65px;
+  padding: 10px;
+}
+
+.eq-ui-right h5 {
+  font-size: .75em;
+  margin-left: 40px;
+  margin-bottom: 4px;
+  position: relative;
+}
+
+.eq-ui-right h5:before {
+  content: '';
+  height: 30px;
+  width: 30px;
+  border-radius: 30px;
+  background: #336699;
+  display: inline-block;
+  position: absolute;
+  left: -38px;
+}
