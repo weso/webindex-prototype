@@ -26,7 +26,7 @@ section.report-articles {
         background-color: nth($report-colours, $i);
       }
 
-      h3:before, h4:before, h5:before {
+      h2:before, h3:before, h4:before {
         color: nth($report-colours, $i);
       }
 
