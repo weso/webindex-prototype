@@ -20,6 +20,17 @@ section.report-articles {
     color: #0f0f0f;
   }
 
+  /* BOX */
+  section.box {
+    padding: 1em;
+    font-size: 0.9em;
+    margin: 1em 0;
+
+    h3:before {
+      content: none;
+    }
+  }
+
   @for $i from 1 to 7 {
     article:nth-of-type(#{$i}) {
       .chapter {
@@ -33,8 +44,15 @@ section.report-articles {
       ul.tags li a {
         background-color: scale-color(nth($report-colours, $i), $lightness: 20%);
       }
+
+      /* BOX */
+
+      section.box {
+        background-color: rgba(nth($report-colours, $i), 0.3);
+      }
     }
   }
+
 }
 
 /* VISUALISATIONS */
