@@ -1,8 +1,13 @@
 # READ MORE
 
-lastParagraphs = document.querySelectorAll("article p:nth-of-type(5)")
+articles = document.querySelectorAll(".about-articles article")
+#lastParagraphs = document.querySelectorAll("article p:nth-of-type(5)")
 
-for paragraph in lastParagraphs
+for article in articles
+  paragraph = article.querySelector("p:nth-of-type(5)")
+
+  if !paragraph then continue
+
   sibling = paragraph.nextSibling
 
   left = 0
@@ -32,7 +37,7 @@ for paragraph in lastParagraphs
   a.container = paragraph.parentNode
   a.collapsed = true
 
-  a.onclick = ->
+  a.onclick = (event) ->
     container = this.container
 
     className = if this.collapsed then "element-hidden" else "element-shown"
@@ -45,3 +50,15 @@ for paragraph in lastParagraphs
 
     this.innerHTML = if this.collapsed then "<span>&#171;</span> READ LESS" else "READ MORE <span>&#187;</span>"
     this.collapsed = !this.collapsed
+
+  a.open = ->
+    if this.collapsed
+      this.click()
+
+  # Loop article tags
+  tags = article.querySelectorAll("ul.tags li a")
+  for tag in tags
+    tag.readMore = a
+    tag.onclick = (event) ->
+      this.readMore.open()
+      true

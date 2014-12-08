@@ -1,0 +1,45 @@
+
+@media all and (max-width: 37em) {
+
+  table.adaptative {
+    border: 0;
+    padding-bottom: 0;
+    display: block;
+    width: 100%;
+
+    caption {
+      display: block;
+    }
+
+    thead {
+      display: none;
+      visibility: hidden;
+    }
+
+    tbody, tr, th, td {
+      border: 0;
+      display: block;
+      padding: 0;
+      text-align: left;
+      white-space: normal;
+    }
+
+    tr {
+      margin-bottom: 2em;
+    }
+
+    th[data-title]:before, td[data-title]:before {
+      content: attr(data-title) ":\A";
+      /* white-space: pre; */
+      font-weight: 700;
+    }
+
+    th:not([data-title]) {
+      font-weight: 700;
+    }
+
+    td:empty {
+      display: none;
+    }
+  }
+}

@@ -16,6 +16,14 @@ ul.about-tags {
 /* ARTICLES */
 
 section.about-articles {
+  h2 {
+    text-align: left;
+  }
+
+  ul {
+    margin: 1em 0;
+  }
+
   ul.images {
     padding: 0;
     overflow: hidden;
@@ -57,7 +65,7 @@ section.about-articles {
         background-color: nth($about-colours, $i);
       }
 
-      h3:before, h4:before, h5:before {
+      h2:before, h3:before, h4:before, h5:before {
         color: nth($about-colours, $i);
       }
 
@@ -75,5 +83,5 @@ section.about-articles {
 }
 
 .element-shown {
-  display: initial;
+  display: block;
 }

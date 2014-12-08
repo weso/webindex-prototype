@@ -94,7 +94,7 @@
     font-size: 1.4em;
     font-weight: 400;
     line-height: 1.3em;
-    margin-bottom: .4em;
+    margin-bottom: 1em;
   }
 
   time {
@@ -157,11 +157,18 @@
     list-style-position: inside;
   }
 
+  ol {
+    li {
+      margin-bottom: 1em;
+    }
+  }
+
   ul:not(.tags) {
     padding-left: 1.5em;
 
     li {
-      list-style: disc;
+      list-style: circle;
+      margin-bottom: 0.5em;
     }
   }
 }

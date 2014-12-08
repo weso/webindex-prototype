@@ -78,14 +78,15 @@ div.illustrations {
       }
 
       h2 {
-        font-size: 1.2em !important;
+        font-size: 1.4em !important;
+        width: 80%;
 
         @media (min-width: 50em) {
-          font-size: 1.4em !important;
+          font-size: 1.6em !important;
         }
 
-        @media (min-width: 67em) {
-          font-size: 1.8em !important;
+        @media (min-width: 60em) {
+          font-size: 2em !important;
         }
 
         margin: 0 !important;
@@ -1006,6 +1007,10 @@ div.follow-box {
 
    td:nth-child(2) {
      width: 10%;
+   }
+
+   td:nth-child(n+3) {
+     font-family: Roboto, sans-serif;
    }
 
    th {

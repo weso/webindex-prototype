@@ -5,11 +5,23 @@ aside.left-bar {
 
   h1 {
     background-color: #fff;
+
+    @media (max-width: 37em) {
+      padding-left: 0.2em;
+    }
   }
 
   nav {
     background-color: #fff;
-    padding: 0.5em 0.2em;
+    padding: 0;
+
+    @media (min-width: 37em) {
+      padding: 0.5em 0.2em;
+    }
+
+    @media (max-width: 37em) {
+      margin-bottom: 1em;
+    }
   }
 
   .bar {
@@ -19,6 +31,42 @@ aside.left-bar {
 
   li > ul {
     display: none;
+  }
+
+  .tags {
+    @media (max-width: 37em) {
+      width: 100%;
+
+      li {
+        width: 100%;
+      }
+
+      a {
+        width: 100%;
+      }
+    }
+  }
+}
+
+aside.left-bar.fixed {
+  @media (max-width: 37em) {
+    width: 100%;
+
+    nav {
+      width: 100%;
+    }
+
+    &:not(.opened) {
+      li:not(.active) {
+        display: none;
+      }
+    }
+  }
+}
+
+@media (max-width: 37em) {
+  section.right-content {
+    padding: 0 0.5em;
   }
 }
 
@@ -31,7 +79,7 @@ aside.left-bar {
     h1 {
       font-size: 2em;
       text-align: left;
-      margin-bottom: 1em;
+      margin-bottom: 0.5em;
       background-color: transparent;
     }
 
@@ -71,13 +119,16 @@ aside.left-bar {
 }
  /* FIXED */
 
- .absolute {
-   position: absolute;
+ @media (min-width: 64em) {
+   .absolute {
+     position: absolute;
+   }
  }
 
  .fixed {
    position: fixed;
    top: 0;
+   z-index: 4000;
 
    h1 {
      display: none;

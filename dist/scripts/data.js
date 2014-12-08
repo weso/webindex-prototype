@@ -674,6 +674,9 @@
           return serie["short_name"];
         }
       };
+      if (series.length > 10) {
+        options.valueOnItem.rotation = -20;
+      }
       wesCountry.charts.chart(options);
       if ((_ref5 = document.querySelector(lineContainer)) != null) {
         _ref5.innerHTML = "";
@@ -867,7 +870,7 @@
 
   renderTable = function(data) {
     var code, continent, empowerment, extraInfo, extraTable, extraTbody, freedomOpenness, globalRank, img, name, observation, observations, path, previousValue, rank, relevantContent, republish, span, table, tbodies, tbody, td, tendency, tr, universalAccess, value, _i, _j, _len, _len1, _ref, _results;
-    observations = data.observations;
+    observations = data.fullObservations ? data.fullObservations : data.observations;
     table = document.querySelector("#ranking");
     path = (_ref = document.getElementById("path")) != null ? _ref.value : void 0;
     tbodies = document.querySelectorAll("#ranking > tbody");
@@ -1445,8 +1448,8 @@
         name = country.name;
         continent = country.area;
         observation = observations[code];
-        republish = observation.republish;
-        value = observation.value;
+        republish = observation.republish ? observation.republish : false;
+        value = observation.values && observation.values.length > 0 ? observation.values[0] : observation.value;
         value = getValue(value, republish);
         ranking = observation.ranked;
         extraInfo = observation.extra;

@@ -50,7 +50,7 @@ li.cat-item {
 
 /* ARTICLES */
 
-section.blog-articles {
+section.blog-articles, section.articles {
   article {
     margin-bottom: 2.5em;
     padding-bottom: 0.5em;
@@ -78,6 +78,10 @@ section.blog-articles {
 
   .entry-meta {
     margin-bottom: 1em;
+  }
+
+  .entry-date {
+    margin-right: 0.5em;
   }
 
   figure {

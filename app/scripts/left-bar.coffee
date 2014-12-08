@@ -46,7 +46,23 @@ clearActive = ->
   for li in document.querySelectorAll(".left-bar .tags li.active")
     li.className = ""
 
+openMenu = ->
+  leftBar = document.querySelector(".left-bar")
+  if leftBar.className.indexOf("opened") == -1
+    leftBar.className = leftBar.className + " opened"
+
+closeMenu = ->
+  leftBar = document.querySelector(".left-bar")
+  if leftBar.className.indexOf("opened") != -1
+    leftBar.className = leftBar.className.replace(" opened", "")
+
 for li in document.querySelectorAll(".left-bar .tags li")
   li.onclick = ->
-    clearActive()
-    this.className = "active"
+    if this.className != "active"
+      clearActive()
+      this.className = "active"
+      closeMenu()
+      true
+    else
+      openMenu()
+      false

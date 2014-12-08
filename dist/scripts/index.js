@@ -1,5 +1,5 @@
 (function() {
-  var accordionCallbacks, accordionTabs, button, buttons, count, empowermentCallback, genderTabCallback, host, illustrations, indicator1, indicator2, indicator3, indicator4, interval, loadAccordionTabs, loadTabsData, neutralityTabCallback, privacyCallback, renderEmpowermentTab, renderGenderTab, renderNeutralityTab, renderPrivacyTab, resize, setPercentage, tab, url, _accordion, _accordionTabs, _i, _j, _len, _len1;
+  var accordionCallbacks, accordionTabs, button, buttons, count, empowermentCallback, genderTabCallback, host, i, illustrations, index, indicator, indicators, interval, limit, limits, loadAccordionTabs, loadTabsData, neutralityTabCallback, privacyCallback, renderEmpowermentTab, renderGenderTab, renderNeutralityTab, renderPrivacyTab, resize, setPercentage, tab, tendencies, tendency, url, value, values, _accordion, _accordionTabs, _i, _j, _k, _len, _len1, _ref, _ref1, _ref2, _ref3;
 
   illustrations = document.querySelectorAll(".illustrations article");
 
@@ -134,6 +134,7 @@
       tab.position = void 0;
       tab.opened = void 0;
       tab.touchable = void 0;
+      tab.openedTimes = 0;
       tab.close = function() {
         this.setPosition(this.closedPosition + "%");
         this.opened = false;
@@ -200,7 +201,7 @@
           i++;
         }
         if (this.openedTimes === 1 && accordionCallbacks[this.index]) {
-          return accordionCallbacks[this.index].call();
+          return accordionCallbacks[this.index].call(this);
         }
       };
       tab.onmouseenter = function() {
@@ -251,17 +252,29 @@
     return _results;
   }, 40);
 
-  indicator1 = document.getElementById("home-header-3-indicator").value;
+  indicators = [];
 
-  indicator2 = document.getElementById("home-header-2-indicator").value;
+  limits = [];
 
-  indicator3 = document.getElementById("home-header-1-indicator").value;
+  tendencies = [];
 
-  indicator4 = document.getElementById("home-header-0-indicator").value;
+  values = [];
+
+  for (i = _k = 0; _k < 4; i = ++_k) {
+    index = 3 - i;
+    indicator = (_ref = document.getElementById("home-header-" + index + "-indicator")) != null ? _ref.value : void 0;
+    limit = (_ref1 = document.getElementById("home-header-" + index + "-limit")) != null ? _ref1.value : void 0;
+    tendency = (_ref2 = document.getElementById("home-header-" + index + "-tendency")) != null ? _ref2.value : void 0;
+    value = (_ref3 = document.getElementById("home-header-" + index + "-value")) != null ? _ref3.value : void 0;
+    indicators.push(indicator);
+    limits.push(limit);
+    tendencies.push(tendency);
+    values.push(value);
+  }
 
   host = this.settings.server.url;
 
-  url = "" + host + "/home/" + indicator1 + "/" + indicator2 + "/" + indicator3 + "/" + indicator4;
+  url = "" + host + "/home/" + (indicators.join()) + "/" + (limits.join()) + "/" + (tendencies.join()) + "/" + (values.join());
 
   if (this.settings.server.method === "JSONP") {
     url += "?callback=getDataCallback";
@@ -276,11 +289,16 @@
   };
 
   loadTabsData = function(data) {
+    var _l, _ref4;
     clearInterval(interval);
-    renderNeutralityTab(data.observations1, data.percentage1);
-    renderEmpowermentTab(data.observations2, data.percentage2);
-    renderGenderTab(data.percentage3);
-    renderPrivacyTab(data.percentage4);
+    renderNeutralityTab(data.observations4, data.percentage4);
+    renderEmpowermentTab(data.observations3, data.percentage3);
+    renderGenderTab(data.percentage2);
+    renderPrivacyTab(data.percentage1);
+    for (i = _l = 0, _ref4 = accordionTabs.length - 1; 0 <= _ref4 ? _l <= _ref4 : _l >= _ref4; i = 0 <= _ref4 ? ++_l : --_l) {
+      tab = accordionTabs[i];
+      tab.close();
+    }
     return setTimeout(function() {
       var world;
       if (accordionTabs[0].isMobile()) {
@@ -295,12 +313,8 @@
   };
 
   renderNeutralityTab = function(countries, percentage) {
-    var path, paths, tendency, _k, _len2, _results;
-    tendency = document.getElementById("home-header-0-tendency").value;
-    if (parseInt(tendency) === -1) {
-      percentage = 100 - percentage;
-    }
-    setPercentage("#tab1", percentage);
+    var path, paths, _l, _len2, _results;
+    setPercentage("#tab4", percentage);
     document.getElementById("map").innerHTML = "";
     wesCountry.maps.createMap({
       container: '#map',
@@ -320,20 +334,16 @@
     });
     paths = document.querySelectorAll("#map .land-group");
     _results = [];
-    for (_k = 0, _len2 = paths.length; _k < _len2; _k++) {
-      path = paths[_k];
+    for (_l = 0, _len2 = paths.length; _l < _len2; _l++) {
+      path = paths[_l];
       _results.push(path.style.opacity = 0.3);
     }
     return _results;
   };
 
   renderEmpowermentTab = function(observations, percentage) {
-    var circle, circleSize, circles, container, newCircle, observation, r, sorter, svg, tendency, valueCircle, _k, _l, _len2, _len3, _ref, _results;
-    tendency = document.getElementById("home-header-1-tendency").value;
-    if (parseInt(tendency) === -1) {
-      percentage = 100 - percentage;
-    }
-    setPercentage("#tab2", percentage);
+    var circle, circleSize, circles, container, newCircle, observation, r, sorter, svg, valueCircle, _l, _len2, _len3, _m, _ref4, _results;
+    setPercentage("#tab3", percentage);
     sorter = function(a, b) {
       var a_area, b_area;
       a_area = a.area;
@@ -350,14 +360,14 @@
     circle = document.querySelector(".infographic-circles .model");
     container = document.getElementById("infographic-circles");
     circleSize = container.offsetWidth * 0.8 / 24;
-    circles = document.querySelector(".infographic-circles .circle");
-    for (_k = 0, _len2 = circles.length; _k < _len2; _k++) {
-      circle = circles[_k];
+    circles = document.querySelectorAll(".infographic-circles > .circle");
+    for (_l = 0, _len2 = circles.length; _l < _len2; _l++) {
+      circle = circles[_l];
       container.removeChild(circle);
     }
     _results = [];
-    for (_l = 0, _len3 = observations.length; _l < _len3; _l++) {
-      observation = observations[_l];
+    for (_m = 0, _len3 = observations.length; _m < _len3; _m++) {
+      observation = observations[_m];
       newCircle = circle.cloneNode(true);
       newCircle.setAttribute("class", "circle");
       svg = newCircle.querySelector("svg");
@@ -369,40 +379,31 @@
       r = r / 2;
       valueCircle.setAttribute("data-r", "" + r);
       valueCircle.setAttribute("r", "0");
-      _results.push((_ref = newCircle.querySelector(".country")) != null ? _ref.innerHTML = observation.area : void 0);
+      _results.push((_ref4 = newCircle.querySelector(".country")) != null ? _ref4.innerHTML = observation.area : void 0);
     }
     return _results;
   };
 
   renderGenderTab = function(percentage) {
-    var container, element, icon, iconSrc, img, p, ps, row, tendency, _k, _l, _len2, _ref, _results;
-    tendency = document.getElementById("home-header-2-tendency").value;
-    if (parseInt(tendency) === -1) {
-      percentage = 100 - percentage;
-    }
-    setPercentage("#tab3", percentage);
-    if ((_ref = document.getElementById("gender-percentage")) != null) {
-      if (_ref.innerHTML == null) {
-        _ref.innerHTML = "" + percentage + "%";
-      }
-    }
+    var container, element, icon, iconSrc, img, p, ps, row, _l, _len2, _m, _results;
+    setPercentage("#tab2", percentage);
     container = document.querySelector(".infographic-percentage");
     ps = document.querySelectorAll(".infographic-percentage p");
-    for (_k = 0, _len2 = ps.length; _k < _len2; _k++) {
-      p = ps[_k];
+    for (_l = 0, _len2 = ps.length; _l < _len2; _l++) {
+      p = ps[_l];
       container.removeChild(p);
     }
     icon = document.querySelector(".infographic-icon");
     iconSrc = icon.src;
     count = 1;
     _results = [];
-    for (row = _l = 0; _l <= 3; row = ++_l) {
+    for (row = _m = 0; _m <= 3; row = ++_m) {
       p = document.createElement("p");
       container.appendChild(p);
       _results.push((function() {
-        var _m, _results1;
+        var _n, _results1;
         _results1 = [];
-        for (element = _m = 0; _m <= 24; element = ++_m) {
+        for (element = _n = 0; _n <= 24; element = ++_n) {
           img = document.createElement("img");
           img.src = iconSrc;
           p.appendChild(img);
@@ -418,27 +419,18 @@
   };
 
   renderPrivacyTab = function(percentage) {
-    var pie, tendency, _ref;
-    tendency = document.getElementById("home-header-3-tendency").value;
-    if (parseInt(tendency) === -1) {
-      percentage = 100 - percentage;
-    }
-    setPercentage("#tab4", percentage);
-    if ((_ref = document.getElementById("privacy-percentage")) != null) {
-      if (_ref.innerHTML == null) {
-        _ref.innerHTML = "" + percentage + "%";
-      }
-    }
+    var pie;
+    setPercentage("#tab1", percentage);
     pie = document.getElementById("world-pie");
     return pie.setAttribute("percentage", percentage);
   };
 
   setPercentage = function(article, percentage) {
-    var label, labels, _k, _len2, _results;
+    var label, labels, _l, _len2, _results;
     labels = document.querySelectorAll("" + article + " strong.percentage");
     _results = [];
-    for (_k = 0, _len2 = labels.length; _k < _len2; _k++) {
-      label = labels[_k];
+    for (_l = 0, _len2 = labels.length; _l < _len2; _l++) {
+      label = labels[_l];
       _results.push(label.innerHTML = "" + percentage + "%");
     }
     return _results;

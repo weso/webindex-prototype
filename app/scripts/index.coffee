@@ -99,6 +99,7 @@ loadAccordionTabs = ->
     tab.position = undefined
     tab.opened = undefined
     tab.touchable = undefined
+    tab.openedTimes = 0
 
     tab.close = ->
       this.setPosition(this.closedPosition + "%")
@@ -175,7 +176,7 @@ loadAccordionTabs = ->
       # Callback
 
       if this.openedTimes == 1 && accordionCallbacks[this.index]
-        accordionCallbacks[this.index].call()
+        accordionCallbacks[this.index].call(this)
 
     tab.onmouseenter = ->
       this.setInitialPosition()
@@ -226,13 +227,25 @@ interval = setInterval( ->
 
 # Download data
 
-indicator1 = document.getElementById("home-header-3-indicator").value # surveillance
-indicator2 = document.getElementById("home-header-2-indicator").value # gender
-indicator3 = document.getElementById("home-header-1-indicator").value # empowerment
-indicator4 = document.getElementById("home-header-0-indicator").value # net neutrality
+indicators = []
+limits = []
+tendencies = []
+values = []
+
+for i in [0...4]
+  index = 3 - i
+  indicator = document.getElementById("home-header-#{index}-indicator")?.value
+  limit = document.getElementById("home-header-#{index}-limit")?.value
+  tendency = document.getElementById("home-header-#{index}-tendency")?.value
+  value = document.getElementById("home-header-#{index}-value")?.value
+
+  indicators.push(indicator)
+  limits.push(limit)
+  tendencies.push(tendency)
+  values.push(value)
 
 host = @settings.server.url
-url = "#{host}/home/#{indicator1}/#{indicator2}/#{indicator3}/#{indicator4}"
+url = "#{host}/home/#{indicators.join()}/#{limits.join()}/#{tendencies.join()}/#{values.join()}"
 
 if @settings.server.method is "JSONP"
   url += "?callback=getDataCallback"
@@ -247,12 +260,16 @@ else
 loadTabsData = (data) ->
   clearInterval interval
 
-  renderNeutralityTab(data.observations1, data.percentage1)
-  renderEmpowermentTab(data.observations2, data.percentage2)
-  renderGenderTab(data.percentage3)
-  renderPrivacyTab(data.percentage4)
+  renderNeutralityTab(data.observations4, data.percentage4)
+  renderEmpowermentTab(data.observations3, data.percentage3)
+  renderGenderTab(data.percentage2)
+  renderPrivacyTab(data.percentage1)
 
   # Animate first tab
+
+  for i in [0..accordionTabs.length - 1]
+    tab = accordionTabs[i]
+    tab.close()
 
   setTimeout( ->
     if accordionTabs[0].isMobile()
@@ -267,11 +284,7 @@ loadTabsData = (data) ->
 # Neutrality tab
 
 renderNeutralityTab = (countries, percentage) ->
-  tendency = document.getElementById("home-header-0-tendency").value
-  if parseInt(tendency) == -1
-    percentage = 100 - percentage
-
-  setPercentage("#tab1", percentage)
+  setPercentage("#tab4", percentage)
 
   document.getElementById("map").innerHTML = ""
 
@@ -301,11 +314,7 @@ renderNeutralityTab = (countries, percentage) ->
 # Empowerment tab
 
 renderEmpowermentTab = (observations, percentage) ->
-  tendency = document.getElementById("home-header-1-tendency").value
-  if parseInt(tendency) == -1
-    percentage = 100 - percentage
-
-  setPercentage("#tab2", percentage)
+  setPercentage("#tab3", percentage)
 
   sorter = (a, b) ->
     a_area = a.area
@@ -326,7 +335,7 @@ renderEmpowermentTab = (observations, percentage) ->
 
   circleSize = container.offsetWidth * 0.8 / 24
 
-  circles = document.querySelector(".infographic-circles .circle")
+  circles = document.querySelectorAll(".infographic-circles > .circle")
 
   for circle in circles
     container.removeChild circle
@@ -354,12 +363,7 @@ renderEmpowermentTab = (observations, percentage) ->
 # Gender tab
 
 renderGenderTab = (percentage) ->
-  tendency = document.getElementById("home-header-2-tendency").value
-  if parseInt(tendency) == -1
-    percentage = 100 - percentage
-
-  setPercentage("#tab3", percentage)
-  document.getElementById("gender-percentage")?.innerHTML?= "#{percentage}%"
+  setPercentage("#tab2", percentage)
 
   container = document.querySelector(".infographic-percentage")
 
@@ -390,12 +394,7 @@ renderGenderTab = (percentage) ->
 # Privacy tab
 
 renderPrivacyTab = (percentage) ->
-  tendency = document.getElementById("home-header-3-tendency").value
-  if parseInt(tendency) == -1
-    percentage = 100 - percentage
-
-  setPercentage("#tab4", percentage)
-  document.getElementById("privacy-percentage")?.innerHTML?= "#{percentage}%"
+  setPercentage("#tab1", percentage)
 
   pie = document.getElementById("world-pie")
   pie.setAttribute("percentage", percentage)

@@ -648,6 +648,9 @@ renderCharts = (data) ->
         serie["short_name"]
     }
 
+    if series.length > 10
+      options.valueOnItem.rotation = -20
+
     wesCountry.charts.chart options
 
     # Line chart
@@ -841,7 +844,7 @@ renderMap = ->
   })
 
 renderTable = (data) ->
-  observations = data.observations
+  observations = if data.fullObservations then data.fullObservations else data.observations
 
   table = document.querySelector("#ranking")
   path = document.getElementById("path")?.value
@@ -1423,8 +1426,8 @@ renderCountries = (countries, observations) ->
       name = country.name
       continent = country.area
       observation = observations[code]
-      republish = observation.republish
-      value = observation.value
+      republish = if observation.republish then observation.republish else false
+      value = if observation.values && observation.values.length > 0 then observation.values[0] else observation.value
       value = getValue(value, republish)
       ranking = observation.ranked
       extraInfo = observation.extra

@@ -1,7 +1,7 @@
 /* SIDEBAR TAGS */
 
 ul.report-tags {
-  @for $i from 1 to 7 {
+  @for $i from 1 to 10 {
     li:nth-child(#{$i}) a {
       background-color: nth($report-colours, $i);
     }
@@ -31,7 +31,138 @@ section.report-articles {
     }
   }
 
-  @for $i from 1 to 7 {
+  /* TABLE OF CONTENTS */
+
+  nav.report-table-contents {
+    margin: 1em 0 2em 0;
+
+    h2 {
+      text-align: left;
+      margin: 1em 0 0.5em 0;
+    }
+
+    > ul > li {
+      margin: 0.3em 0;
+    }
+
+    li ul {
+      margin-left: 1em;
+    }
+  }
+
+  /* Surveillance G8 table */
+
+  table.surveillance-g8 {
+    width: 100%;
+
+    caption {
+      margin-bottom: 1em;
+      color: #222;
+    }
+
+    tr th {
+      width: 20%;
+      font-weight: 400;
+      font-size: 0.6em;
+
+      @media (min-width: 37em) {
+        width: 40%;
+        font-size: 0.9em;
+      }
+
+      text-align: right;
+      padding-right: 1em;
+      color: #222;
+
+      p {
+        margin: 0.3em 0 0 0;
+      }
+    }
+
+    td {
+      text-align: center;
+      font-size: 0.6em;
+
+      @media (min-width: 37em) {
+        font-size: 0.9em;
+      }
+
+      padding: 1.5em 0;
+      border: 1px solid white;
+    }
+
+    .red {
+      background-color: $report-table-red;
+    }
+
+    .green {
+      background-color: $report-table-green;
+    }
+
+    .yellow {
+      background-color: $report-table-yellow;
+    }
+
+    .orange {
+      background-color: $report-table-orange;
+    }
+  }
+
+  /* Online And Offline Freedom table */
+
+  table.online-offline-freedom {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: auto;
+    margin-bottom: 2em;
+
+    caption {
+      margin-bottom: 1em;
+      color: #222;
+    }
+
+    th {
+      font-weight: 400;
+      border: none;
+      text-align: center;
+      color: #688A08;
+    }
+
+    td {
+      border-top: 1px solid #bbb;
+      border-bottom: 1px solid #bbb;
+    }
+
+    ul {
+      width: 50%;
+      margin: 0.5em auto;
+      padding: 0;
+      color: #393B0B;
+
+      li {
+        list-style-type: none !important;
+      }
+    }
+
+    tbody tr {
+      th {
+        text-align: right;
+        padding-right: 1em;
+        width: 15%;
+        color: #088A08;
+      }
+    }
+
+    .blue {
+      color: #0096af;
+
+      li {
+        text-align: right;
+      }
+    }
+  }
+
+  @for $i from 1 to 10 {
     article:nth-of-type(#{$i}) {
       .chapter {
         background-color: nth($report-colours, $i);
@@ -42,7 +173,7 @@ section.report-articles {
       }
 
       ul.tags li a {
-        background-color: scale-color(nth($report-colours, $i), $lightness: 20%);
+        background-color: rgba(nth($report-colours, $i), 0.7);
       }
 
       /* BOX */
@@ -59,4 +190,51 @@ section.report-articles {
 
 section.hidden-visualisations {
   display: none;
+}
+
+/* Ranking table */
+
+section.ranking-table {
+  display: none;
+
+  table.report-ranking {
+    font-size: 0.9em;
+    table-layout: auto;
+
+    .flag {
+      float: right;
+      border: 1px solid #ccc;
+    }
+
+    th {
+      background-color: $report-table-red;
+      font-weight: 400;
+      color: white;
+      text-align: center;
+      border: 1px solid white;
+    }
+
+    td[data-title="Rank"], td[data-title="Score"] {
+      text-align: center;
+      background-color: $report-table-green;
+      width: 10%;
+      border: none;
+      font-family: Roboto, sans-serif;
+    }
+
+    td[data-title="Country"] {
+      padding: 1em;
+      vertical-align: middle;
+    }
+
+    tr:nth-child(n+11) {
+      display: none;
+    }
+
+    &.opened {
+      tr:nth-child(n+11) {
+        display: table-row;
+      }
+    }
+  }
 }
