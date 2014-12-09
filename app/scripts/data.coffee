@@ -1,12 +1,14 @@
 global = this
 global.options = {}
-global.selectorDataReady = {}
+global.selectorDataReady = {
+  timeline: true
+}
 global.selections = {
   indicator: null,
   indicatorOption: null,
   indicatorTendency: null,
   countries: null,
-  year: null,
+  year: 2014,
   years: [],
   areas: []
 }
@@ -64,19 +66,19 @@ setPageStateful = ->
             tutorialBoxOnChange.call(selectors["#indicator-select"])
             global.tutorialRestoreValues.selections[0] = true
       },
-      {
-        name: "time",
-        selector: global.options.timeline,
-        onChange: (index, value, parameters, selectors) ->
-          if settings.debug then console.log "year:onChange index:#{index} value:#{value}"
+      ##{
+      ##  name: "time",
+      ##  selector: global.options.timeline,
+      ##  onChange: (index, value, parameters, selectors) ->
+      ##    if settings.debug then console.log "year:onChange index:#{index} value:#{value}"
 
-          global.selections.year = parseInt(value)
-          updateInfo()
+      ##    global.selections.year = parseInt(value)
+      ##    updateInfo()
 
-          if global.tutorial
-            tutorialBoxOnChange.call(global.options.timeline)
-            global.tutorialRestoreValues.selections[1] = true
-      },
+      ##    if global.tutorial
+      ##      tutorialBoxOnChange.call(global.options.timeline)
+      ##      global.tutorialRestoreValues.selections[1] = true
+      ##},
       {
         name: "country",
         selector: global.options.countrySelector,
@@ -113,7 +115,7 @@ setPageStateful = ->
 
 getSelectorData = ->
   getIndicators()
-  getYears()
+  #getYears()
   getCountries()
 
 # Indicators
@@ -126,7 +128,7 @@ getIndicators = () ->
     url += "?callback=getIndicatorsCallback"
     @processJSONP(url)
   else
-    @processAJAX(url, getYearsCallback)
+    @processAJAX(url, getIndicatorsCallback)
 
 @getIndicatorsCallback = (data) ->
   indicators = []
@@ -214,7 +216,7 @@ setIndicatorOptions = (select, table, element, level, last) ->
     count++
 
 # Years
-
+###
 getYears = () ->
   host = @settings.server.url
   url = "#{host}/years/array"
@@ -245,7 +247,7 @@ getYears = () ->
 
   global.selectorDataReady.timeline = true
   checkSelectorDataReady()
-
+###
 # Countries
 
 getCountries = () ->
@@ -387,6 +389,7 @@ updateInfo = () ->
 renderYearBox = (yearContainer, primary, year) ->
   yearContainer?.innerHTML = ""
 
+  ###
   i = document.createElement "i"
   i.className = "fa fa-caret-left left"
   yearContainer?.appendChild i
@@ -396,11 +399,12 @@ renderYearBox = (yearContainer, primary, year) ->
     i.onclick = (event) ->
       global.options.timeline.select(this.year)
       global.options.timeline.refresh()
-
+  ###
   span = document.createElement "span"
   span.innerHTML = year
   yearContainer?.appendChild span
 
+  ###
   i = document.createElement "i"
   i.className = "fa fa-caret-right right"
   yearContainer?.appendChild i
@@ -410,7 +414,7 @@ renderYearBox = (yearContainer, primary, year) ->
     i.onclick = (event) ->
       global.options.timeline.select(this.year)
       global.options.timeline.refresh()
-
+  ###
 renderContinentLegend = (data, options, container, getContinents, getContinentColour) ->
   continents = getContinents(options)
 
@@ -1027,7 +1031,7 @@ renderIndicatorInfo = (option, tendency) ->
   secondary = type.toLowerCase() == "secondary"
 
   document.getElementById("primary-info")?.style?.display = if primary then "block" else "none"
-
+  ###
   years = global.options.timeline.getElements()
 
   for i in [0..years.length - 2]
@@ -1037,7 +1041,7 @@ renderIndicatorInfo = (option, tendency) ->
       global.options.timeline.disable(year)
     else
       global.options.timeline.enable(year)
-
+  ###
   # Name
   name = option.getAttribute("data-name")
   document.getElementById("indicator-name")?.innerHTML = name
@@ -1743,13 +1747,13 @@ showTutorial = ->
   # Save restore selector values
   global.tutorialRestoreValues = {
     indicator: document.getElementById("indicator-select").value,
-    year: global.options.timeline.selected(),
+    #year: global.options.timeline.selected(),
     countries: global.options.countrySelector.selected(),
     selections: [false, false, false, false, false]
   }
   # Set initial values for selectors
   global.options.indicatorSelector.value = -1
-  global.options.timeline.clear()
+  #global.options.timeline.clear()
   global.options.countrySelector.clear()
 
   # Uncollapse left bar
@@ -1765,7 +1769,7 @@ showTutorial = ->
 
   tutorialElements = [
     ".first-box",
-    ".second-box",
+    ##".second-box",
     ".third-box",
     ".first-tab",
     ".second-tab"
@@ -1787,9 +1791,9 @@ tutorialRestore = () ->
   if global.options.indicatorSelector.selectedIndex == -1
     global.options.indicatorSelector.value = global.tutorialRestoreValues.indicator
     global.options.indicatorSelector.refresh()
-  if global.options.timeline.selected() == -1
-    global.options.timeline.select(global.tutorialRestoreValues.year)
-    global.options.timeline.refresh()
+  #if global.options.timeline.selected() == -1
+  #  global.options.timeline.select(global.tutorialRestoreValues.year)
+  #  global.options.timeline.refresh()
   if global.options.countrySelector.selected() == ""
     global.options.countrySelector.select(global.tutorialRestoreValues.countries)
     global.options.countrySelector.refresh()
@@ -1861,9 +1865,9 @@ createTip = (tutorial, elements, index, back) ->
   previousStatus = if index > 0 then "active" else "inactive"
 
   nextStatus = "inactive"
-  if index >= 3 and index < total - 1
+  if index >= 2 and index < total - 1
     nextStatus = "active"
-  else if index < 3 and global.tutorialRestoreValues.selections[index]
+  else if index < 2 and global.tutorialRestoreValues.selections[index]
     nextStatus = "active"
 
   previous.setAttribute("status", previousStatus)
