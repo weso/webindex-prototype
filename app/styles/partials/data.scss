@@ -38,7 +38,7 @@
       position: absolute;
       left: 0;
       bottom: 0;
-      width: 50%;
+      width: 70%;
       max-width: 12em;
       border-top: 1px solid #ccc;
       border-left: 1px solid #ccc;
@@ -401,15 +401,36 @@
     }
 
     .index {
-      width: 10%;
+      width: 50%;
+
+      @media (min-width: 64em) {
+        width: 10%;
+      }
     }
 
     .subindex, .component {
-      width: 20%;
+      width: 50%;
+
+      @media (min-width: 64em) {
+        width: 20%;
+      }
+    }
+
+    li a:before, li a:after {
+      @media (max-width: 64em) {
+        display: none;
+        border: none;
+      }
     }
 
     .indicator {
-      width: 100%;
+      width: 50%;
+      z-index: 2;
+      position: relative;
+
+      @media (min-width: 64em) {
+        width: 100%;
+      }
     }
 
     li[data-subindex="UNIVERSAL_ACCESS"] a:hover {
@@ -588,6 +609,7 @@
 }
 
 .primary-info {
+  display: none !important;
   background-color: $data-info;
   padding: 0.5em;
   margin: 0.5em 0 0 0;
@@ -869,7 +891,7 @@
     margin: 0;
   }
 
-  @media (max-width: 37em) {
+  @media (max-width: 64em) {
     .view-tutorial {
       display: none;
     }
@@ -1118,6 +1140,8 @@ div.middle-section {
       &:nth-child(3) {
         margin-right: 0;
       }
+
+      margin-bottom: 0.5em;
     }
 
     @media (min-width: 64em) {
@@ -1478,6 +1502,11 @@ nav.tabs {
       float: right;
       background-color: #fff;
       margin: 0 0.5em 0 0.2em;
+      box-sizing: border-box;
+
+      @media (max-width: 37em) {
+        width: 40%;
+      }
     }
 
     li.selected {
@@ -1500,7 +1529,17 @@ nav.tabs {
       color: #555;
       background: #fff;
       text-decoration: none;
-      padding: 0.4em 4em 0.3em 4em;
+      padding: 0.3em 0;
+      box-sizing: border-box;
+
+      @media (max-width: 37em) {
+        width: 100%;
+        text-align: center;
+      }
+
+      @media (min-width: 37em) {
+        padding: 0.4em 4em 0.3em 4em;
+      }
     }
 
     a:hover {
@@ -1700,7 +1739,11 @@ table.full-ranking {
   div.country-map {
     float: right;
     width: 45%;
-    height: 15em;
+    height: 10em;
+
+    @media (min-width: 37em) {
+      height: 15em;
+    }
 
     .visor {
       display: none;
@@ -1733,8 +1776,10 @@ table.full-ranking {
   }
 
   div.table-wrapper {
-    float: left;
-    width: 55%;
+    @media (min-width: 37em) {
+      float: left;
+      width: 55%;
+    }
   }
 
   table {

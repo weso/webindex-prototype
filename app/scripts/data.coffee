@@ -1145,7 +1145,7 @@ renderSomeBoxes = (data, prefix) ->
 
   higherContainer = document.getElementById("#{prefix}higher")
   if higherContainer
-    higherContainer.innerHTML = if global.selections.indicatorTendency then higher else lower
+    higherContainer.innerHTML = higher
 
     higherContainer.onclick = ->
       global.options.countrySelector.select(higherArea)
@@ -1153,7 +1153,7 @@ renderSomeBoxes = (data, prefix) ->
 
   lowerContainer = document.getElementById("#{prefix}lower")
   if lowerContainer
-    lowerContainer.innerHTML = if global.selections.indicatorTendency then lower else higher
+    lowerContainer.innerHTML = lower
 
     lowerContainer.onclick = ->
       global.options.countrySelector.select(lowerArea)
@@ -1741,6 +1741,14 @@ startTutorialFirstTime = ->
     global.tutorial = false
 
 showTutorial = ->
+  viewTutorial = document.getElementById("view-tutorial")
+  if viewTutorial
+    viewTutorialStyle = window.getComputedStyle(viewTutorial)
+    displayTutorial = viewTutorialStyle.getPropertyValue('display')
+    if displayTutorial != "block" then return
+  else
+    return
+
   global.tutorial = true
   window.scrollTo(0, 0)
 
@@ -1751,6 +1759,7 @@ showTutorial = ->
     countries: global.options.countrySelector.selected(),
     selections: [false, false, false, false, false]
   }
+
   # Set initial values for selectors
   global.options.indicatorSelector.value = -1
   #global.options.timeline.clear()

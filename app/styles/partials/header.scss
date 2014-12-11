@@ -10,7 +10,7 @@ header.site-header .logo {
   max-width: 100%;
   box-sizing: border-box;
 
-  @media (max-width: 37em) {
+  @media (max-width: 64em) {
     margin-left: 0.5em;
     margin-right: 0.5em;
   }
@@ -107,12 +107,19 @@ header.site-header nav {
   overflow: auto;
   clear: right;
   padding: 1em 0.5em 1em 0;
-  width: intrinsic;
-  float: right;
+  box-sizing: border-box;
+
+  @media (min-width: 40em) {
+    width: intrinsic;
+    float: right;
+  }
 
   div {
     overflow: hidden;
-    width: intrinsic;
+
+    @media (min-width: 40em) {
+      width: intrinsic;
+    }
   }
 }
 

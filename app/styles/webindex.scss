@@ -47,6 +47,10 @@ body {
   margin-top: 2em;
   height: 100%;
   overflow: hidden;
+
+  @media (max-width: 64em) {
+    padding: 0 0.5em;
+  }
 }
 
 .text-left {

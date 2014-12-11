@@ -275,10 +275,11 @@ loadTabsData = (data) ->
     if accordionTabs[0].isMobile()
       neutralityTabCallback.call()
       world = document.getElementById("world")
-      world.setAttribute("width", "10em")
-      world.setAttribute("height", "10em")
-    else
-      privacyCallback.call()
+      world.setAttribute("width", "12em")
+      world.setAttribute("height", "12em")
+    #else
+    #  privacyCallback.call()
+    privacyCallback.call()
   , 100)
 
 # Neutrality tab

@@ -39,7 +39,9 @@
   }
 
   li {
-    text-align: center;
+    text-align: left;
+    width: 70%;
+    margin: 0 auto;
 
     @include media($medium-screen) {
       text-align: left;

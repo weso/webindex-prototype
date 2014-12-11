@@ -47,7 +47,15 @@ section.about-articles {
   }
 
   iframe {
-    height: 34em;
+    height: 18em;
+
+    @media (min-width: 40em) {
+      height: 28em;
+    }
+
+    @media (min-width: 64em) {
+      height: 34em;
+    }
   }
 
   ul.tags {
